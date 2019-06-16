@@ -1,0 +1,18 @@
+version: "3"
+services:
+  csharp:
+    container_name: csharp
+    image: aimvector/csharp:1.0.0
+    build: ./c#  
+  golang:
+    container_name: golang
+    image: aimvector/golang:1.0.0
+    build: ./golang
+  nodejs:
+    container_name: nodejs
+    image: aimvector/nodejs:1.0.0
+    build: ./nodejs
+  python:
+    container_name: python
+    image: aimvector/python:1.0.0
+    build: ./python
