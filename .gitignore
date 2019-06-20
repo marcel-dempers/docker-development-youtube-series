@@ -1,0 +1,4 @@
+c#/src/bin/
+c#/src/obj/
+node_modules/
+__pycache__/
