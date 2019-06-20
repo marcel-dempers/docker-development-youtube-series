@@ -7,7 +7,7 @@ This is the source code for the YouTube series covering docker-based development
 Part #1:                    https://youtu.be/wyjNpxLRmLg  <br/>
 Source code for Part #1:    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part1
 
-Part #2:
+Part #2:                    https://youtu.be/EdmKENqnQUw   <br/>
 Source code for Part #2    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part2
 
 More details coming soon!
