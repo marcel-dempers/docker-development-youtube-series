@@ -13,5 +13,7 @@ Source code for Part #2    https://github.com/marcel-dempers/docker-development-
 Part #3:                    https://youtu.be/2lQ7WrwpZfI  <br/>
 Source code for Part #2    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part3
 
+Part #4:                    https://youtu.be/kToyI16IFxs  <br/>
+Source code for Part #4    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part4
 
 More details coming soon!
