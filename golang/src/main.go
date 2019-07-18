@@ -8,14 +8,12 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-var searchMock []byte
-
 func Response(ctx *fasthttp.RequestCtx) {
 	fmt.Fprintf(ctx, "Hello") 
 }
 func main() {
     
-	fmt.Println("starting.")
+	fmt.Println("starting...")
 
 	router := fasthttprouter.New()
 	router.GET("/", Response)
