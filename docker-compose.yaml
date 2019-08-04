@@ -5,11 +5,7 @@ services:
     image: aimvector/csharp:1.0.0
     build:
       context: ./c#
-      target: prod
-    #working_dir: /work      #comment out for build.target:prod
-    #entrypoint: /bin/sh     #comment out for build.target:prod
-    #stdin_open: true        #comment out for build.target:prod
-    #tty: true               #comment out for build.target:prod
+      target: debug
     volumes:
     - ./c#/src/:/work/
     ports:
