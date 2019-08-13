@@ -15,7 +15,8 @@ COPY ./src/ /work/
 RUN mkdir /out/
 RUN dotnet publish --no-restore --output /out/ --configuration Release
 
-CMD dotnet run
+ENTRYPOINT ["dotnet", "run"]
+
 ###########START NEW IMAGE###########################################
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim as prod
