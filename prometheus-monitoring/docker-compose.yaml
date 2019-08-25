@@ -1,0 +1,24 @@
+version: "3"
+services:
+  my-application:
+    build: ./application
+    container_name: my-application
+    image: my-application
+    ports:
+      - "80:80"
+  prometheus:
+    container_name: prometheus-svc
+    image: prom/prometheus
+    ports: 
+      - "9090:9090"
+    command: --config.file=/etc/prometheus/prometheus.yaml
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+  grafana:
+    image: grafana/grafana:5.0.4
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin

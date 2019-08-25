@@ -1,8 +1,11 @@
-# docker-development-youtube-series
+# Docker Development Guide
+## a Youtube Series
 
 Hi! 
 
 This is the source code for the YouTube series covering docker-based development workflows.
+
+## Docker Development Basics
 
 Part #1: The Dockerfiles (.NET, Golang, Python, NodeJS) <br/>
 Video:                    https://youtu.be/wyjNpxLRmLg  <br/>
@@ -23,5 +26,12 @@ Source code for Part #4    https://github.com/marcel-dempers/docker-development-
 Part #5:                   Debugging .NET Core code in Docker <br/>
 Video:                     https://youtu.be/ds2bud0ZYTY  <br/>
 Source code for Part #5    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part5
+
+## Prometheus Monitoring
+
+Let's take a look how to monitor application code using Prometheus.
+
+See the [Prometheus Monitoring](./prometheus-monitoring/readme.md) readme guide for detailed steps
+
 
 More details coming soon!

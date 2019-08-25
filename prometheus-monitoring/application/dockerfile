@@ -1,0 +1,30 @@
+FROM golang:1.11.13-alpine3.10 as builder
+
+# installing git
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh
+
+# setting working directory
+WORKDIR /go/src/app
+
+# installing dependencies
+RUN go get github.com/leonelquinteros/gorand
+RUN go get github.com/sirupsen/logrus
+RUN go get github.com/prometheus/client_golang/prometheus
+RUN go get github.com/prometheus/client_golang/prometheus/promauto
+RUN go get github.com/prometheus/client_golang/prometheus/promhttp
+
+COPY / /go/src/app/
+RUN go build -o myapp
+
+FROM alpine:3.10
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache openssh curl ca-certificates
+
+WORKDIR /go/src/app
+COPY --from=builder /go/src/app/myapp /go/src/app/myapp
+
+EXPOSE 80
+
+CMD ["./myapp"]
