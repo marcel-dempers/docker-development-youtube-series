@@ -1,0 +1,21 @@
+FROM python:3.7.3-alpine3.9 as dev
+
+RUN mkdir /work/
+WORKDIR /work/
+
+COPY ./src/requirements.txt /work/requirements.txt
+RUN pip install -r requirements.txt
+
+COPY ./src/ /work/
+
+###########START NEW IMAGE###################
+
+FROM python:3.7.3-alpine3.9 as prod
+
+RUN mkdir /app/
+WORKDIR /app/
+
+COPY --from=dev /work/ /app/
+RUN pip install -r requirements.txt
+ENV FLASK_APP=server.py
+CMD flask run -h 0.0.0 -p 5000
