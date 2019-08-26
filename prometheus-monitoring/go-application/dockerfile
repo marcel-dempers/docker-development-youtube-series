@@ -25,6 +25,6 @@ RUN apk update && apk upgrade && \
 WORKDIR /go/src/app
 COPY --from=builder /go/src/app/myapp /go/src/app/myapp
 
-EXPOSE 80
+EXPOSE 5000
 
 CMD ["./myapp"]

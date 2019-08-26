@@ -6,28 +6,28 @@ services:
     container_name: go-application
     image: go-application
     ports:
-      - "80:80"
+      - "80:5000"
   python-application:
     build:
       context: ./python-application
     container_name: python-application
     image: python-application
     ports:
-      - "81:80"
+      - "81:5000"
   dotnet-application:
     build:
       context: ./dotnet-application
     container_name: dotnet-application
     image: dotnet-application
     ports:
-      - "82:80"
+      - "82:5000"
   nodejs-application:
     build:
       context: ./nodejs-application
     container_name: nodejs-application
     image: nodejs-application
     ports:
-      - "83:80"
+      - "83:5000"
   prometheus:
     container_name: prometheus-svc
     image: prom/prometheus

@@ -5,4 +5,4 @@ scrape_configs:
 - job_name: my-application
   honor_labels: true
   static_configs:
-  - targets: ['go-application','python-application','dotnet-application','nodejs-application']
+  - targets: ['go-application:5000','python-application:5000','dotnet-application:5000','nodejs-application:5000']
