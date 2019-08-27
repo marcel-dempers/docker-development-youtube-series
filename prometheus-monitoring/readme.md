@@ -3,29 +3,22 @@
 
 To run any of the commands, please ensure you open a terminal and navigate to the path where this readme is located.
 
-## Start Prometheus
+## Start Prometheus, Grafana & Dashboards
 
 ```
 docker-compose up -d prometheus
 docker-compose up -d grafana
+docker-compose up -d grafana-dashboards
 ```
 
-Wait for Grafana to start up
-Import the dashboards
-```
-TODO
-```
-
-You should see all application targets un `UNKNOWN` or  `DOWN` status.
-```http://localhost:9090/targets```
 
 ## Start the example app you prefer
 
 ```
-docker-compose up -d golang-application
-docker-compose up -d python-application
-docker-compose up -d dotnet-application
-docker-compose up -d nodejs-application
+docker-compose up -d --build go-application
+docker-compose up -d --build python-application
+docker-compose up -d --build dotnet-application
+docker-compose up -d --build nodejs-application
 ```
 
 ## Generate some requests by opening the application in the browser

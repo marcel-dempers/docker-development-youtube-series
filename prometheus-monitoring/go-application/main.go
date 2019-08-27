@@ -20,11 +20,11 @@ func main() {
 
 	fmt.Println("starting...")
 
-        requestDuration := prometheus.NewHistogramVec(prometheus.HistogramOpts{
-        	Name:    "go_request_duration_seconds",
-	        Help:    "Histogram for the duration in seconds.",
-        	Buckets: []float64{1, 2, 5, 6, 10},
-        },
+	requestDuration := prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "go_request_duration_seconds",
+		Help:    "Histogram for the duration in seconds.",
+		Buckets: []float64{1, 2, 5, 6, 10},
+	},
 	[]string{"endpoint"},
 	)
 

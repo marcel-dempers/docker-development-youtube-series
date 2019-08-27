@@ -19,16 +19,15 @@ namespace work.Pages
             sw.Stop();
             ProcessedJobCount.Inc();
             var histogram =
-            Metrics
-                .CreateHistogram(
+            Metrics.CreateHistogram(
                     "dotnet_request_duration_seconds",
                     "Histogram for the duration in seconds.",
-                    new[] { 0.02, 0.05, 0.1, 0.15, 0.2, 0.5, 0.8, 1 },
-                    "GET",
-                    "/");
+                    new HistogramConfiguration
+                    {
+                        Buckets = Histogram.LinearBuckets(start: 1, width: 1, count: 5)
+                    });
 
-        histogram
-            .Observe(sw.Elapsed.TotalSeconds);
+            histogram.Observe(sw.Elapsed.TotalSeconds);
 
         }
     }
