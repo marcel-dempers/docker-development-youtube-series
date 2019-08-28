@@ -9,24 +9,24 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-var (
-	requestsProcessed = promauto.NewCounter(prometheus.CounterOpts{
-			Name: "go_request_operations_total",
-			Help: "The total number of processed requests",
+
+var	requestsProcessed = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "go_request_operations_total",
+		Help: "The total number of processed requests",
 	})
+
+
+var requestDuration = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+	Name:    "go_request_duration_seconds",
+	Help:    "Histogram for the duration in seconds.",
+	Buckets: []float64{1, 2, 5, 6, 10},
+	}	,
+	[]string{"endpoint"},
 )
 
 func main() {
 
 	fmt.Println("starting...")
-
-	requestDuration := prometheus.NewHistogramVec(prometheus.HistogramOpts{
-		Name:    "go_request_duration_seconds",
-		Help:    "Histogram for the duration in seconds.",
-		Buckets: []float64{1, 2, 5, 6, 10},
-	},
-	[]string{"endpoint"},
-	)
 
 	prometheus.MustRegister(requestDuration)
 
