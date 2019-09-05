@@ -8,9 +8,4 @@ RUN npm install
 
 COPY ./src/ /work/
 
-
-###########START NEW IMAGE###################
-
-FROM dev as prod
-
 CMD node .
