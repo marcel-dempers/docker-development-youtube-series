@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deploy
+  labels:
+    app: example-app
+  annotations:
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      imagePullSecrets:
+      - name: "docker-registry"
+      containers:
+      - name: example-app
+        image: aimvector/example-app
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

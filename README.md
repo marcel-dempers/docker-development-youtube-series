@@ -33,5 +33,14 @@ Let's take a look how to monitor application code using Prometheus.
 
 See the [Prometheus Monitoring](./prometheus-monitoring/readme.md) readme guide for detailed steps
 
+## Kubernetes Development Basics
+
+See the [Kubernetes Guide](./kubernetes/readme.md) readme guide for detailed steps
+
+Part #1                     Kubernetes Getting Started on Windows <br/>
+Video:                      https://youtu.be/8h4FoWK7tIA <br/>
+
+Part #2                     Kubernetes kubectl | the basics <br/>
+Video:                      https://youtu.be/feLpGydQVio <br/>   
 
 More details coming soon!
