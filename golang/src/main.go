@@ -11,12 +11,17 @@ import (
 func Response(ctx *fasthttp.RequestCtx) {
 	fmt.Fprintf(ctx, "Hello") 
 }
+
+func Status(ctx *fasthttp.RequestCtx) {
+	fmt.Fprintf(ctx, "ok") 
+}
 func main() {
     
 	fmt.Println("starting...")
 
 	router := fasthttprouter.New()
 	router.GET("/", Response)
+	router.GET("/status", Status)
 	
 	log.Fatal(fasthttp.ListenAndServe(":5000", router.Handler))
 }

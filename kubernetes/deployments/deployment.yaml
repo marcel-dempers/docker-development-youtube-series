@@ -12,18 +12,16 @@ spec:
       labels:
         app: example-app
     spec:
-      imagePullSecrets:
-      - name: "docker-registry"
       containers:
       - name: example-app
-        image: aimvector/example-app
+        image: aimvector/golang:1.0.0
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: 5000
           initialDelaySeconds: 3
           periodSeconds: 3
         resources:

@@ -15,7 +15,7 @@ services:
     image: aimvector/golang:1.0.0
     build: 
       context: ./golang
-      target: debug
+      target: prod
     volumes:
     - ./golang/src/:/go/src/work/
     ports:

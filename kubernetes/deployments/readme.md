@@ -24,3 +24,5 @@ docker-compose build nodejs
 docker-compose build python
 
 ```
+
+Take a look at example [deployment yaml](./deployment.yaml)
