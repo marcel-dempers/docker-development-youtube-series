@@ -31,3 +31,10 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "500m"
+         volumeMouts:
+         -  name: config-volume
+            mountPath: /configs/
+       volumes:
+         - name: config-volume
+           configMap:
+             name: example-config #name of our configmap object

@@ -10,13 +10,14 @@ services:
     - ./c#/src/:/work/
     ports:
       - 5000:5000
-  golang: #docker run -it -v ${PWD}:/go/src/work -p 5001:5000 -p 2345:2345 --security-opt "seccomp:unconfined" aimvector/golang:1.0.0
+  golang: #docker run -it -v ${PWD}:/go/src/work -v ${PWD}/golang/configs/:/configs -p 5001:5000 -p 2345:2345 --security-opt "seccomp:unconfined" aimvector/golang:1.0.0
     container_name: golang
     image: aimvector/golang:1.0.0
     build: 
       context: ./golang
       target: prod
     volumes:
+    - ./golang/configs:/configs/
     - ./golang/src/:/go/src/work/
     ports:
       - 5001:5000
