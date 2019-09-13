@@ -11,6 +11,7 @@ import (
 )
 
 var configuration []byte
+var secret []byte
 
 func Response(ctx *fasthttp.RequestCtx) {
 	fmt.Fprintf(ctx, "Hello") 
@@ -32,10 +33,23 @@ func ReadConfig(){
 
 }
 
+func ReadSecret(){
+	fmt.Println("reading secret...")
+	s, e := ioutil.ReadFile("/secrets/secret.json")
+	if e != nil {
+		fmt.Printf("Error reading secret file: %v\n", e)
+		os.Exit(1)
+	}
+	secret = s
+	fmt.Println("secret loaded!")
+
+}
+
 func main() {
     
 	fmt.Println("starting...")
 	ReadConfig()
+	ReadSecret()
 	router := fasthttprouter.New()
 	router.GET("/", Response)
 	router.GET("/status", Status)
