@@ -27,6 +27,11 @@ Part #5:                   Debugging .NET Core code in Docker <br/>
 Video:                     https://youtu.be/ds2bud0ZYTY  <br/>
 Source code for Part #5    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part5
 
+Part #6:                   Debugging Python code in Docker using VSCode <br/>
+Video:                     https://youtu.be/b78Tg-YmJZI  <br/>
+Source code for Part #6    https://github.com/marcel-dempers/docker-development-youtube-series/tree/debugging-python
+
+
 ## Prometheus Monitoring
 
 Let's take a look how to monitor application code using Prometheus.
