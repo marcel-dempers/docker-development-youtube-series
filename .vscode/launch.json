@@ -32,6 +32,20 @@
             "args": [],
             "trace" : "verbose",
             "env" : {}
-        }
+        },
+        {
+            "name": "Python Attach",
+            "type": "python",
+            "request": "attach",
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/python/src/",
+                    "remoteRoot": "/work"
+                }
+            ],
+            "port": 5678,
+            "host": "127.0.0.1"
+        },
+        
     ]
 }

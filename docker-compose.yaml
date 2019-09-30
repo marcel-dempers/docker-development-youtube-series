@@ -44,7 +44,7 @@ services:
     image: aimvector/python:1.0.0
     build:
       context: ./python
-      target: prod
+      target: debug
     #working_dir: /work      #comment out for build.target:prod
     #entrypoint: /bin/sh     #comment out for build.target:prod
     #stdin_open: true        #comment out for build.target:prod
@@ -53,3 +53,4 @@ services:
     - ./python/src/:/work
     ports:
       - 5003:5000
+      - 5678:5678
