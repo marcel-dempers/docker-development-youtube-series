@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test2
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/marcel-dempers/docker-development-youtube-series.git
+    targetRevision: HEAD
+    path: argo/example-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: test
