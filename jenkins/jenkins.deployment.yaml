@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+  labels:
+    name: jenkins
+    app: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+        name: jenkins
+      name: jenkins
+    spec:
+      serviceAccountName: jenkins
+      containers:
+      - env:
+        - name: JAVA_OPTS
+          value: -Xmx2048m -Dhudson.slaves.NodeProvisioner.MARGIN=50 -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
+        image: jenkins/jenkins #:lts-alpine 
+        imagePullPolicy: IfNotPresent
+        name: jenkins
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 50000
+          protocol: TCP
+        # resources:
+        #   limits:
+        #     cpu: "1"
+        #     memory: 1Gi
+        #   requests:
+        #     cpu: "1"
+        #     memory: 1Gi
+        volumeMounts:
+        - mountPath: /var/jenkins_home
+          name: jenkins
+      restartPolicy: Always
+      securityContext:
+        #fsGroup: 1000
+        runAsUser: 0
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: jenkins
+        persistentVolumeClaim:
+          claimName: jenkins-claim
