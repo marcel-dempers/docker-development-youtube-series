@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-app
+  template:
+    metadata:
+      labels:
+        app: grafana-app
+    spec:
+      volumes:
+      - name: grafana-datasource-provisioning
+        configMap:
+          name: grafana-datasource-provisioning
+      - name: grafana-dashboard-provisioning
+        configMap:
+          name: grafana-dashboard-provisioning
+      - name: grafana-dashboard-node-rsrc-use
+        configMap:
+          name: grafana-dashboard-node-rsrc-use
+      - name: grafana-dashboard-node-cluster-rsrc-use
+        configMap:
+          name: grafana-dashboard-node-cluster-rsrc-use
+      - name: grafana-dashboard-k8s-resources-cluster
+        configMap:
+          name: grafana-dashboard-k8s-resources-cluster
+      - name: grafana-dashboard-k8s-resources-namespace
+        configMap:
+          name: grafana-dashboard-k8s-resources-namespace
+      - name : grafana-dashboard-k8s-resources-pod
+        configMap:
+          name: grafana-dashboard-k8s-resources-pod
+      - name: grafana-dashboard-k8s-resources-workload
+        configMap:
+          name: grafana-dashboard-k8s-resources-workload
+      - name: grafana-dashboard-k8s-resources-workloads-namespace
+        configMap:
+          name: grafana-dashboard-k8s-resources-workloads-namespace
+      - name: grafana-dashboard-kubelet
+        configMap:
+          name: grafana-dashboard-kubelet
+      - name: grafana-dashboard-nodes
+        configMap:
+          name: grafana-dashboard-nodes
+      - name: grafana-dashboard-pods
+        configMap:
+          name: grafana-dashboard-pods
+      containers:
+      - name: grafana-app
+        image: grafana/grafana:6.4.3
+        ports:
+        - name: web
+          containerPort: 3000
+        volumeMounts:
+        - name: grafana-datasource-provisioning
+          mountPath: /etc/grafana/provisioning/datasources/
+
+        - name: grafana-dashboard-provisioning
+          mountPath: /etc/grafana/provisioning/dashboards/
+
+        - name: grafana-dashboard-node-rsrc-use
+          mountPath: /var/lib/grafana/dashboards/kubernetes/node-rsrc-use.json
+          subPath: node-rsrc-use.json
+
+        - name: grafana-dashboard-node-cluster-rsrc-use
+          mountPath: /var/lib/grafana/dashboards/kubernetes/node-cluster-rsrc-use.json
+          subPath: node-cluster-rsrc-use.json
+
+        - name: grafana-dashboard-k8s-resources-cluster
+          mountPath: /var/lib/grafana/dashboards/kubernetes/k8s-resources-cluster.json
+          subPath: k8s-resources-cluster.json
+
+        - name: grafana-dashboard-k8s-resources-namespace
+          mountPath: /var/lib/grafana/dashboards/kubernetes/k8s-resources-namespace.json
+          subPath: k8s-resources-namespace.json
+
+        - name: grafana-dashboard-k8s-resources-pod
+          mountPath: /var/lib/grafana/dashboards/kubernetes/k8s-resources-pod.json
+          subPath: k8s-resources-pod.json
+
+        - name: grafana-dashboard-k8s-resources-workload
+          mountPath: /var/lib/grafana/dashboards/kubernetes/k8s-resources-workload.json
+          subPath: k8s-resources-workload.json
+
+        - name: grafana-dashboard-k8s-resources-workloads-namespace
+          mountPath: /var/lib/grafana/dashboards/kubernetes/k8s-resources-workloads-namespace.json
+          subPath: k8s-resources-workloads-namespace.json
+
+        - name: grafana-dashboard-kubelet
+          mountPath: /var/lib/grafana/dashboards/kubernetes/kubelet.json
+          subPath: kubelet.json
+
+        - name: grafana-dashboard-nodes
+          mountPath: /var/lib/grafana/dashboards/kubernetes/nodes.json
+          subPath: nodes.json
+        - name: grafana-dashboard-pods
+          mountPath: /var/lib/grafana/dashboards/kubernetes/pods.json
+          subPath: pods.json
