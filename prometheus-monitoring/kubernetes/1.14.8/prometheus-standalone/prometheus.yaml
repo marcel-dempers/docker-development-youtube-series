@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-standalone
+  labels:
+    prometheus: k8s
+spec:
+  externalLabels:
+    cluster: docker-desktop
+  replicas: 1
+  version: v2.13.1
+  serviceAccountName: prometheus-standalone
+  serviceMonitorSelector:
+    matchExpressions:
+    - key: k8s-app
+      operator: In
+      values:
+      - apps
+  #     - kube-state-metrics
+  #     - apiserver
+  #     - kubelet
+  # ruleSelector:
+  #   matchLabels:
+  #     role: alert-rules
+  #     prometheus: k8s
+  # resources:
+  #   requests:
+  #     memory: 400Mi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-standalone
