@@ -46,3 +46,7 @@ Request duration
 ```
 rate(go_request_duration_seconds_sum[2m]) / rate(go_request_duration_seconds_total[2m])
 ```
+
+# Prometheus Guide on Kubernetes
+
+Checkout the prometheus guide [here](./kubernetes/readme.md)
