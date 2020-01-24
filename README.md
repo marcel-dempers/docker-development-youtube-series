@@ -34,6 +34,7 @@ Source code for Part #6    https://github.com/marcel-dempers/docker-development-
 
 ## Prometheus Monitoring
 
+Application and Server monitoring <br/>
 Let's take a look how to monitor application code using Prometheus.
 
 See the [Prometheus Monitoring](./prometheus-monitoring/readme.md) readme guide for detailed steps
@@ -47,5 +48,21 @@ Video:                      https://youtu.be/8h4FoWK7tIA <br/>
 
 Part #2                     Kubernetes kubectl | the basics <br/>
 Video:                      https://youtu.be/feLpGydQVio <br/>   
+
+Part #3                     Kubernetes deployments | the basics <br/>
+Video:                      https://youtu.be/DMpEZEakYVc <br/>  
+
+Part #4                     Kubernetes config management | the basics <br/>
+Video:                      https://youtu.be/o-gXx7r7Rz4 <br/>  
+
+Part #5                     Kubernetes secrets | the basics <br/>
+Video:                      https://youtu.be/o36yTfGDmZ0 <br/>
+
+Part #6                     Kubernetes load balancing and services | the basics <br/>
+Video:                      https://youtu.be/xhva6DeKqVU <br/>  
+
+Part #7                     Kubernetes ingress | the basics <br/>
+Video:                      https://youtu.be/izWCkcJAzBw <br/>  
+
 
 More details coming soon!
