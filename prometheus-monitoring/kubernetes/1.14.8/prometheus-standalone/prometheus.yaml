@@ -16,16 +16,6 @@ spec:
       operator: In
       values:
       - apps
-  #     - kube-state-metrics
-  #     - apiserver
-  #     - kubelet
-  # ruleSelector:
-  #   matchLabels:
-  #     role: alert-rules
-  #     prometheus: k8s
-  # resources:
-  #   requests:
-  #     memory: 400Mi
 ---
 apiVersion: v1
 kind: ServiceAccount

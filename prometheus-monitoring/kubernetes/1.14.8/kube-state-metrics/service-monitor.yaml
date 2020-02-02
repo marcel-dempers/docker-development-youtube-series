@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kube-state-metrics
+  labels:
+    prometheus: cluster-monitoring
+    k8s-app: kube-state-metrics
+spec:
+  targetLabels:
+  - cluster
+  jobLabel: kube-state-metrics
+  selector:
+    matchLabels:
+      k8s-app: kube-state-metrics
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  endpoints:
+  - port: http-metrics
+    honorLabels: true
+    scheme: http
+    interval: 60s
