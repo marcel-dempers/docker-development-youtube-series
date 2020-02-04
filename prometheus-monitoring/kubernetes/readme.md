@@ -26,4 +26,10 @@ Video : [here](https://youtu.be/LQpmeb7idt8) <br/>
 Source Code tested on K8s version 1.14.8 <br/>
 Source: [here](https://github.com/marcel-dempers/docker-development-youtube-series/releases/tag/prometheus-operator-1)<br/>
 
+## Node Exporter guide
+
+Video : [here](https://youtu.be/1-tRiThpFrY) <br/>
+Source Code tested on K8s version 1.14.8 <br/>
+Source: [here](https://github.com/marcel-dempers/docker-development-youtube-series/releases/tag/prometheus-node-exporter-1)<br/>
+
 More coming soon!
