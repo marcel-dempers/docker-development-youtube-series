@@ -1,39 +1,75 @@
+# apiVersion: v1
+# items:
+# - apiVersion: v1
+#   kind: ConfigMap
+#   metadata:
+#     name: grafana-dashboard-provisioning
+#     namespace: monitoring
+#   data:
+#     dashboard.yaml: |-
+#       apiVersion: 1
+#       providers:
+#       - name: 'kubernetes'
+#         orgId: 1
+#         # <string, required> name of the dashboard folder. Required
+#         folder: 'kubernetes'
+#         type: file
+#         disableDeletion: true
+#         editable: true
+#         # <int> how often Grafana will scan for changed dashboards
+#         updateIntervalSeconds: 30
+#         options:
+#           path: /var/lib/grafana/dashboards
+# - apiVersion: v1
+#   kind: ConfigMap
+#   metadata:
+#     name: grafana-datasource-provisioning
+#     namespace: monitoring
+#   data:
+#     datasources.yaml: |-
+#       apiVersion: 1
+#       datasources:
+#       - name: prometheus
+#         orgId: 1
+#         type: prometheus 
+#         url: http://prometheus-service:9090
+#         isDefault: true
+#         access: proxy
+#         editable: true
+# kind: ConfigMapList
 apiVersion: v1
-items:
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: grafana-dashboard-provisioning
-    namespace: monitoring
-  data:
-    dashboard.yaml: |-
-      apiVersion: 1
-      providers:
-      - name: 'kubernetes'
-        orgId: 1
-        # <string, required> name of the dashboard folder. Required
-        folder: 'kubernetes'
-        type: file
-        disableDeletion: true
-        editable: true
-        # <int> how often Grafana will scan for changed dashboards
-        updateIntervalSeconds: 30
-        options:
-          path: /var/lib/grafana/dashboards
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: grafana-datasource-provisioning
-    namespace: monitoring
-  data:
-    datasources.yaml: |-
-      apiVersion: 1
-      datasources:
-      - name: prometheus
-        orgId: 1
-        type: prometheus 
-        url: http://prometheus-service:9090
-        isDefault: true
-        access: proxy
-        editable: true
-kind: ConfigMapList
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+data:
+  datasources.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: prometheus
+      orgId: 1
+      type: prometheus 
+      url: http://prometheus-service:9090
+      isDefault: true
+      access: proxy
+      editable: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+data:
+  dashboards.yaml: |-
+    {
+        "apiVersion": 1,
+        "providers": [
+            {
+                "folder": "",
+                "name": "0",
+                "options": {
+                    "path": "/grafana-dashboard-definitions/0"
+                },
+                "orgId": 1,
+                "type": "file"
+            }
+        ]
+    }

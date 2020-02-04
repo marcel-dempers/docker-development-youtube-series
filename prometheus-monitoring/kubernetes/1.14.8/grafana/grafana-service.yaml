@@ -1,12 +1,13 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: grafana-app
   labels:
-    app: grafana-app
+    app: grafana
+  name: grafana
 spec:
-  selector:
-    app: grafana-app
   ports:
-  - name: web
+  - name: http
     port: 3000
+    targetPort: http
+  selector:
+    app: grafana
