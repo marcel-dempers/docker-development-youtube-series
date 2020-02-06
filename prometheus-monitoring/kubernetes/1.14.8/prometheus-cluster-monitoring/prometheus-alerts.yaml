@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: example-rule
+spec:
+  groups:
+  - name: example-rule
+    rules:
+    - alert: example-alert
+      annotations:
+        description: Memory on node {{ $labels.instance }} currently at {{ $value }}% 
+          is under pressure
+        summary: Memory usage is under pressure, system may become unstable.
+      expr: |
+        100 - ((node_memory_MemAvailable_bytes{job="node-exporter"} * 100) / node_memory_MemTotal_bytes{job="node-exporter"}) > 70
+      for: 2m
+      labels:
+        severity: warning
