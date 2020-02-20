@@ -1,0 +1,20 @@
+# Headless service for Vault server DNS entries. This service should only
+# point to Vault servers. For access to an agent, one should assume that
+# the agent is installed locally on the node and the NODE_IP should be used.
+# If the node can't run a Vault agent, then this service can be used to
+# communicate directly to a server agent.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-example-ui
+  labels:
+    app.kubernetes.io/name: vault-example-ui
+spec:
+  selector:
+    app.kubernetes.io/name: vault-example
+    component: server
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8200
