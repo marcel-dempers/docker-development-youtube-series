@@ -40,6 +40,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: vault-claim
+        - name: tls-secret
+          secret:
+            secretName: vault-example-tls-secret
       initContainers:
         - name: setupperms
           image: alpine:latest
@@ -75,14 +78,18 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: VAULT_ADDR
-              value: "http://127.0.0.1:8200"
+              value: "https://127.0.0.1:8200"
             - name: VAULT_API_ADDR
-              value: "http://$(POD_IP):8200"
+              value: "https://$(POD_IP):8200"
             - name: SKIP_CHOWN
               value: "true"
             - name: SKIP_SETCAP
               value: "true"
+            - name: VAULT_CACERT
+              value: "/vault/ssl/ca.pem"
           volumeMounts:
+          - name: tls-secret
+            mountPath: /vault/ssl
           - name: config
             mountPath: /vault/config
           - name: data
@@ -95,23 +102,15 @@ spec:
             - containerPort: 8202
               name: replication
           readinessProbe:
-            # Check status; unsealed vault servers return 0
-            # The exit code reflects the seal status:
-            #   0 - unsealed
-            #   1 - error
-            #   2 - sealed
-            exec:
-              command: ["/bin/sh", "-ec", "vault status -tls-skip-verify"]
-            failureThreshold: 2
-            initialDelaySeconds: 5
-            periodSeconds: 3
-            successThreshold: 1
-            timeoutSeconds: 5
+            httpGet:
+              path: "/v1/sys/health?standbyok=true"
+              port: 8200
+              scheme: HTTPS
           livenessProbe:
             httpGet:
               path: "/v1/sys/health?standbyok=true"
               port: 8200
-              scheme: HTTP
+              scheme: HTTPS
             initialDelaySeconds: 60
             periodSeconds: 3
             successThreshold: 1

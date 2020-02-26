@@ -9,8 +9,10 @@ data:
     disable_mlock = true
     ui = true
     listener "tcp" {
-      tls_disable = 1
-      address = "[::]:8200"
+      address = "0.0.0.0:8200"
+      tls_cert_file = "/vault/ssl/vault-example.pem"
+      tls_key_file = "/vault/ssl/vault-example-key.pem"
+      tls_min_version = "tls12"
       cluster_address = "[::]:8201"
     }
     storage "file" {
