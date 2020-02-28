@@ -25,5 +25,8 @@ cat vault-example.pem | base64 | tr -d '\n'
 cat vault-example-key.pem | base64 | tr -d '\n'
 
 #TEST
+vault operator init #grab keys
+vault operator unseal #unseal 3 times
+
 vault login
 vault kv put cubbyhole/hello foo=world
