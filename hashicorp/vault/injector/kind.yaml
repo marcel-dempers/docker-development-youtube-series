@@ -1,0 +1,4 @@
+
+# #https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/
+
+#kind create cluster --name vault --image kindest/node:v1.17.0@sha256:9512edae126da271b66b990b6fff768fbb7cd786c7d39e86bdf55906352fdf62 --config kind.yaml
