@@ -15,7 +15,7 @@ cfssl gencert \
   -ca=ca.pem \
   -ca-key=ca-key.pem \
   -config=ca-config.json \
-  -hostname="vault-example,vault-example.vault-example.svc.cluster.local,localhost,127.0.0.1" \
+  -hostname="vault-example,vault-example.vault-example.svc.cluster.local,vault-example.vault-example.svc,localhost,127.0.0.1" \
   -profile=default \
   vault-csr.json | cfssljson -bare vault-example
 

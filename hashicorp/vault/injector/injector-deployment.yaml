@@ -32,7 +32,7 @@ spec:
             - name: AGENT_INJECT_LOG_LEVEL
               value: "info"
             - name: AGENT_INJECT_VAULT_ADDR
-              value: https://vault-example:8200
+              value: https://vault-example.vault-example.svc:8200
             - name: AGENT_INJECT_VAULT_IMAGE
               value: "vault:1.3.1"
             - name: AGENT_INJECT_TLS_AUTO
