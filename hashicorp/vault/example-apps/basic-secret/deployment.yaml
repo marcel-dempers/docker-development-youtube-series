@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: basic-secret
   labels:
-    app: vault-agent-demo
+    app: basic-secret
 spec:
   selector:
     matchLabels:
-      app: vault-agent-demo
+      app: basic-secret
   replicas: 1
   template:
     metadata:
       annotations:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/tls-skip-verify: "true"
-        vault.hashicorp.com/agent-inject-secret-helloworld: "secret/helloworld"
+        vault.hashicorp.com/agent-inject-secret-helloworld: "secret/basic-secret/helloworld"
         vault.hashicorp.com/agent-inject-template-helloworld: |
-          {{- with secret "secret/helloworld" -}}
+          {{- with secret "secret/basic-secret/helloworld" -}}
           {
             "username" : "{{ .Data.username }}",
             "password" : "{{ .Data.password }}"
           }
           {{- end }}
-        vault.hashicorp.com/role: "myapp"
+        vault.hashicorp.com/role: "basic-secret-role"
       labels:
-        app: vault-agent-demo
+        app: basic-secret
     spec:
-      serviceAccountName: app
+      serviceAccountName: basic-secret
       containers:
       - name: app
         image: jweissig/app:0.0.1
@@ -36,4 +36,4 @@ kind: ServiceAccount
 metadata:
   name: app
   labels:
-    app: vault-agent-demo
+    app: basic-secret
