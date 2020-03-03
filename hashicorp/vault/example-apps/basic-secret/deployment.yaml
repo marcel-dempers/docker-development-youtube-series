@@ -34,6 +34,6 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: app
+  name: basic-secret
   labels:
     app: basic-secret

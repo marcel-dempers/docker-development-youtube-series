@@ -39,3 +39,9 @@ vault secrets enable -path=secret/ kv
 vault kv put secret/basic-secret/helloworld username=dbuser password=sUp3rS3cUr3P@ssw0rd
 exit
 ```
+
+Lets deploy our app and see if it works:
+
+```
+kubectl -n vault-example apply -f ./hashicorp/vault/example-apps/basic-secret/deployment.yaml
+```

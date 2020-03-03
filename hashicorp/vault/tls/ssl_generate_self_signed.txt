@@ -24,6 +24,20 @@ cat ca.pem | base64 | tr -d '\n'
 cat vault-example.pem | base64 | tr -d '\n'
 cat vault-example-key.pem | base64 | tr -d '\n'
 
+#linux - make the secret automatically
+cat <<EOF > ./server-tls-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-example-tls-secret
+type: Opaque
+data:
+  vault-example.pem: $(cat vault-example.pem | base64 | tr -d '\n')
+  vault-example-key.pem: $(cat vault-example-key.pem | base64 | tr -d '\n') 
+  ca.pem: $(cat ca.pem | base64 | tr -d '\n')
+EOF
+
+
 #TEST
 vault operator init #grab keys
 vault operator unseal #unseal 3 times

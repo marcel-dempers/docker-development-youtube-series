@@ -2,3 +2,5 @@ c#/src/bin/
 c#/src/obj/
 node_modules/
 __pycache__/
+*.pem
+*.csr
