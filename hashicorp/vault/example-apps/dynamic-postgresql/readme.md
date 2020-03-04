@@ -1,68 +1,79 @@
 # Dynamic Secret Creation [PostgreSQL]
 
+Deploy our test database
 
+
+```
+kubectl create ns postgres
+kubectl -n postgres apply -f ./hashicorp/vault/example-apps/dynamic-postgresql/postgres.yaml
+kubectl -n postgres get pods
+
+kubectl -n postgres exec -it <podname> bash
+psql --username=postgresadmin postgresdb
+```
+
+```
 Enable the database engine
 
 ```
 kubectl -n vault-example exec -it vault-example-0 vault login
 kubectl -n vault-example exec -it vault-example-0 vault secrets enable database
+```
 
-#map connection details to a role
-kubectl -n vault-example exec -it vault-example-0 vault write database/config/my-postgresql-database \
+## Configure DB Credential creation
+
+```
+kubectl -n vault-example exec -it vault-example-0 sh 
+
+vault write database/config/postgresdb \
     plugin_name=postgresql-database-plugin \
-    allowed_roles="my-role" \
-    connection_url="postgresql://{{username}}:{{password}}@localhost:5432/" \
-    username="root" \
-    password="root"
+    allowed_roles="sql-role" \
+    connection_url="postgresql://{{username}}:{{password}}@postgres.postgres:5432/postgresdb?sslmode=disable" \
+    username="postgresadmin" \
+    password="admin123"
 
-#create the role
-kubectl -n vault-example exec -it vault-example-0  vault write database/roles/my-role \
-    db_name=my-postgresql-database \
+ vault write database/roles/sql-role \
+    db_name=postgresdb \
     creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
         GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
     default_ttl="1h" \
     max_ttl="24h"
 
-```
+#test 
+vault read database/creds/sql-role
 
 ```
-#Create a role for our app
 
-kubectl -n vault-example exec -it vault-example-0 vault write auth/kubernetes/role/basic-secret-role \
-   bound_service_account_names=basic-secret \
-   bound_service_account_namespaces=vault-example \
-   policies=basic-secret-policy \
-   ttl=1h
+## Example Application
+
+Create a policy to control access to secrets
+
+```
+kubectl -n vault-example exec -it vault-example-0 sh
+
+cat <<EOF > /home/vault/postgres-app-policy.hcl
+path "database/creds/sql-role" {
+  capabilities = ["read"]
+}
+EOF
+
+vault policy write postgres-app-policy /home/vault/postgres-app-policy.hcl
+
 ```
 
-The above maps our Kubernetes service account, used by our pod, to a policy.
-Now lets create the policy to map our service account to a bunch of secrets
+
+Bind our role to a service account for our application
 
 
 ```
 kubectl -n vault-example exec -it vault-example-0 sh
-cat <<EOF > /home/vault/app-policy.hcl
-path "secret/basic-secret/*" {
-  capabilities = ["read"]
-}
-EOF
-vault policy write basic-secret-policy /home/vault/app-policy.hcl
-exit
-```
 
-Now our service account for our pod can access all secrets under `secret/basic-secret/*`
-Lets create some secrets.
-
+vault write auth/kubernetes/role/sql-role \
+   bound_service_account_names=dynamic-postgres \
+   bound_service_account_namespaces=vault-example \
+   policies=postgres-app-policy \
+   ttl=1h
 
 ```
-kubectl -n vault-example exec -it vault-example-0 sh 
-vault secrets enable -path=secret/ kv
-vault kv put secret/basic-secret/helloworld username=dbuser password=sUp3rS3cUr3P@ssw0rd
-exit
-```
 
-Lets deploy our app and see if it works:
-
-```
-kubectl -n vault-example apply -f ./hashicorp/vault/example-apps/basic-secret/deployment.yaml
-```
+kubectl -n vault-example apply -f .\hashicorp\vault\example-apps\dynamic-postgresql\deployment.yaml

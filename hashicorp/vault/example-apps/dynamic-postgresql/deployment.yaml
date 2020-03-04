@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamic-postgres
+  labels:
+    app: dynamic-postgres
+spec:
+  selector:
+    matchLabels:
+      app: dynamic-postgres
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/tls-skip-verify: "true"
+        vault.hashicorp.com/agent-inject-secret-sql-role: "database/creds/sql-role"
+        vault.hashicorp.com/agent-inject-template-sql-role: |
+          {
+          {{- with secret "database/creds/sql-role" -}}
+            "db_connection": "host=postgres.postgress port=5432 user={{ .Data.username }} password={{ .Data.password }} dbname=postgresdb sslmode=disable"
+          {{- end }}
+          }
+        vault.hashicorp.com/role: "sql-role"
+      labels:
+        app: dynamic-postgres
+    spec:
+      serviceAccountName: dynamic-postgres
+      containers:
+      - name: app
+        image: jweissig/app:0.0.1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dynamic-postgres
+  labels:
+    app: dynamic-postgres

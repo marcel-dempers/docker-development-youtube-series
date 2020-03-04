@@ -8,6 +8,7 @@ It's critical because we'll need certain [admission controllers](https://kuberne
 To get 1.17 for Linux\Windows, just use `kind` since you can create a 1.17 with admissions all setup.
 
 ```
+#Windows
 kind create cluster --name vault --image kindest/node:v1.17.0@sha256:9512edae126da271b66b990b6fff768fbb7cd786c7d39e86bdf55906352fdf62
 
 #Linux
@@ -27,6 +28,7 @@ Remember not to check-in your TLS to GIT :)
 ```
 kubectl create ns vault-example
 kubectl -n vault-example apply -f ./hashicorp/vault/server/
+kubectl -n vault-example get pods
 ```
 
 ## Storage
@@ -44,6 +46,7 @@ if you need to change the storage class, deleve the pvc , edit YAML and re-apply
 kubectl -n vault-example exec -it vault-example-0 vault operator init
 #unseal 3 times
 kubectl -n vault-example exec -it vault-example-0 vault operator unseal
+kubectl -n vault-example get pods
 ```
 
 ## Depploy the Injector
@@ -53,7 +56,8 @@ VIDEO: <Coming-Soon>
 Injector allows pods to automatically get secrets from the vault.
 
 ```
-kubectl -n vault-example apply -f ./hashicorp/vault/injector\
+kubectl -n vault-example apply -f ./hashicorp/vault/injector/
+kubectl -n vault-example get pods
 ```
 
 ## Injector Kubernetes Auth Policy
@@ -70,6 +74,9 @@ vault write auth/kubernetes/config \
 token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
 kubernetes_host=https://${KUBERNETES_PORT_443_TCP_ADDR}:443 \
 kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+exit
+
+kubectl -n vault-example get pods
 
 ```
 
@@ -91,7 +98,7 @@ Objective:
 * Let's create a basic secret in vault manually
 * Application consumes the secret automatically
 
-[Try it](./vault/example-apps/basic-secret/readme.md)
+[Try it](./example-apps/basic-secret/readme.md)
 
 
 

@@ -7,7 +7,9 @@ In order for us to start using secrets in vault, we need to setup a policy.
 ```
 #Create a role for our app
 
-kubectl -n vault-example exec -it vault-example-0 vault write auth/kubernetes/role/basic-secret-role \
+kubectl -n vault-example exec -it vault-example-0 sh 
+
+vault write auth/kubernetes/role/basic-secret-role \
    bound_service_account_names=basic-secret \
    bound_service_account_namespaces=vault-example \
    policies=basic-secret-policy \
@@ -44,4 +46,5 @@ Lets deploy our app and see if it works:
 
 ```
 kubectl -n vault-example apply -f ./hashicorp/vault/example-apps/basic-secret/deployment.yaml
+kubectl -n vault-example get pods
 ```
