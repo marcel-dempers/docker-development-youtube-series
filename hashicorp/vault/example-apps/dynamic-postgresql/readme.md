@@ -6,6 +6,7 @@ Deploy our test database
 ```
 kubectl create ns postgres
 kubectl -n postgres apply -f ./hashicorp/vault/example-apps/dynamic-postgresql/postgres.yaml
+kubectl -n postgres apply -f ./hashicorp/vault/example-apps/dynamic-postgresql/pgadmin.yaml
 kubectl -n postgres get pods
 
 kubectl -n postgres exec -it <podname> bash
