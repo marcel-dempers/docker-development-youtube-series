@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vault-example
+  labels:
+    app.kubernetes.io/name: vault-example
+spec:
+  serviceName: vault-example
+  podManagementPolicy: Parallel
+  replicas: 1
+  updateStrategy:
+    type: "OnDelete"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vault-example
+      component: server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vault-example
+        component: server
+    spec:
+      affinity:  
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: vault-example
+                  component: server
+              topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: vault-example      
+      shareProcessNamespace: true
+      securityContext:
+        fsGroup: 1000
+      volumes:
+        - name: config
+          configMap:
+            name: vault-example-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: vault-claim
+        - name: tls-secret
+          secret:
+            secretName: vault-example-tls-secret
+      initContainers:
+        - name: setupperms
+          image: alpine:latest
+          command: ['sh', '-c', 'echo The app is running! && chown 100 /vault/data && ls -l /vault/']
+          volumeMounts:
+          - name: data
+            mountPath: /vault/data
+      containers:
+        - name: vault
+          securityContext:
+            runAsNonRoot: true
+            runAsGroup: 1000
+            runAsUser: 100
+            capabilities:
+              add: ["IPC_LOCK"]
+          image: vault:1.3.1
+          imagePullPolicy: IfNotPresent
+          command:
+          - "/bin/sh"
+          - "-ec"
+          args:
+          - |
+            sed -E "s/HOST_IP/${HOST_IP?}/g" /vault/config/extraconfig-from-values.hcl > /tmp/storageconfig.hcl;
+            sed -Ei "s/POD_IP/${POD_IP?}/g" /tmp/storageconfig.hcl;
+            /usr/local/bin/docker-entrypoint.sh vault server -config=/tmp/storageconfig.hcl
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: VAULT_ADDR
+              value: "https://127.0.0.1:8200"
+            - name: VAULT_API_ADDR
+              value: "https://$(POD_IP):8200"
+            - name: SKIP_CHOWN
+              value: "true"
+            - name: SKIP_SETCAP
+              value: "true"
+            - name: VAULT_CACERT
+              value: "/vault/ssl/ca.pem"
+          volumeMounts:
+          - name: tls-secret
+            mountPath: /vault/ssl
+          - name: config
+            mountPath: /vault/config
+          - name: data
+            mountPath: /vault/data
+          ports:
+            - containerPort: 8200
+              name: http
+            - containerPort: 8201
+              name: internal
+            - containerPort: 8202
+              name: replication
+          readinessProbe:
+            httpGet:
+              path: "/v1/sys/health?standbyok=true"
+              port: 8200
+              scheme: HTTPS
+          livenessProbe:
+            httpGet:
+              path: "/v1/sys/health?standbyok=true"
+              port: 8200
+              scheme: HTTPS
+            initialDelaySeconds: 60
+            periodSeconds: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          lifecycle:
+            # Vault container doesn't receive SIGTERM from Kubernetes
+            # and after the grace period ends, Kube sends SIGKILL.  This
+            # causes issues with graceful shutdowns such as deregistering itself
+            # from Consul (zombie services).
+            preStop:
+              exec:
+                command: [
+                  "/bin/sh", "-c",
+                  # Adding a sleep here to give the pod eviction a
+                  # chance to propagate, so requests will not be made
+                  # to this pod while it's terminating
+                  "sleep 5 && kill -SIGTERM $(pidof vault)",
+                ]
+      

@@ -1,0 +1,46 @@
+
+
+cd ./hashicorp/vault/tls/
+
+docker run -it --rm -v ${PWD}:/work -w /work debian:buster bash
+apt-get update && apt-get install -y curl &&
+curl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/local/bin/cfssl && \
+curl https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/local/bin/cfssljson && \
+chmod +x /usr/local/bin/cfssl && \
+chmod +x /usr/local/bin/cfssljson
+
+#generate certificate
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname="vault-example,vault-example.vault-example.svc.cluster.local,vault-example.vault-example.svc,localhost,127.0.0.1" \
+  -profile=default \
+  vault-csr.json | cfssljson -bare vault-example
+
+#get values to make a secret
+cat ca.pem | base64 | tr -d '\n'
+cat vault-example.pem | base64 | tr -d '\n'
+cat vault-example-key.pem | base64 | tr -d '\n'
+
+#linux - make the secret automatically
+cat <<EOF > ./server-tls-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-example-tls-secret
+type: Opaque
+data:
+  vault-example.pem: $(cat vault-example.pem | base64 | tr -d '\n')
+  vault-example-key.pem: $(cat vault-example-key.pem | base64 | tr -d '\n') 
+  ca.pem: $(cat ca.pem | base64 | tr -d '\n')
+EOF
+
+
+#TEST
+vault operator init #grab keys
+vault operator unseal #unseal 3 times
+
+vault login
+vault kv put cubbyhole/hello foo=world

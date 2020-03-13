@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-example-agent-injector
+  labels:
+    app.kubernetes.io/name: vault-example-agent-injector
+    component: webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vault-example-agent-injector
+      component: webhook
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vault-example-agent-injector
+        component: webhook
+    spec:
+      serviceAccountName: vault-example-agent-injector
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 1000
+        runAsUser: 100
+      containers:
+        - name: sidecar-injector
+          image: "hashicorp/vault-k8s:0.1.2"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: AGENT_INJECT_LISTEN
+              value: ":8080"
+            - name: AGENT_INJECT_LOG_LEVEL
+              value: "info"
+            - name: AGENT_INJECT_VAULT_ADDR
+              value: https://vault-example.vault-example.svc:8200
+            - name: AGENT_INJECT_VAULT_IMAGE
+              value: "vault:1.3.1"
+            - name: AGENT_INJECT_TLS_AUTO
+              value: vault-example-agent-injector-cfg
+            - name: AGENT_INJECT_TLS_AUTO_HOSTS
+              value: vault-example-agent-injector-svc,vault-example-agent-injector-svc.vault-example,vault-example-agent-injector-svc.vault-example.svc
+          args:
+            - agent-inject
+            - 2>&1
+          livenessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTPS
+            failureThreshold: 2
+            initialDelaySeconds: 1
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTPS
+            failureThreshold: 2
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 5
