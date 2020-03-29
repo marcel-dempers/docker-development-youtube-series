@@ -12,7 +12,9 @@ CMD nodemon --inspect=0.0.0.0 server.js
 
 FROM node:12.4.0-alpine as prod
 
+WORKDIR /work/
 COPY ./src/package.json /work/package.json
 RUN npm install
+COPY ./src/ /work/
 
-CMD node server.js
+CMD node .
