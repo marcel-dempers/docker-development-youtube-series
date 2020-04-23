@@ -25,20 +25,6 @@ services:
       - 2345:2345
     security_opt:
       - "seccomp:unconfined"
-  nodejs: #docker run -it -v ${PWD}:/work -w /work -p 5002:5000 aimvector/nodejs:1.0.0 /bin/sh
-    container_name: nodejs
-    image: aimvector/nodejs:1.0.0
-    build:
-      context: ./nodejs
-      target: prod
-    #working_dir: /work      #comment out for build.target:prod
-    #entrypoint: /bin/sh     #comment out for build.target:prod
-    #stdin_open: true        #comment out for build.target:prod
-    #tty: true               #comment out for build.target:prod
-    volumes:
-    - ./nodejs/src/:/work
-    ports:
-      - 5002:5000
   python: #docker run -it -v ${PWD}:/work -w /work -p 5003:5000 aimvector/python:1.0.0 /bin/sh
     container_name: python
     image: aimvector/python:1.0.0
@@ -54,3 +40,19 @@ services:
     ports:
       - 5003:5000
       - 5678:5678
+  nodejs: #docker run -it -v ${PWD}:/work -w /work -p 5002:5000 aimvector/nodejs:1.0.0 /bin/sh
+    container_name: nodejs
+    image: aimvector/nodejs:1.0.0
+    build:
+      context: ./nodejs
+      target: debug
+    #working_dir: /work      #comment out for build.target:prod
+    #entrypoint: /bin/sh     #comment out for build.target:prod
+    #stdin_open: true        #comment out for build.target:prod
+    #tty: true               #comment out for build.target:prod
+    volumes:
+    - ./nodejs/src/:/work/src/
+    ports:
+      - 5002:5000
+      - 9229:9229            #debug port
+
