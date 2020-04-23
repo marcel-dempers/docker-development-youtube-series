@@ -44,11 +44,10 @@
             "host": "127.0.0.1"
         },
         {
-            
             "name": "Docker: Attach to Node",
             "type": "node",
             "request": "attach",
-            "remoteRoot": "/work/",
+            "remoteRoot": "/work/src/",
             "port": 9229,
             "address": "localhost",
             "localRoot": "${workspaceFolder}/nodejs/src/",
