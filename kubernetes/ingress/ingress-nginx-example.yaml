@@ -15,7 +15,11 @@ spec:
   - host: marcel.test
     http:
       paths:
-      - path: /
+      - path: /v1/hello
+        backend:
+          serviceName: example-service
+          servicePort: 80
+      - path: /v2/hello
         backend:
           serviceName: example-service
           servicePort: 80
