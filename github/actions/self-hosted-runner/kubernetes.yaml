@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-secret
+type: Opaque
+data:
+  GITHUB_PERSONAL_TOKEN: XXXXXXXXXXXXXXXXXXXXXXXXX
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-runner
+  labels:
+    app: github-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-runner
+  template:
+    metadata:
+      labels:
+        app: github-runner
+    spec:
+      containers:
+      - name: github-runner
+        image: aimvector/github-runner:latest
+        env:
+        - name: GITHUB_OWNER
+          value: marcel-dempers
+        - name: GITHUB_REPOSITORY
+          value: docker-development-youtube-series
+        - name: GITHUB_PERSONAL_TOKEN 
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: GITHUB_PERSONAL_TOKEN
