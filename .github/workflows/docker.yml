@@ -1,6 +1,7 @@
 name: Docker Series Builds
 
-on: [push]
+#uncomment to enable push trigger
+#on: [push]
 
 jobs:
   build:
