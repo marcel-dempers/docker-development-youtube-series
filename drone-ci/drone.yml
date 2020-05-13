@@ -11,7 +11,7 @@ steps:
     path: /var/run
   commands:
   - sleep 5 # give docker enough time to start
-  - docker ps -a
+  - docker build ./golang -t aimvector/golang:1.0.0
 
 services:
 - name: docker
