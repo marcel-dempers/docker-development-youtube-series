@@ -10,10 +10,11 @@ data:
   POSTGRES_PASSWORD: admin123
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
+  serviceName: "postgres"
   selector:
     matchLabels:
       app: postgres
