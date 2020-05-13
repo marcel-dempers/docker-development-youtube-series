@@ -4,14 +4,21 @@ type: kubernetes
 name: default
 
 steps:
-- name: test
+- name: build-push
   image: docker:dind
   volumes:
   - name: dockersock
     path: /var/run
+  environment:
+    DOCKER_USER:
+      from_secret: DOCKER_USER
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
   commands:
   - sleep 5 # give docker enough time to start
+  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   - docker build ./golang -t aimvector/golang:1.0.0
+  - docker push aimvector/golang:1.0.0
 
 services:
 - name: docker
@@ -20,7 +27,6 @@ services:
   volumes:
   - name: dockersock
     path: /var/run
-
 volumes:
 - name: dockersock
   temp: {}
