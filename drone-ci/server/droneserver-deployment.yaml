@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone-server
+  labels:
+    app: drone-server
+  annotations:
+spec:
+  selector:
+    matchLabels:
+      app: drone-server
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: drone-server
+    spec:
+      containers:
+      - name: drone-server
+        image: drone/drone:1.6.5
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        env:
+        - name: DRONE_USER_CREATE 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_USER_CREATE
+        - name: DRONE_DATABASE_DRIVER
+          value: postgres
+        - name: DRONE_DATABASE_DATASOURCE 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_DATABASE_DATASOURCE
+        - name: DRONE_SERVER_PROTO
+          value: https
+        - name: DRONE_SERVER_HOST 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_SERVER_HOST
+        - name: DRONE_GITHUB_CLIENT_ID 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_GITHUB_CLIENT_ID
+        - name: DRONE_GITHUB_CLIENT_SECRET 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_GITHUB_CLIENT_SECRET
+        - name: DRONE_RPC_SECRET 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_RPC_SECRET

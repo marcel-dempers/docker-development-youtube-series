@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: droneserver
+  labels:
+    app: drone-server
+spec:
+  type: ClusterIP
+  selector:
+    app: drone-server
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 80
+    - protocol: TCP
+      name: https
+      port: 443
+      targetPort: 443
