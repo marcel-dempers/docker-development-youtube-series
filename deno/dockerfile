@@ -1,0 +1,6 @@
+FROM aimvector/deno:1.0.0-buster-slim as build
+
+COPY ./src/ $DENO_DIR
+
+ENTRYPOINT ["deno"]
+CMD ["run", "--allow-net", "/deno-dir/server.js"]
