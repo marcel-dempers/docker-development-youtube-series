@@ -64,5 +64,8 @@ Video:                      https://youtu.be/xhva6DeKqVU <br/>
 Part #7                     Kubernetes ingress | the basics <br/>
 Video:                      https://youtu.be/izWCkcJAzBw <br/>  
 
+Kubernetes in the Cloud
+
+Checkout my series on running Kubernetes in the Cloud [here](./kubernetes/cloud/readme.md) <br/>
 
 More details coming soon!
