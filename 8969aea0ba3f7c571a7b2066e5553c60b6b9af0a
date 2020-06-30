@@ -1,0 +1,1 @@
+{"jobID":"40f8d0be-f586-44c0-b5e7-8aaf0064f1cf","spec":{"type":"policy","cause":{"Message":"","User":"marcel-dempers \u003caimvec@gmail.com\u003e"},"spec":{"default:deployment/example-deploy":{"add":{"automated":"true","tag.example-app":"glob:1.1.*"},"remove":{}}}},"result":null}
