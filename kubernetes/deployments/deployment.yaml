@@ -4,6 +4,7 @@ metadata:
   name: example-deploy
   labels:
     app: example-app
+    test: test
 spec:
   selector:
     matchLabels:
