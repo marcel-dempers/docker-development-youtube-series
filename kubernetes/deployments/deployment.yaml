@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,6 +6,8 @@ metadata:
   labels:
     app: example-app
     test: test
+  annotations:
+    fluxcd.io/tag.example-app: glob:1.*
 spec:
   selector:
     matchLabels:
