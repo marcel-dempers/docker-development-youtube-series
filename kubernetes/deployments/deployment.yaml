@@ -7,7 +7,7 @@ metadata:
     app: example-app
     test: test
   annotations:
-    fluxcd.io/tag.example-app: glob:1.0.*
+    fluxcd.io/tag.example-app: glob:1.*.*
     fluxcd.io/automated: 'true'
 spec:
   selector:
