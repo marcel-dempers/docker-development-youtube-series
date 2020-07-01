@@ -44,8 +44,9 @@ https://github.com/marcel-dempers/docker-development-youtube-series/settings/key
 
 fluxctl sync
 
-fluxcd.io/tag.example-app: semver:~1.0
-fluxcd.io/automated: 'true'
+  annotations:
+    fluxcd.io/tag.example-app: semver:~1.0
+    fluxcd.io/automated: 'true'
 
 fluxctl policy -w default:deployment/example-deploy --tag "example-app=1.0.*"
 ```
