@@ -1,0 +1,7 @@
+bases:
+  - ../../application
+patches:
+  - replica_count.yaml
+images:
+- name: aimvector/python
+  newTag: 1.0.1
