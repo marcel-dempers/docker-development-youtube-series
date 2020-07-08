@@ -1,4 +1,4 @@
 {
     "environment" : "prod",
-    "new" : "123"
-  }
+    "hello": "world"
+}

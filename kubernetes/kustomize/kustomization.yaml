@@ -1,5 +1,0 @@
-resources:
-  - application/namespace.yaml
-  - application/deployment.yaml
-  - application/service.yaml
-  - application/configmap.yaml
