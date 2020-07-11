@@ -1,6 +1,9 @@
 # Kubernetes 1.18.4 Monitoring Guide
 
+Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
+```
 kind create cluster --name prometheus --image kindest/node:v1.18.4
+```
 
 ```
 kubectl create ns monitoring
