@@ -70,7 +70,7 @@ cp ~/.ssh/id_rsa* .
 az aks create -n aks-getting-started \
 --resource-group $RESOURCEGROUP \
 --location australiaeast \
---kubernetes-version 1.16.9 \
+--kubernetes-version 1.16.10 \
 --load-balancer-sku standard \
 --nodepool-name default \
 --node-count 1 \
