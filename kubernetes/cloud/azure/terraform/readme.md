@@ -17,7 +17,7 @@ docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh mcr.microsoft.
 curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
 
 unzip /tmp/terraform.zip
-chmod +x terraform && mv /usr/local/bin/
+chmod +x terraform && mv terraform /usr/local/bin/
 
 cd kubernetes/cloud/azure/terraform/
 terraform init
