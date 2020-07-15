@@ -19,4 +19,14 @@ module "k8s" {
   client_certificate    = "${base64decode(module.cluster.client_certificate)}"
   client_key            = "${base64decode(module.cluster.client_key)}"
   cluster_ca_certificate= "${base64decode(module.cluster.cluster_ca_certificate)}"
+
+}
+
+module "k8s_monitoring_prometheus_operator" {
+  source                = "./modules/monitoring/prometheus-operator/"
+  host                  = "${module.cluster.host}"
+  client_certificate    = "${base64decode(module.cluster.client_certificate)}"
+  client_key            = "${base64decode(module.cluster.client_key)}"
+  cluster_ca_certificate= "${base64decode(module.cluster.cluster_ca_certificate)}"
+
 }
