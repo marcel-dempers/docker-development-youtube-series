@@ -1,0 +1,5 @@
+curl -o kubernetes_alpha -LO https://github.com/hashicorp/terraform-provider-kubernetes-alpha/releases/download/v0.1.0/terraform-provider-kubernetes-alpha_0.1.0_linux_amd64.zip
+unzip kubernetes_alpha
+
+mv terraform-provider-kubernetes-alpha .terraform/plugins/linux_amd64/
+rm -rf kubernetes_alpha
