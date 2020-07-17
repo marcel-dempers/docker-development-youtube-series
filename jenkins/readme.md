@@ -1,3 +1,13 @@
+
+# Jenkins on Amazon Kubernetes
+
+For running Jenkins on AMAZON, start [here](./amazon-eks/readme.md)
+
+# Jenkins on Local (Docker Windows \ Minikube \ etc)
+
+For running Jenkins on Local Docker for Windows or Minikube <br/>
+Watch the [video](https://youtu.be/eRWIJGF3Y2g)
+
 # Setting up Jenkins Agent
 
 After installing `kubernetes-plugin` for Jenkins
@@ -14,6 +24,7 @@ After installing `kubernetes-plugin` for Jenkins
     * Add Kubernetes Pod Template
         * Name: jenkins-slave
         * Namespace: jenkins
+        * Service Account: jenkins
         * Labels: jenkins-slave (you will need to use this label on all jobs)
         * Containers | Add Template
             * Name: jnlp

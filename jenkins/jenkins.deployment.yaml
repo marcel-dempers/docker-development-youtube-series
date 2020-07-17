@@ -1,48 +1,42 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jenkins
   labels:
-    name: jenkins
     app: jenkins
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      name: jenkins
+      app: jenkins
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: jenkins
-        name: jenkins
-      name: jenkins
     spec:
       serviceAccountName: jenkins
       containers:
-      - env:
+      - name: jenkins
+        image: jenkins/jenkins:2.235.1-lts-alpine
+        imagePullPolicy: IfNotPresent
+        env:
         - name: JAVA_OPTS
           value: -Xmx2048m -Dhudson.slaves.NodeProvisioner.MARGIN=50 -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
-        image: jenkins/jenkins #:lts-alpine 
-        imagePullPolicy: IfNotPresent
-        name: jenkins
         ports:
         - containerPort: 8080
           protocol: TCP
         - containerPort: 50000
           protocol: TCP
-        # resources:
-        #   limits:
-        #     cpu: "1"
-        #     memory: 1Gi
-        #   requests:
-        #     cpu: "1"
-        #     memory: 1Gi
         volumeMounts:
         - mountPath: /var/jenkins_home
           name: jenkins
       restartPolicy: Always
       securityContext:
-        #fsGroup: 1000
         runAsUser: 0
       terminationGracePeriodSeconds: 30
       volumes:
