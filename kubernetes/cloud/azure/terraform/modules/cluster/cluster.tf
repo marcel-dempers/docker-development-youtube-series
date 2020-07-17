@@ -17,7 +17,7 @@ resource "azurerm_kubernetes_cluster" "aks-getting-started" {
     type       = "VirtualMachineScaleSets"
     os_disk_size_gb = 250
   }
- 
+
   service_principal  {
     client_id = var.serviceprinciple_id
     client_secret = var.serviceprinciple_key
@@ -29,7 +29,6 @@ resource "azurerm_kubernetes_cluster" "aks-getting-started" {
         key_data = var.ssh_key
     }
   }
- 
 
   network_profile {
       network_plugin = "kubenet"
@@ -57,6 +56,7 @@ resource "azurerm_kubernetes_cluster" "aks-getting-started" {
       enabled = false
     }
   }
+
 }
 
 /*

@@ -7,6 +7,7 @@ provider "kubernetes" {
     cluster_ca_certificate =  var.cluster_ca_certificate
 }
 
+
 resource "kubernetes_deployment" "example" {
   metadata {
     name = "terraform-example"
@@ -64,5 +65,22 @@ resource "kubernetes_deployment" "example" {
         }
       }
     }
+  }
+}
+
+resource "kubernetes_service" "example" {
+  metadata {
+    name = "terraform-example"
+  }
+  spec {
+    selector = {
+      test = "MyExampleApp"
+    }
+    port {
+      port        = 80
+      target_port = 80
+    }
+
+    type = "LoadBalancer"
   }
 }
