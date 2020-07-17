@@ -1,11 +1,7 @@
-# Prometheus Guide
+# Kubernetes monitoring with Prometheus
 
-Important Notice:
------------------
-
-To ensure I don't make any breaking changes, I have tagged the source code as a snapshot of the time the video was released.
-The tag will point to the exact source code I tested when I made the video.
-If you are using master branch, there might be breaking changes however I do my best to avoid it.
+Kubernetes [1.14.8](./1.14.8/readme.md) <br/>
+Kubernetes [1.18.4](./1.18.4/readme.md) <br/>
 
 ## Prometheus Overview
 
@@ -32,4 +28,3 @@ Video : [here](https://youtu.be/1-tRiThpFrY) <br/>
 Source Code tested on K8s version 1.14.8 <br/>
 Source: [here](https://github.com/marcel-dempers/docker-development-youtube-series/releases/tag/prometheus-node-exporter-1)<br/>
 
-More coming soon!
