@@ -58,6 +58,7 @@ az role assignment create --assignee $SERVICE_PRINCIPAL \
 For extra reference you can also take a look at the Microsoft Docs: [here](https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/aks/kubernetes-service-principal.md) </br>
 
 
+# Terraform CLI
 ```
 # Get Terraform
 
