@@ -14,7 +14,7 @@ We'll need the Amazon CLI to gather information so we can build our Terraform fi
 docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh amazon/aws-cli:2.0.17
 
 # some handy tools :)
-yum install jq gzip nano tar git unzip wget
+yum install -y jq gzip nano tar git unzip wget
 
 ```
 
@@ -34,10 +34,8 @@ aws configure
 # Get Terraform
 
 curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
-
 unzip /tmp/terraform.zip
 chmod +x terraform && mv terraform /usr/local/bin/
-
 cd kubernetes/cloud/amazon/terraform/
 
 ```
@@ -66,7 +64,7 @@ terraform apply -var access_key=$access_key -var secret_key=$secret_key
 
 ```
 # grab our EKS config
-aws eks update-kubeconfig --name eks-getting-started --region ap-southeast-2
+aws eks update-kubeconfig --name getting-started-eks --region ap-southeast-2
 
 # Get kubectl
 

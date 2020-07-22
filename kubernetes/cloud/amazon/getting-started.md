@@ -134,9 +134,9 @@ eksctl create cluster --name getting-started-eks \
 --managed \
 --node-type t2.small \
 --nodes 1 \
+--node-volume-size 200 \
 --ssh-access \
 --ssh-public-key=~/.ssh/id_rsa.pub \
---node-volume-size 200
 
 ```
 ## Create some sample containers

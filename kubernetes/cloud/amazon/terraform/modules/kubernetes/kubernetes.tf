@@ -1,11 +1,13 @@
+# # Kubernetes provider
+# # https://learn.hashicorp.com/terraform/kubernetes/provision-eks-cluster#optional-configure-terraform-kubernetes-provider
+# # To learn how to schedule deployments and services using the provider, go here: ttps://learn.hashicorp.com/terraform/kubernetes/deploy-nginx-kubernetes.
 
 provider "kubernetes" {
-    load_config_file       = "false"
-    host                   =  var.host
-    token                  =  var.token
-    cluster_ca_certificate =  var.cluster_ca_certificate
+  load_config_file       = "false"
+  host                   = var.host
+  token                  = var.token
+  cluster_ca_certificate = var.cluster_ca_certificate
 }
-
 
 resource "kubernetes_deployment" "example" {
   metadata {
@@ -45,21 +47,6 @@ resource "kubernetes_deployment" "example" {
               cpu    = "250m"
               memory = "50Mi"
             }
-          }
-
-          liveness_probe {
-            http_get {
-              path = "/nginx_status"
-              port = 80
-
-              http_header {
-                name  = "X-Custom-Header"
-                value = "Awesome"
-              }
-            }
-
-            initial_delay_seconds = 3
-            period_seconds        = 3
           }
         }
       }
