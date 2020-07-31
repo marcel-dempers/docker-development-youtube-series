@@ -15,6 +15,7 @@ var rabbit_user = os.Getenv("RABBIT_USERNAME")
 var rabbit_password = os.Getenv("RABBIT_PASSWORD")
 
 func main() {
+
 	router := httprouter.New()
 
 	router.POST("/publish/:message", func(w http.ResponseWriter, r *http.Request, p httprouter.Params){
@@ -25,11 +26,11 @@ func main() {
 	log.Fatal(http.ListenAndServe(":80", router))
 }
 
-
 func submit(writer http.ResponseWriter, request *http.Request, p httprouter.Params) {
 	message := p.ByName("message")
-
+	
 	fmt.Println("Received message: " + message)
+
 	conn, err := amqp.Dial("amqp://" + rabbit_user + ":" +rabbit_password + "@" + rabbit_host + ":" + rabbit_port +"/")
 
 	if err != nil {
@@ -37,16 +38,18 @@ func submit(writer http.ResponseWriter, request *http.Request, p httprouter.Para
 	}
 
 	defer conn.Close()
+
 	ch, err := conn.Channel()
-	
+
 	if err != nil {
 		log.Fatalf("%s: %s", "Failed to open a channel", err)
 	}
+
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
 		"publisher", // name
-		false,   // durable
+		true,   // durable
 		false,   // delete when unused
 		false,   // exclusive
 		false,   // no-wait
@@ -66,11 +69,10 @@ func submit(writer http.ResponseWriter, request *http.Request, p httprouter.Para
 			ContentType: "text/plain",
 			Body:        []byte(message),
 	})
-	
+
 	if err != nil {
 		log.Fatalf("%s: %s", "Failed to publish a message", err)
 	}
 
 	fmt.Println("publish success!")
-
 }

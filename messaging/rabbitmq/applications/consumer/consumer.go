@@ -1,5 +1,6 @@
 package main
 
+
 import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
@@ -13,13 +14,11 @@ var rabbit_user = os.Getenv("RABBIT_USERNAME")
 var rabbit_password = os.Getenv("RABBIT_PASSWORD")
 
 func main() {
-	
 	consume()
 }
 
-
 func consume() {
-	 
+
 	conn, err := amqp.Dial("amqp://" + rabbit_user + ":" +rabbit_password + "@" + rabbit_host + ":" + rabbit_port +"/")
 
 	if err != nil {
@@ -27,11 +26,11 @@ func consume() {
 	}
 
 	ch, err := conn.Channel()
-	
+
 	if err != nil {
 		log.Fatalf("%s: %s", "Failed to open a channel", err)
 	}
-	
+
 	q, err := ch.QueueDeclare(
 		"publisher", // name
 		false,   // durable
@@ -59,7 +58,7 @@ func consume() {
 		false,  // no-wait
 		nil,    // args
 	  )
-	
+
 	if err != nil {
 		log.Fatalf("%s: %s", "Failed to register consumer", err)
 	}
@@ -76,8 +75,4 @@ func consume() {
 	  
 	  fmt.Println("Running...")
 	  <-forever
-
-
-
-
 }

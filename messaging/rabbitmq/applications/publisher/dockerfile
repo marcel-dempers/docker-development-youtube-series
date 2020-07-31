@@ -12,7 +12,6 @@ COPY publisher.go /src
 
 RUN go build publisher.go
 
-
 FROM alpine as runtime
 
 COPY --from=build /src/publisher /app/publisher
