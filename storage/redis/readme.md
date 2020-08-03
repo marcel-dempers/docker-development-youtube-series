@@ -52,19 +52,24 @@ An example application that reads a key from Redis, increments it and writes it 
 ```
 cd .\storage\redis\applications\client\
 
-docker build . -t aimvector/redis-client:v1.0.0
-
 # start go dev environment
-docker run -it -v ${PWD}:/go/src -w /go/src --net redis -p 80:80 aimvector/redis-client:v1.0.0
+docker run -it -v ${PWD}:/go/src -w /go/src --net redis -p 80:80 golang:1.14-alpine
 
-# go build client.go
+go build client.go
+# start the app
+./client
+
+# build the container
+docker build . -t aimvector/redis-client:v1.0.0
 
 ```
 
 Run our application
 
 ```
+cd .\storage\redis\applications\client\
 docker build . -t aimvector/redis-client:v1.0.0
+
 docker run -it --net redis `
 -e REDIS_HOST=redis `
 -e REDIS_PORT=6379 `
