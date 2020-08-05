@@ -79,3 +79,6 @@ aimvector/redis-client:v1.0.0
 
 ```
 
+## Redis Replication and High Availability
+
+Lets move on to the [clustering](./clustering/readme.md) secion.

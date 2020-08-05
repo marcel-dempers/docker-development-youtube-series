@@ -1,4 +1,4 @@
-module github.com/my/repo
+module example.com/hello
 
 go 1.14
 
