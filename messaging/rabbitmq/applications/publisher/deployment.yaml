@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabbitmq-publisher
+type: Opaque
+data:
+  RABBIT_USERNAME: Z3Vlc3Q=
+  RABBIT_PASSWORD: Z3Vlc3Q=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-publisher
+  labels:
+    app: rabbitmq-publisher
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq-publisher
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-publisher
+    spec:
+      containers:
+      - name: rabbitmq-publisher
+        image: aimvector/rabbitmq-publisher:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: RABBIT_HOST 
+          value: "rabbitmq-0.rabbitmq.rabbits.svc.cluster.local"
+        - name: RABBIT_PORT
+          value: "5672"
+        - name: RABBIT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-publisher
+              key: RABBIT_USERNAME
+        - name: RABBIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-publisher
+              key: RABBIT_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-publisher
+  labels:
+    app: rabbitmq-publisher
+spec:
+  type: LoadBalancer
+  selector:
+    app: rabbitmq-publisher
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 80
