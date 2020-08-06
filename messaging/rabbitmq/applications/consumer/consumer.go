@@ -33,7 +33,7 @@ func consume() {
 
 	q, err := ch.QueueDeclare(
 		"publisher", // name
-		false,   // durable
+		true,   // durable
 		false,   // delete when unused
 		false,   // exclusive
 		false,   // no-wait
