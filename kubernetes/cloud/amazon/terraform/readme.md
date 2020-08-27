@@ -41,13 +41,6 @@ chmod +x terraform && mv terraform /usr/local/bin/
 terraform
 ```
 
-# Generate SSH key for our EC2 workers
-
-```
-ssh-keygen -t rsa -b 4096 -N 'VeryStrongSecret123!' -C "your_email@example.com" -q -f  ~/.ssh/id_rsa
-SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
-```
-
 ## Terraform Amazon Kubernetes Provider 
 
 Documentation on all the Kubernetes fields for terraform [here](https://www.terraform.io/docs/providers/aws/r/eks_cluster.html)
