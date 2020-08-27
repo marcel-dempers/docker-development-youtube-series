@@ -1,6 +1,7 @@
 # Kubernetes monitoring with Prometheus
 
 Kubernetes [1.14.8](./1.14.8/readme.md) <br/>
+Kubernetes [1.15-1.17](./1.15-1.17/readme.md) <br/>
 Kubernetes [1.18.4](./1.18.4/readme.md) <br/>
 
 ## Prometheus Overview
