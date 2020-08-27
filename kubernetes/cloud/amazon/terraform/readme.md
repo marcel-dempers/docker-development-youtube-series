@@ -11,7 +11,7 @@ We'll need the Amazon CLI to gather information so we can build our Terraform fi
 
 ```
 # Run Amazon CLI
-docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh amazon/aws-cli:2.0.17
+docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh amazon/aws-cli:2.0.43
 
 # some handy tools :)
 yum install -y jq gzip nano tar git unzip wget
@@ -26,6 +26,8 @@ yum install -y jq gzip nano tar git unzip wget
 
 aws configure
 
+Default region name: ap-southeast-2
+Default output format: json
 ```
 
 # Terraform CLI 
@@ -33,17 +35,16 @@ aws configure
 ```
 # Get Terraform
 
-curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/0.13.1/terraform_0.13.1_linux_amd64.zip
 unzip /tmp/terraform.zip
 chmod +x terraform && mv terraform /usr/local/bin/
-cd kubernetes/cloud/amazon/terraform/
-
+terraform
 ```
 
-# Generate SSH key
+# Generate SSH key for our EC2 workers
 
 ```
-ssh-keygen -t rsa -b 4096 -N "VeryStrongSecret123!" -C "your_email@example.com" -q -f  ~/.ssh/id_rsa
+ssh-keygen -t rsa -b 4096 -N 'VeryStrongSecret123!' -C "your_email@example.com" -q -f  ~/.ssh/id_rsa
 SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
 ```
 
@@ -52,11 +53,12 @@ SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
 Documentation on all the Kubernetes fields for terraform [here](https://www.terraform.io/docs/providers/aws/r/eks_cluster.html)
 
 ```
+cd kubernetes/cloud/amazon/terraform
+
 terraform init
 
-terraform plan -var access_key=$access_key -var secret_key=$secret_key
-
-terraform apply -var access_key=$access_key -var secret_key=$secret_key
+terraform plan
+terraform apply
 
 ```
 
@@ -79,5 +81,5 @@ kubectl get svc
 # Clean up 
 
 ```
-terraform destroy -var access_key=$access_key -var secret_key=$secret_key
+terraform destroy
 ```
