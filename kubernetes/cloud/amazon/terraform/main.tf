@@ -7,14 +7,6 @@ provider "aws" {
   region  = var.region
 }
 
-provider "null" {
-  version = "~> 2.1"
-}
-
-provider "template" {
-  version = "~> 2.1"
-}
-
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }
@@ -98,7 +90,7 @@ module "eks" {
       name                          = "worker-group-1"
       instance_type                 = "t2.small"
       additional_userdata           = "echo foo bar"
-      asg_desired_capacity          = 2
+      asg_desired_capacity          = 1
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
     },
   ]
@@ -128,7 +120,7 @@ resource "kubernetes_deployment" "example" {
   }
 
   spec {
-    replicas = 3
+    replicas = 2
 
     selector {
       match_labels = {

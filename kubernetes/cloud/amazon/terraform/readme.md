@@ -67,7 +67,11 @@ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s http
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 
+kubectl get nodes
+kubectl get deploy
+kubectl get pods
 kubectl get svc
+
 
 ```
 
