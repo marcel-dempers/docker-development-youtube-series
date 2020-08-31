@@ -12,18 +12,18 @@ kind create cluster --name prometheus --image kindest/node:v1.16.9
 kubectl create ns monitoring
 
 # Create the operator to instanciate all CRDs
-kubectl -n monitoring apply -f ./prometheus-monitoring/kubernetes/1.15-1.17/prometheus-operator/
+kubectl -n monitoring apply -f ./monitoring/prometheus/kubernetes/1.15-1.17/prometheus-operator/
 
 # Deploy monitoring components
-kubectl -n monitoring apply -f ./prometheus-monitoring/kubernetes/1.15-1.17/node-exporter/
-kubectl -n monitoring apply -f ./prometheus-monitoring/kubernetes/1.15-1.17/kube-state-metrics/
-kubectl -n monitoring apply -f ./prometheus-monitoring/kubernetes/1.15-1.17/alertmanager
+kubectl -n monitoring apply -f ./monitoring/prometheus/kubernetes/1.15-1.17/node-exporter/
+kubectl -n monitoring apply -f ./monitoring/prometheus/kubernetes/1.15-1.17/kube-state-metrics/
+kubectl -n monitoring apply -f ./monitoring/prometheus/kubernetes/1.15-1.17/alertmanager
 
 # Deploy prometheus instance and all the service monitors for targets
-kubectl -n monitoring apply -f ./prometheus-monitoring/kubernetes/1.15-1.17/prometheus-cluster-monitoring/
+kubectl -n monitoring apply -f ./monitoring/prometheus/kubernetes/1.15-1.17/prometheus-cluster-monitoring/
 
 # Dashboarding
-kubectl -n monitoring create -f ./prometheus-monitoring/kubernetes/1.15-1.17/grafana/
+kubectl -n monitoring create -f ./monitoring/prometheus/kubernetes/1.15-1.17/grafana/
 
 # Check the pods
 kubectl -n monitoring get pods

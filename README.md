@@ -37,7 +37,7 @@ Source code for Part #6    https://github.com/marcel-dempers/docker-development-
 Application and Server monitoring <br/>
 Let's take a look how to monitor application code using Prometheus.
 
-See the [Prometheus Monitoring](./prometheus-monitoring/readme.md) readme guide for detailed steps
+See the [Prometheus Monitoring](./monitoring/prometheus/readme.md) readme guide for detailed steps
 
 ## Kubernetes Development Basics
 
