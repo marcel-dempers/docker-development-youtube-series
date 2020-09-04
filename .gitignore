@@ -8,3 +8,4 @@ __pycache__/
 .terraform
 *.tfstate
 *.tfstate.*
+security/letsencrypt/introduction/certs/**
