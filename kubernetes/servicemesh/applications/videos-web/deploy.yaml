@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videos-web
+  labels:
+    app: videos-web
+spec:
+  selector:
+    matchLabels:
+      app: videos-web
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: videos-web
+    spec:
+      containers:
+      - name: videos-web
+        image: aimvector/service-mesh:videos-web-1.0.0
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: videos-web
+  labels:
+    app: videos-web
+spec:
+  type: ClusterIP
+  selector:
+    app: videos-web
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 80
+
+
