@@ -111,9 +111,11 @@ This is intentional to demonstrate a busy network.
                    +------------+       +-----------+
 
 ```
+<br/>
 
-## Run the apps
-
+## Run the apps: Docker
+<hr/>
+<br/>
 There is a `docker-compose.yaml`  in this directory. <br/>
 Change your terminal to this folder and run:
 
@@ -125,3 +127,67 @@ docker-compose up
 ```
 
 You can access the app on `http://localhost` 
+
+<br/>
+
+## Run the apps: Kubernetes 
+<hr/>
+<br/>
+
+Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
+
+```
+kind create cluster --name servicemesh --image kindest/node:v1.18.4
+```
+<br/>
+
+### Deploy videos-web
+
+<hr/>
+<br/>
+
+```
+cd ./kubernetes/servicemesh/
+
+kubectl apply -f applications/videos-web/deploy.yaml
+kubectl port-forward svc/videos-web 80:80
+
+```
+
+You should see blank page at `http://localhost/` <br/>
+It's blank because it needs the `playlists-api` to get data
+
+<br/>
+
+### Deploy playlists-api and database
+
+<hr/>
+<br/>
+
+```
+cd ./kubernetes/servicemesh/
+
+kubectl apply -f applications/playlists-api/deploy.yaml
+kubectl port-forward svc/playlists-api 81:80
+
+```
+
+You should see empty playlists page at `http://localhost/` <br/>
+Playlists are empty because it needs the `videos-api` to get video data <br/>
+
+<br/>
+
+### Deploy videos-api and database
+
+<hr/>
+<br/>
+
+```
+cd ./kubernetes/servicemesh/
+
+kubectl apply -f applications/videos-api/deploy.yaml
+
+```
+
+Refresh page at `http://localhost/` <br/>
+You should now see the complete architecture in the browser <br/>
