@@ -3,7 +3,9 @@ services:
   fluentd:
     container_name: fluentd
     user: root
-    image: fluent/fluentd:v1.11-debian
+    build:
+      context: .
+    image: fluentd
     volumes:
     - /var/lib/docker/containers:/fluentd/log/containers # Example: Reading docker logs
     - ./file:/app/ #Example: Reading logs from a file
@@ -25,4 +27,23 @@ services:
     volumes:
     - ./file:/app
     command: [ /bin/sh , -c , "apk add --no-cache curl && chmod +x /app/write-file-log.sh && ./app/write-file-log.sh"]
-  
+  elasticsearch: # port 9200
+    image: elasticsearch:7.9.1
+    container_name: elasticsearch
+    environment:
+    - node.name=elasticsearch
+    - cluster.initial_master_nodes=elasticsearch
+    - bootstrap.memory_lock=true
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  kibana:
+    image: kibana:7.9.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
