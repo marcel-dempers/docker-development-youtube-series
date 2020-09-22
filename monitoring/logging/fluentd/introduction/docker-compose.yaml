@@ -5,8 +5,24 @@ services:
     user: root
     image: fluent/fluentd:v1.11-debian
     volumes:
-    - /var/lib/docker/containers:/fluentd/log/containers
-    - ./fluent.conf:/fluentd/etc/fluent.conf
+    - /var/lib/docker/containers:/fluentd/log/containers # Example: Reading docker logs
+    - ./file:/app/ #Example: Reading logs from a file
+    - ./configurations:/fluentd/etc/
     - ./logs:/output/
     logging:
       driver: "local"
+  # This app sends logs to Fluentd via HTTP
+  http-myapp:
+    container_name: http-myapp
+    image: alpine
+    volumes:
+    - ./http:/app
+    command: [ /bin/sh , -c , "apk add --no-cache curl && chmod +x /app/send-http-log.sh && ./app/send-http-log.sh"]
+  # This app writes logs to a local file
+  file-myapp:
+    container_name: file-myapp
+    image: alpine
+    volumes:
+    - ./file:/app
+    command: [ /bin/sh , -c , "apk add --no-cache curl && chmod +x /app/write-file-log.sh && ./app/write-file-log.sh"]
+  
