@@ -8,9 +8,9 @@ services:
     image: fluentd
     volumes:
     - /var/lib/docker/containers:/fluentd/log/containers # Example: Reading docker logs
-    - ./file:/app/ #Example: Reading logs from a file
+    - ./file:/fluentd/log/files/ #Example: Reading logs from a file
     - ./configurations:/fluentd/etc/
-    - ./logs:/output/
+    - ./logs:/output/ # Example: Fluentd will collect logs and store it here for demo
     logging:
       driver: "local"
   # This app sends logs to Fluentd via HTTP
@@ -19,14 +19,14 @@ services:
     image: alpine
     volumes:
     - ./http:/app
-    command: [ /bin/sh , -c , "apk add --no-cache curl && chmod +x /app/send-http-log.sh && ./app/send-http-log.sh"]
+    command: [ /bin/sh , -c , "apk add --no-cache curl && chmod +x /app/app.sh && ./app/app.sh"]
   # This app writes logs to a local file
   file-myapp:
     container_name: file-myapp
     image: alpine
     volumes:
     - ./file:/app
-    command: [ /bin/sh , -c , "apk add --no-cache curl && chmod +x /app/write-file-log.sh && ./app/write-file-log.sh"]
+    command: [ /bin/sh , -c , "chmod +x /app/app.sh && ./app/app.sh"]
   elasticsearch: # port 9200
     image: elasticsearch:7.9.1
     container_name: elasticsearch
