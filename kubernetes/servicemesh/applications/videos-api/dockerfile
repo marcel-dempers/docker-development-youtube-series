@@ -5,10 +5,10 @@ WORKDIR /src
 
 COPY go.sum /src/
 COPY go.mod /src/
+RUN go mod download
 
 COPY app.go /src
 
-RUN go get 
 RUN go build -o app
 
 FROM alpine:3.12
