@@ -169,19 +169,24 @@ func initDummyData(){
   
 
 	retry(10, duration, func() (err error){
-	 
+	
 		for i := range dummy {
 			dummyItem := dummy[i]
 			v := videos{}
 			iStr := strconv.Itoa(i)
 
 			fmt.Println("checking vid: " +  iStr)
-			err := json.Unmarshal([]byte(dummyItem), &v)
+			err = json.Unmarshal([]byte(dummyItem), &v)
 			if err != nil {
-				panic(err)
+				break
 			}
 
+			fmt.Println("adding vid: " +  v.Id)
 			err = rdb.Set(ctx, v.Id,dummyItem , 0).Err()
+
+			if err != nil {
+				break
+			}
 		}
 		
 
