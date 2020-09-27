@@ -89,7 +89,7 @@ This is intentional to demonstrate a busy network.
 
 <br/>
 
-## Full architecture
+## Full application architecture
 <hr/>
 <br/>
 
@@ -105,6 +105,30 @@ This is intentional to demonstrate a busy network.
                    | videos-api +------>+ videos-db |
                    |            |       |           |
                    +------------+       +-----------+
+
+```
+
+## Adding an Ingress Controller
+
+Adding an ingress controller allows us to route all our traffic. </br>
+We setup a `host` file with entry `demo.com 127.0.0.1`
+And `port-forward` to the `ingress-controller`
+
+
+```
+demo.com/home --> videos-web
+demo.com/api/playlists --> playlists-api
+
++-------------------+  demo.com/home   +------------+     +---------------+    +--------------+
+|ingress-nginx      +----------------->+ videos+web +---->+ playlists+api +--->+ playlists+db |
+|Ingress controller |                  |            |     |               |    |              |
++---------+---------+                  +------------+     +-----+---------+    +--------------+
+          |                                                     |
+          |                                                     v
+          |                  demo.com api/playlists       +-----+------+       +-----------+
+          +---------------------------------------------> | videos+api +------>+ videos+db |
+                                                          |            |       |           |
+                                                          +------------+       +-----------+
 
 ```
 <br/>
