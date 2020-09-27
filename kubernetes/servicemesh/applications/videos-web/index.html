@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <title>Video Catalog</title>
 </head>
 
@@ -68,10 +68,17 @@
             playlist: [],
         };
 
+        var playlistApiUrl = "";
+        if (location.hostname == "localhost"){
+          playlistApiUrl = "http://localhost:81/"
+        } else {
+          playlistApiUrl = "http://" + location.hostname + "/api/playlists"
+        }
+
         var app = angular.module('videos', []);
         app.controller('videosController', function ($scope, $http) {
 
-            $http.get("http://localhost:81/")
+            $http.get(playlistApiUrl)
                 .then(function (response) {
 
                     console.log(response);
