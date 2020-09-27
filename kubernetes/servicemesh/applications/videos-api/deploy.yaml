@@ -22,6 +22,7 @@ spec:
       containers:
       - name: videos-api
         image: aimvector/service-mesh:videos-api-1.0.0
+        imagePullPolicy : Always
         ports:
         - containerPort: 10010
         env:

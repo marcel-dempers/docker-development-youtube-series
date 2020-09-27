@@ -22,6 +22,7 @@ spec:
       containers:
       - name: playlists-api
         image: aimvector/service-mesh:playlists-api-1.0.0
+        imagePullPolicy : Always
         ports:
         - containerPort: 10010
         env:
@@ -85,5 +86,23 @@ spec:
       name: http
       port: 6379
       targetPort: 6379
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: playlists-api
+spec:
+  rules:
+  - host: marcel.test
+    http:
+      paths:
+      - path: /api/playlists(/|$)(.*)
+        backend:
+          serviceName: playlists-api
+          servicePort: 80
 
 

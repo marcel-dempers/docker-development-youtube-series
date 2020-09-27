@@ -22,6 +22,7 @@ spec:
       containers:
       - name: videos-web
         image: aimvector/service-mesh:videos-web-1.0.0
+        imagePullPolicy : Always
         ports:
         - containerPort: 80
 ---
@@ -40,5 +41,22 @@ spec:
       name: http
       port: 80
       targetPort: 80
-
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: videos-web
+spec:
+  rules:
+  - host: marcel.test
+    http:
+      paths:
+      - path: /home(/|$)(.*)
+        backend:
+          serviceName: videos-web
+          servicePort: 80
 
