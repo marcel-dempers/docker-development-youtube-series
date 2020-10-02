@@ -4,10 +4,9 @@ metadata:
   name: ingress-nginx
   namespace: ingress-nginx
 spec:
-  externalTrafficPolicy: Local
   selector:
     app: nginx-ingress
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: http
       port: 80

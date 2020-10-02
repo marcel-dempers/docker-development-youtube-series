@@ -52,7 +52,7 @@ metadata:
   name: videos-web
 spec:
   rules:
-  - host: marcel.test
+  - host: servicemesh.demo
     http:
       paths:
       - path: /home(/|$)(.*)

@@ -41,6 +41,7 @@ func main() {
 			vs := []videos{}
 			for vi := range playlists[pi].Videos {
 			 
+				v := videos{}
 				videoResp, err := http.Get("http://videos-api:10010/" + playlists[pi].Videos[vi].Id)
 				
 				if err != nil {
@@ -55,7 +56,7 @@ func main() {
 					panic(err)
 				}
 
-				v := videos{}
+				
 				err = json.Unmarshal(video, &v)
 
 				if err != nil {
@@ -134,7 +135,8 @@ func getPlaylists()(response string){
 	playlistData, err := rdb.Get(ctx, "playlists").Result()
 	
 	if err != nil {
-		panic(err)
+		fmt.Println("error occured retrieving playlists from Redis")
+		return "[]"
 	}
 
 	return playlistData

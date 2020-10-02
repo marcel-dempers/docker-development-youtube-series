@@ -11,11 +11,13 @@ import (
 	"encoding/json"
 	"os"
 	"strconv"
+	"math/rand"
 )
 
 var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
+var flaky = os.Getenv("FLAKY")
 
 var ctx = context.Background()
 var rdb *redis.Client
@@ -25,6 +27,13 @@ func main() {
 	router := httprouter.New()
 
 	router.GET("/:id", func(w http.ResponseWriter, r *http.Request, p httprouter.Params){
+		
+		if flaky == "true"{
+			if rand.Intn(90) < 30 {
+				panic("flaky error occurred ")
+		  } 
+		}
+		
 		video := video(w,r,p)
 
 		cors(w)

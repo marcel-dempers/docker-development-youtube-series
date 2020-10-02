@@ -32,6 +32,8 @@ spec:
           value: "videos-db"
         - name: "REDIS_PORT"
           value: "6379"
+        - name: "FLAKY"
+          value: "false"
 ---
 apiVersion: v1
 kind: Service
