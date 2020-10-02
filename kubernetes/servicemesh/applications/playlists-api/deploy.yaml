@@ -97,7 +97,7 @@ metadata:
   name: playlists-api
 spec:
   rules:
-  - host: marcel.test
+  - host: servicemesh.demo
     http:
       paths:
       - path: /api/playlists(/|$)(.*)
