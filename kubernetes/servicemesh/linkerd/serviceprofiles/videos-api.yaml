@@ -1,7 +1,6 @@
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
-  creationTimestamp: null
   name: videos-api.default.svc.cluster.local
   namespace: default
 spec:
@@ -9,5 +8,5 @@ spec:
   - condition:
       method: GET
       pathRegex: /.*
+    name: AUTO RETRY ALL
     isRetryable: true
-    name: GET *
