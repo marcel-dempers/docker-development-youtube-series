@@ -5,7 +5,7 @@
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name linkerd --image kindest/node:v1.18.4
+kind create cluster --name linkerd --image kindest/node:v1.19.1
 ```
 
 ## Deploy our microservices (Video catalog)
@@ -17,8 +17,10 @@ kubectl apply -f kubernetes/servicemesh/applications/ingress-nginx/
 
 # applications
 kubectl apply -f kubernetes/servicemesh/applications/playlists-api/
+kubectl apply -f kubernetes/servicemesh/applications/playlists-db/
 kubectl apply -f kubernetes/servicemesh/applications/videos-api/
 kubectl apply -f kubernetes/servicemesh/applications/videos-web/
+kubectl apply -f kubernetes/servicemesh/applications/videos-db/
 ```
 
 ## Make sure our applications are running 
@@ -94,12 +96,12 @@ linkerd-control-plane   Ready    master   26m   v1.18.4
 ## Linkerd CLI
 
 Lets download the `linkerd` command line tool <br/>
-I grabbed the `edge-20.9.4` release using `curl`
+I grabbed the `edge-20.10.1` release using `curl`
 
-You can go to the [releases](https://github.com/linkerd/linkerd2/releases/tag/edge-20.9.4) page to get it
+You can go to the [releases](https://github.com/linkerd/linkerd2/releases/tag/edge-20.10.1) page to get it
 
 ```
-curl -L -o linkerd https://github.com/linkerd/linkerd2/releases/download/edge-20.9.4/linkerd2-cli-edge-20.9.4-linux-amd64 
+curl -L -o linkerd https://github.com/linkerd/linkerd2/releases/download/edge-20.10.1/linkerd2-cli-edge-20.10.1-linux-amd64 
 chmod +x linkerd && mv ./linkerd /usr/local/bin/
 
 linkerd --help
@@ -117,19 +119,19 @@ linkerd check --pre
 ## Get the YAML
 
 ```
-linkerd install > ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.9.4.yaml
+linkerd install > ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.10.1.yaml
 ```
 
 ## Install Linkerd
 
 ```
-kubectl apply -f ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.9.4.yaml
+kubectl apply -f ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.10.1.yaml
 ```
 
 Let's wait until all components are running
 
 ```
-kubectl -n linkerd get deploy
+watch kubectl -n linkerd get pods
 kubectl -n linkerd get svc
 ```
 
@@ -178,6 +180,7 @@ kubectl get deploy playlists-db -o yaml | linkerd inject - | kubectl apply -f -
 kubectl get deploy videos-api -o yaml | linkerd inject - | kubectl apply -f -
 kubectl get deploy videos-db -o yaml | linkerd inject - | kubectl apply -f -
 kubectl get deploy videos-web -o yaml | linkerd inject - | kubectl apply -f -
+kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | linkerd inject - | kubectl apply -f -
 
 ```
 
@@ -204,6 +207,7 @@ kubectl edit deploy videos-api
 #set environment FLAKY=true
 ```
 
+# Service Profile 
 
 linkerd profile -n default videos-api --tap deploy/videos-api --tap-duration 10s
 linkerd profile -n default videos-api --template
@@ -213,4 +217,27 @@ We can see that service profile helps us add retry policies in place: <br/>
 ```
 linkerd routes -n default deploy/playlists-api --to svc/videos-api -o wide
 linkerd top deploy/videos-api
+```
+
+# Mutual TLS
+
+We can validate if mTLS is working 
+
+```
+/work # linkerd -n default edges deployment
+SRC                  DST             SRC_NS    DST_NS    SECURED       
+playlists-api        videos-api      default   default   √
+linkerd-prometheus   playlists-api   linkerd   default   √
+linkerd-prometheus   playlists-db    linkerd   default   √
+linkerd-prometheus   videos-api      linkerd   default   √
+linkerd-prometheus   videos-db       linkerd   default   √
+linkerd-prometheus   videos-web      linkerd   default   √
+linkerd-tap          playlists-api   linkerd   default   √
+linkerd-tap          playlists-db    linkerd   default   √
+linkerd-tap          videos-api      linkerd   default   √
+linkerd-tap          videos-db       linkerd   default   √
+linkerd-tap          videos-web      linkerd   default   √
+
+linkerd -n default tap deploy
+
 ```

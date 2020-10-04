@@ -111,24 +111,33 @@ This is intentional to demonstrate a busy network.
 ## Adding an Ingress Controller
 
 Adding an ingress controller allows us to route all our traffic. </br>
-We setup a `host` file with entry `demo.com 127.0.0.1`
+We setup a `host` file with entry `127.0.0.1  servicemesh.demo`
 And `port-forward` to the `ingress-controller`
 
 
 ```
-demo.com/home --> videos-web
-demo.com/api/playlists --> playlists-api
+servicemesh.demo/home --> videos-web
+servicemesh.demo/api/playlists --> playlists-api
 
-+-------------------+  demo.com/home   +------------+     +---------------+    +--------------+
-|ingress-nginx      +----------------->+ videos+web +---->+ playlists+api +--->+ playlists+db |
-|Ingress controller |                  |            |     |               |    |              |
-+---------+---------+                  +------------+     +-----+---------+    +--------------+
-          |                                                     |
-          |                                                     v
-          |                  demo.com api/playlists       +-----+------+       +-----------+
-          +---------------------------------------------> | videos+api +------>+ videos+db |
-                                                          |            |       |           |
-                                                          +------------+       +-----------+
+
+                              servicemesh.demo/home            +--------------+
+                              +------------------------------> | videos-web   |
+                              |                                |              |
+servicemesh.demo/home  +------+------------+                   +--------------+
+   +------------------>+ingress-nginx      |
+                       |Ingress controller |
+                       +------+------------+                   +---------------+    +--------------+
+                              |                                | playlists-api +--->+ playlists-db |
+                              +------------------------------> |               |    |              |
+                              servicemesh.demo/api/playlists   +-----+---------+    +--------------+
+                                                                     |
+                                                                     v
+                                                               +-----+------+       +-----------+
+                                                               | videos-api +------>+ videos-db |
+                                                               |            |       |           |
+                                                               +------------+       +-----------+
+
+
 
 ```
 <br/>
@@ -188,6 +197,7 @@ It's blank because it needs the `playlists-api` to get data
 cd ./kubernetes/servicemesh/
 
 kubectl apply -f applications/playlists-api/deploy.yaml
+kubectl apply -f applications/playlists-db/
 kubectl port-forward svc/playlists-api 81:80
 
 ```
@@ -206,7 +216,7 @@ Playlists are empty because it needs the `videos-api` to get video data <br/>
 cd ./kubernetes/servicemesh/
 
 kubectl apply -f applications/videos-api/deploy.yaml
-
+kubectl apply -f applications/videos-db/
 ```
 
 Refresh page at `http://localhost/` <br/>
