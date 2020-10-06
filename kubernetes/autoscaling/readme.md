@@ -170,3 +170,12 @@ kubectl get hpa/application-cpu  -owide
 kubectl describe hpa/application-cpu 
 
 ```
+
+## Vertical Pod Autoscaling
+
+The vertical pod autoscaler allows us to automatically set request values on our pods <br/>
+based on recommendations.
+This helps us tune the request values based on actual CPU and Memory usage.<br/>
+
+More [here](./vertical-pod-autoscaling/readme.md)
+
