@@ -209,8 +209,15 @@ kubectl edit deploy videos-api
 
 # Service Profile 
 
+```
 linkerd profile -n default videos-api --tap deploy/videos-api --tap-duration 10s
-linkerd profile -n default videos-api --template
+```
+
+After crafting the `serviceprofile`, we can apply it using `kubectl`
+
+```
+ kubectl apply -f kubernetes/servicemesh/linkerd/serviceprofiles/videos-api.yaml
+```
 
 We can see that service profile helps us add retry policies in place: <br/>
 
