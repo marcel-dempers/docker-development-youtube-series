@@ -57,7 +57,7 @@ cd kubernetes/autoscaling/vertical-pod-autoscaling
 docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/work -w /work --net host debian:buster bash
 
 # install git
-apt-get update && apt-get install -y git curl
+apt-get update && apt-get install -y git curl nano
 
 # install kubectl 
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -138,4 +138,7 @@ kubectl -n goldilocks apply -f ./dashboard
 
 kubectl label ns default goldilocks.fairwinds.com/enabled=true
 kubectl label ns default goldilocks.fairwinds.com/vpa-update-mode="off"
+
+kubectl -n goldilocks port-forward svc/goldilocks-dashboard 80
+
 ```
