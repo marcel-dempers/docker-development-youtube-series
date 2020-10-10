@@ -26,7 +26,9 @@ Default output format: json
 # Create a Storage Bucket
 
 ```
-aws s3api create-bucket --bucket veleromarcel --region ap-southeast-2 --create-bucket-configuration LocationConstraint=ap-southeast-2
+BUCKET=veleromarcel
+REGION=ap-southeast-2
+aws s3api create-bucket --bucket $BUCKET --region $REGION --create-bucket-configuration LocationConstraint=$REGION
 ```
 
 # Create IAM User
