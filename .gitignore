@@ -9,3 +9,6 @@ __pycache__/
 *.tfstate
 *.tfstate.*
 security/letsencrypt/introduction/certs/**
+
+hashicorp/waypoint/*/data.db*
+hashicorp/waypoint/*/.waypoint
