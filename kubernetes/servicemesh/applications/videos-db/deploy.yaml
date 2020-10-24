@@ -55,6 +55,5 @@ spec:
     app: videos-db
   ports:
     - protocol: TCP
-      name: http
       port: 6379
       targetPort: 6379
