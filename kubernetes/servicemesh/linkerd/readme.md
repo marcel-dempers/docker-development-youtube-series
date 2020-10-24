@@ -69,7 +69,7 @@ We should be able to access our site under `http://servicemesh.demo/home/`
 
 # Getting Started with Linkerd
 
-Firstly, I like to do most of my work in containers so everything is reproducable <br/>
+Firstly, I like to do most of my work in containers so everything is reproducible  <br/>
 and my machine remains clean.
 
 ## Get a container to work in
@@ -89,7 +89,7 @@ export KUBE_EDITOR="nano"
 #test cluster access:
 /work # kubectl get nodes
 NAME                    STATUS   ROLES    AGE   VERSION
-linkerd-control-plane   Ready    master   26m   v1.18.4
+linkerd-control-plane   Ready    master   26m   v1.19.1
 
 ```
 

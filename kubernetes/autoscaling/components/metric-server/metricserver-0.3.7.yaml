@@ -88,8 +88,8 @@ spec:
         args:
           - --cert-dir=/tmp
           - --secure-port=4443
-          #- --kubelet-insecure-tls
-          #- --kubelet-preferred-address-types="InternalIP"
+          - --kubelet-insecure-tls #remove these for production: only used for kind
+          - --kubelet-preferred-address-types="InternalIP" #remove these for production: only used for kind
         ports:
         - name: main-port
           containerPort: 4443
