@@ -101,7 +101,6 @@ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.12 TARGET_ARCH=x86_64
 
 mv istio-1.6.12/bin/istioctl /usr/local/bin/
 chmod +x /usr/local/bin/istioctl
-
 mv istio-1.6.12 /tmp/
 
 ```
@@ -126,15 +125,9 @@ istioctl install --set profile=default
 
 kubectl -n istio-system get pods
 
-istioctl verify-install
+istioctl proxy-status
 
 ```
-
-https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/
-
-## Manual sidecar injection
-kubectl get deploy playlists-api -o yaml | istioctl kube-inject -f - | kubectl apply -f -
-
 
 # Mesh our video catalog services
 
@@ -145,12 +138,10 @@ There are 2 ways to mesh:
 You can set the `istio-injection=enabled` label on a namespace to have the istio side car automatically injected into any pod that gets created in the labelled namespace
 
 This is a more permanent solution:
+Pods will need to be recreated for injection to occur
 
 ```
-  template:
-    metadata:
-      labels:
-        istio-injection: enabled
+kubectl label namespace/default istio-injection=enabled
 ```
 
 2) Manual Injection:
@@ -179,14 +170,114 @@ kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | istioctl
 
 # TCP \ HTTP traffic
 
+Let's run a `curl` loop to generate some traffic to our site </br>
+We'll make a call to `/home/` and to simulate the browser making a call to get the playlists, <br/>
+we'll make a follow up call to `/api/playlists`
+
+```
+While ($true) { curl -UseBasicParsing http://servicemesh.demo/home/;curl -UseBasicParsing http://servicemesh.demo/api/playlists; Start-Sleep -Seconds 1;}
+```
+
+
 # Observability
+
+## Prometheus
+
+```
+kubectl apply -f /tmp/istio-1.6.12/samples/addons/prometheus.yaml
+```
+
+## Grafana
+
+```
+kubectl apply -n istio-system -f /tmp/istio-1.6.12/samples/addons/grafana.yaml
+```
+
+We can see the components in the `istio-system` namespace:
+```
+kubectl -n istio-system get pods
+```
+
+Access grafana dashboards :
+
+```
+kubectl -n istio-system port-forward svc/grafana 3000
+```
 
 ## Kiali 
 
-note: rerun for CRDs
+`NOTE: this may fail because CRDs need to generate, if so, just rerun the command:`
+
 ```
 kubectl apply -f /tmp/istio-1.6.12/samples/addons/kiali.yaml
 
-
+kubectl -n istio-system get pods
 kubectl -n istio-system port-forward svc/kiali 20001
 ```
+
+# Virtual Services
+
+## Auto Retry
+
+Let's add a fault in the `videos-api` by setting `env` variable `FLAKY=true`
+
+```
+kubectl edit deploy videos-api
+```
+
+```
+kubectl apply -f kubernetes/servicemesh/istio/retries/videos-api.yaml
+```
+
+We can describe pods using `istioctl`
+
+```
+# istioctl x describe pod <videos-api-POD-NAME>
+
+istioctl x describe pod videos-api-584768f497-jjrqd
+Pod: videos-api-584768f497-jjrqd
+   Pod Ports: 10010 (videos-api), 15090 (istio-proxy)
+Suggestion: add 'version' label to pod for Istio telemetry.
+--------------------
+Service: videos-api
+   Port: http 10010/HTTP targets pod port 10010
+VirtualService: videos-api
+   1 HTTP route(s)
+```
+
+Analyse our namespace:
+
+```
+istioctl analyze --namespace default
+```
+
+## Traffic Splits
+
+Let's deploy V2 of our application which has a header that's under development
+
+```
+kubectl apply -f kubernetes/servicemesh/istio/traffic-splits/videos-web-v2.yaml
+
+# we can see v2 pods
+kubectl get pods
+
+```
+
+Let's send 50% of traffic to V1 and 50% to V2 by using a `VirtualService`
+
+```
+kubectl apply -f kubernetes/servicemesh/istio/traffic-splits/videos-web.yaml
+```
+
+## Canary Deployments
+
+Traffic splits has its uses, but sometimes we may want to route traffic to other  <br/>
+parts of the system using feature toggles, for example, setting a `cookie`<br/>
+<br/>
+Let's send all users that have the cookie value `version=v2` to V2 of our `videos-web`.
+
+```
+kubectl apply -f kubernetes/servicemesh/istio/canary/videos-web.yaml
+```
+
+We can confirm this works, by setting the cookie value `version=v2` followed by accessing https://servicemesh.demo/home/ on an incogneto browser page <br/>

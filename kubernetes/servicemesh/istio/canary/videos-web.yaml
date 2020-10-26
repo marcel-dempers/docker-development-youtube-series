@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: videos-web-canary
+spec:
+  hosts:
+  - servicemesh.demo
+  http:
+  - match:
+    - uri:
+        prefix: /
+      headers:
+        cookie:
+          regex: ^(.*?;)?(version=v2)(;.*)?$
+    route:
+    - destination:
+        host: videos-web-v2
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: videos-web
