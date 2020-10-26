@@ -18,8 +18,8 @@ kubectl apply -f kubernetes/servicemesh/applications/ingress-nginx/
 # applications
 kubectl apply -f kubernetes/servicemesh/applications/playlists-api/
 kubectl apply -f kubernetes/servicemesh/applications/playlists-db/
-kubectl apply -f kubernetes/servicemesh/applications/videos-api/
 kubectl apply -f kubernetes/servicemesh/applications/videos-web/
+kubectl apply -f kubernetes/servicemesh/applications/videos-api/
 kubectl apply -f kubernetes/servicemesh/applications/videos-db/
 ```
 

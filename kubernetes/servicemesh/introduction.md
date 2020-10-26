@@ -120,10 +120,10 @@ servicemesh.demo/home --> videos-web
 servicemesh.demo/api/playlists --> playlists-api
 
 
-                              servicemesh.demo/home            +--------------+
+                              servicemesh.demo/home/           +--------------+
                               +------------------------------> | videos-web   |
                               |                                |              |
-servicemesh.demo/home  +------+------------+                   +--------------+
+servicemesh.demo/home/ +------+------------+                   +--------------+
    +------------------>+ingress-nginx      |
                        |Ingress controller |
                        +------+------------+                   +---------------+    +--------------+

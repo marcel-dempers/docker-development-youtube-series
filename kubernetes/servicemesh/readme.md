@@ -17,8 +17,18 @@ Video :point_down: <br/>
 
 Getting started with Linkerd
 
-Read Me:  [readme](./linkerd/readme.md)
+Read Me:  [readme](./linkerd/README.md)
 
 Video :point_down: <br/>
 
 <a href="https://youtu.be/Hc-XFPHDDk4" title="Cloud K8s"><img src="https://i.ytimg.com/vi/Hc-XFPHDDk4/hqdefault.jpg" width="45%" height="45%" alt="Linkerd" /></a>
+
+## Introduction to Istio
+
+Getting started with Istio
+
+Read Me:  [readme](./istio/README.md)
+
+Video :point_down: <br/>
+
+<!-- <a href="https://youtu.be/Hc-XFPHDDk4" title="Cloud K8s"><img src="https://i.ytimg.com/vi/Hc-XFPHDDk4/hqdefault.jpg" width="45%" height="45%" alt="Linkerd" /></a> -->
