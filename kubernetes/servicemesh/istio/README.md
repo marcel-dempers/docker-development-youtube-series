@@ -142,6 +142,9 @@ Pods will need to be recreated for injection to occur
 
 ```
 kubectl label namespace/default istio-injection=enabled
+
+# restart all pods to get sidecar injected
+kubectl delete pods --all
 ```
 
 2) Manual Injection:
@@ -157,6 +160,10 @@ videos-api      1/1     1            1           8h
 videos-db       1/1     1            1           8h 
 videos-web      1/1     1            1           8h 
 
+# Lets manually inject istio sidecar into our Ingress Controller:
+
+kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | istioctl kube-inject -f - | kubectl apply -f -
+
 # You can manually inject istio sidecar to every deployment like this:
 
 kubectl get deploy playlists-api -o yaml | istioctl kube-inject -f - | kubectl apply -f -
@@ -164,7 +171,7 @@ kubectl get deploy playlists-db -o yaml | istioctl kube-inject -f - | kubectl ap
 kubectl get deploy videos-api -o yaml | istioctl kube-inject -f - | kubectl apply -f -
 kubectl get deploy videos-db -o yaml | istioctl kube-inject -f - | kubectl apply -f -
 kubectl get deploy videos-web -o yaml | istioctl kube-inject -f - | kubectl apply -f -
-kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | istioctl kube-inject -f - | kubectl apply -f -
+
 
 ```
 
@@ -181,11 +188,6 @@ While ($true) { curl -UseBasicParsing http://servicemesh.demo/home/;curl -UseBas
 
 # Observability
 
-## Prometheus
-
-```
-kubectl apply -f /tmp/istio-1.6.12/samples/addons/prometheus.yaml
-```
 
 ## Grafana
 
@@ -280,4 +282,4 @@ Let's send all users that have the cookie value `version=v2` to V2 of our `video
 kubectl apply -f kubernetes/servicemesh/istio/canary/videos-web.yaml
 ```
 
-We can confirm this works, by setting the cookie value `version=v2` followed by accessing https://servicemesh.demo/home/ on an incogneto browser page <br/>
+We can confirm this works, by setting the cookie value `version=v2` followed by accessing https://servicemesh.demo/home/ on a browser page <br/>
