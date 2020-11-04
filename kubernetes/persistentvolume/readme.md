@@ -1,9 +1,9 @@
-# Persisted Volumes Demo
+# Persistent Volumes Demo
 
 ## Container Storage
 
 By default containers store their data on the file system like any other process.
-Container file system is temporary and not persisted during container restarts
+Container file system is temporary and not persistent during container restarts
 When container is recreated, so is the file system
 
 
@@ -40,7 +40,7 @@ Since data is lost.
 Same can be demonstrated using Kubernetes
 
 ```
-cd .\kubernetes\persistedvolumes\
+cd .\kubernetes\persistentvolume\
 
 kubectl create ns postgres
 kubectl apply -n postgres -f ./postgres-no-pv.yaml
@@ -67,8 +67,8 @@ docker run -d --rm -v postges:/var/lib/postgresql/data -e POSTGRES_DB=postgresdb
 
 
 ```
-kubectl apply -f persistedvolume.yaml
-kubectl apply -n postgres -f persistedvolumeclaim.yaml
+kubectl apply -f persistentvolume.yaml
+kubectl apply -n postgres -f persistentvolumeclaim.yaml
 
 kubectl apply -n postgres -f postgres-with-pv.yaml
 
