@@ -9,7 +9,7 @@ docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh amazon/aws-cli
 
 cd ./kubernetes/cloud/amazon
 
-yum install jq
+yum install jq gzip nano tar git
 ```
 
 ## Login to AWS
@@ -116,13 +116,27 @@ aws eks create-nodegroup \
 ## EKS CTL example
 
 ```
-eksctl create cluster --name getting-started-eks-1 \
+# Install EKS CTL
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+mv /tmp/eksctl /usr/local/bin
+
+# Create SSH key for Node access (if you need it)
+yum install openssh
+mkdir -p ~/.ssh/
+PASSPHRASE="mysuperstrongpassword"
+ssh-keygen -t rsa -b 4096 -N "${PASSPHRASE}" -C "your_email@example.com" -q -f  ~/.ssh/id_rsa
+chmod 400 ~/.ssh/id_rsa*
+
+
+eksctl create cluster --name getting-started-eks \
 --region ap-southeast-2 \
 --version 1.16 \
 --managed \
 --node-type t2.small \
 --nodes 1 \
---node-volume-size 200 
+--node-volume-size 200 \
+--ssh-access \
+--ssh-public-key=~/.ssh/id_rsa.pub \
 
 ```
 ## Create some sample containers

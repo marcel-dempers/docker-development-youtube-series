@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playlists-api
+  labels:
+    app: playlists-api
+spec:
+  selector:
+    matchLabels:
+      app: playlists-api
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: playlists-api
+    spec:
+      containers:
+      - name: playlists-api
+        image: aimvector/service-mesh:playlists-api-1.0.0
+        imagePullPolicy : Always
+        ports:
+        - containerPort: 10010
+        env:
+        - name: "ENVIRONMENT"
+          value: "DEBUG"
+        - name: "REDIS_HOST"
+          value: "playlists-db"
+        - name: "REDIS_PORT"
+          value: "6379"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playlists-api
+  labels:
+    app: playlists-api
+spec:
+  type: ClusterIP
+  selector:
+    app: playlists-api
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 10010
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: playlists-api
+spec:
+  rules:
+  - host: servicemesh.demo
+    http:
+      paths:
+      - path: /api/playlists(/|$)(.*)
+        backend:
+          serviceName: playlists-api
+          servicePort: 80
+
+

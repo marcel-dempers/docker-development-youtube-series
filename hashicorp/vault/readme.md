@@ -17,8 +17,8 @@ kind create cluster --name vault --kubeconfig ~/.kube/kind-vault --image kindest
 
 ## TLS End to End Encryption
 
-VIDEO: <Coming-Soon>
-See steps in `hashicorp/vault/tls/ssl_generate_self_signed.txt`
+VIDEO: ```<Coming-Soon>```  
+See steps in [./tls/ssl_generate_self_signed.txt](./tls/ssl_generate_self_signed.txt)
 You'll need to generate TLS certs (or bring your own)
 Create base64 strings from the files, place it in the `server-tls-secret.yaml` and apply it.
 Remember not to check-in your TLS to GIT :)
@@ -38,21 +38,20 @@ kubectl -n vault-example get pvc
 ```
 ensure vault-claim is bound, if not, `kubectl -n vault-example describe pvc vault-claim`
 ensure correct storage class is used for your cluster.
-if you need to change the storage class, deleve the pvc , edit YAML and re-apply
+if you need to change the storage class, delete the pvc, edit YAML and re-apply
 
 ## Initialising Vault
 
 ```
 kubectl -n vault-example exec -it vault-example-0 vault operator init
-#unseal 3 times
+# unseal 3 times
 kubectl -n vault-example exec -it vault-example-0 vault operator unseal
 kubectl -n vault-example get pods
 ```
 
-## Depploy the Injector
+## Deploy the Injector
 
-VIDEO: <Coming-Soon>
-
+VIDEO: ```<Coming-Soon>```  
 Injector allows pods to automatically get secrets from the vault.
 
 ```
@@ -68,7 +67,6 @@ For the injector to be authorised to access vault, we need to enable K8s auth
 kubectl -n vault-example exec -it vault-example-0 vault login
 kubectl -n vault-example exec -it vault-example-0 vault auth enable kubernetes
 
-
 kubectl -n vault-example exec -it vault-example-0 sh
 vault write auth/kubernetes/config \
 token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
@@ -77,7 +75,6 @@ kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 exit
 
 kubectl -n vault-example get pods
-
 ```
 
 # Summary
@@ -108,7 +105,7 @@ Objective:
 * Let's delegate Vault to manage life cycles of our database credentials
 * Deploy an app, that automatically gets it's credentials from vault
 
-[Try it](./example-apps/basic-secret/readme.md)
+[Try it](./example-apps/dynamic-postgresql/readme.md)
 
 
 

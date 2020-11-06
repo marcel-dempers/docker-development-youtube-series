@@ -4,7 +4,7 @@ kind: ServiceAccount
 metadata:
   name: jenkins
 ---
-kind: Role
+kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: jenkins
@@ -20,7 +20,19 @@ rules:
   verbs: ["get","list","watch"]
 - apiGroups: [""]
   resources: ["secrets"]
-  verbs: ["get"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["ingresses"]
+  verbs: ["create","delete","get","list","patch","update"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -29,7 +41,7 @@ metadata:
   name: jenkins
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: jenkins
 subjects:
 - kind: ServiceAccount

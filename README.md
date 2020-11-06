@@ -1,71 +1,37 @@
-# Docker Development Guide
-## a Youtube Series
+# The Ultimate Engineer Toolbox <img src="https://www.shareicon.net/data/128x128/2017/04/11/883708_media_512x512.png" alt="YouTube" width="5%" height="5%"> :hammer::wrench:
 
-Hi! 
+A Collection of tools, hands-on walkthroughs with source code. <br/>
+The Ultimate Swiss Army knife for DevOps, Developers and Platform Engineers
 
-This is the source code for the YouTube series covering docker-based development workflows.
+<br/>
+
+
+| Steps  | Playlist :tv: | Source :octocat: | 
+|---|---|---|
+| Learn Kubernetes :snowflake:  | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVvUEdqaBeMK2awVThNujwMd" title="Kubernetes"><img src="https://i.ytimg.com/vi/8h4FoWK7tIA/hqdefault.jpg" width="15%" height="15%" alt="Kubernetes Guide" /></a>  | [source]("./kubernetes/README.md")   | 
+| Learn about CI/CD tools :whale: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVsSsrnZimHEf7NJ1MlRhQUj" title="CI/CD"><img src="https://i.ytimg.com/vi/myCcJJ_Fk10/hqdefault.jpg" width="15%" height="15%" alt="CI/CD Guide" /></a>  |   |   |   |
+| Deploy Kubernetes to the cloud :partly_sunny: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVsUhzNBkn-rPzXtPNpJu1-k" title="Cloud K8s"><img src="https://i.ytimg.com/vi/3jA9EfkSAUU/hqdefault.jpg" width="15%" height="15%" alt="Cloud Guide" /></a>  | [source]("./kubernetes/cloud/README.md")  | 
+| Monitoring Kubernetes :mag: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVuEXCrRkPFWLXRKWNLOVUHn" title="Cloud K8s"><img src="https://i.ytimg.com/vi/5o37CGlNLr8/hqdefault.jpg" width="15%" height="15%" alt="Cloud Guide" /></a>   | [source]("./monitoring/prometheus/kubernetes/README.md")  | 
+| Guide to Logging :page_with_curl: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVvfDxFW50Mdezk0xum-tyHT" title="Cloud K8s"><img src="https://i.ytimg.com/vi/MMVdkzeQ848/hqdefault.jpg" width="15%" height="15%" alt="Cloud Guide" /></a>   | [source]("./monitoring/logging/README.md")  |  
+| Guide to ServiceMesh :globe_with_meridians: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVsmxHpGsMjTOROn3i99lzTA" title="Cloud K8s"><img src="https://i.ytimg.com/vi/rVNPnHeGYBE/hqdefault.jpg" width="15%" height="15%" alt="Cloud Guide" /></a>   | [source]("./kubernetes/servicemesh/README.md")  |
+
 
 ## Docker Development Basics
 
-Part #1: The Dockerfiles (.NET, Golang, Python, NodeJS) <br/>
-Video:                    https://youtu.be/wyjNpxLRmLg  <br/>
-Source code for Part #1:    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part1
 
-Part #2: The code (.NET, Golang, Python, NodeJS) <br/>
-Video:                     https://youtu.be/EdmKENqnQUw   <br/>
-Source code for Part #2    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part2
+| Step :heavy_check_mark:  | Video :movie_camera: | Source Code :octocat: |
+|---|---|---|
+| Working with `Dockerfiles` <br/>(.NET, Golang, Python, NodeJS) | <a href="https://youtu.be/wyjNpxLRmLg" title="Docker 1"><img src="https://i.ytimg.com/vi/wyjNpxLRmLg/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a>  | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/part1)  |
+| Working with code <br/>(.NET, Golang, Python, NodeJS) | <a href="https://youtu.be/EdmKENqnQUw" title="Docker 1"><img src="https://i.ytimg.com/vi/EdmKENqnQUw/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a>  | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/part2)  |
+| Docker Multistage explained  | <a href="https://youtu.be/2lQ7WrwpZfI" title="Docker 1"><img src="https://i.ytimg.com/vi/2lQ7WrwpZfI/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a>  | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/part3)  |
+| Debugging Go in Docker  | <a href="https://youtu.be/kToyI16IFxs" title="Docker 1"><img src="https://i.ytimg.com/vi/kToyI16IFxs/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a> | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/master/golang)  |
+| Debugging .NET in Docker  | <a href="https://youtu.be/ds2bud0ZYTY" title="Docker 1"><img src="https://i.ytimg.com/vi/ds2bud0ZYTY/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a>  | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/part5)  |
+| Debugging Python in Docker  | <a href="https://youtu.be/b78Tg-YmJZI" title="Docker 1"><img src="https://i.ytimg.com/vi/b78Tg-YmJZI/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a>  | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/debugging-python)  |
+| Debugging NodeJS in Docker  | <a href="https://youtu.be/ktvgr9VZ4dc" title="Docker 1"><img src="https://i.ytimg.com/vi/ktvgr9VZ4dc/hqdefault.jpg" width="15%" height="15%" alt="Docker 1" /></a>  | [source](https://github.com/marcel-dempers/docker-development-youtube-series/tree/master/nodejs)  |
 
-Part #3: Docker Multistage explained <br/>
-Video:                     https://youtu.be/2lQ7WrwpZfI  <br/>
-Source code for Part #2    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part3
-
-Part #4:                   Debugging Golang code in Docker <br/>
-Video:                     https://youtu.be/kToyI16IFxs  <br/>
-Source code for Part #4    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part4
-
-Part #5:                   Debugging .NET Core code in Docker <br/>
-Video:                     https://youtu.be/ds2bud0ZYTY  <br/>
-Source code for Part #5    https://github.com/marcel-dempers/docker-development-youtube-series/tree/part5
-
-Part #6:                   Debugging Python code in Docker using VSCode <br/>
-Video:                     https://youtu.be/b78Tg-YmJZI  <br/>
-Source code for Part #6    https://github.com/marcel-dempers/docker-development-youtube-series/tree/debugging-python
+## Engineering Toolbox :hammer::wrench:
 
 
-## Prometheus Monitoring
+Checkout the toolbox [website](https://marceldempers.dev/toolbox)
 
-Application and Server monitoring <br/>
-Let's take a look how to monitor application code using Prometheus.
-
-See the [Prometheus Monitoring](./prometheus-monitoring/readme.md) readme guide for detailed steps
-
-## Kubernetes Development Basics
-
-See the [Kubernetes Guide](./kubernetes/readme.md) readme guide for detailed steps
-
-Part #1                     Kubernetes Getting Started on Windows <br/>
-Video:                      https://youtu.be/8h4FoWK7tIA <br/>
-
-Part #2                     Kubernetes kubectl | the basics <br/>
-Video:                      https://youtu.be/feLpGydQVio <br/>   
-
-Part #3                     Kubernetes deployments | the basics <br/>
-Video:                      https://youtu.be/DMpEZEakYVc <br/>  
-
-Part #4                     Kubernetes config management | the basics <br/>
-Video:                      https://youtu.be/o-gXx7r7Rz4 <br/>  
-
-Part #5                     Kubernetes secrets | the basics <br/>
-Video:                      https://youtu.be/o36yTfGDmZ0 <br/>
-
-Part #6                     Kubernetes load balancing and services | the basics <br/>
-Video:                      https://youtu.be/xhva6DeKqVU <br/>  
-
-Part #7                     Kubernetes ingress | the basics <br/>
-Video:                      https://youtu.be/izWCkcJAzBw <br/>  
-
-Kubernetes in the Cloud
-
-Checkout my series on running Kubernetes in the Cloud [here](./kubernetes/cloud/readme.md) <br/>
-
-More details coming soon!
+<a href="https://marceldempers.dev/toolbox" title="toolbox 1"><img src="./toolbox.png" alt="toolbox 1" /></a>

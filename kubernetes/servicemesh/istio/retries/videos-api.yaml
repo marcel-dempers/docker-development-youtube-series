@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: videos-api
+spec:
+  hosts:
+  - videos-api
+  http:
+  - route:
+    - destination:
+        host: videos-api
+    retries:
+      attempts: 10
+      perTryTimeout: 2s

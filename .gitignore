@@ -4,3 +4,8 @@ node_modules/
 __pycache__/
 *.pem
 *.csr
+# terraform
+.terraform
+*.tfstate
+*.tfstate.*
+security/letsencrypt/introduction/certs/**

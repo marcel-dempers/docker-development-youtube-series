@@ -1,0 +1,43 @@
+version: "3.4"
+services:
+  videos-web:
+    container_name: videos-web
+    image: aimvector/service-mesh:videos-web-1.0.0
+    build:
+      context: ./applications/videos-web
+    ports:
+      - 80:80
+  playlists-api:
+    container_name: playlists-api
+    image: aimvector/service-mesh:playlists-api-1.0.0
+    build:
+      context: ./applications/playlists-api
+    environment:
+    - "ENVIRONMENT=DEBUG"
+    - "REDIS_HOST=playlists-db"
+    - "REDIS_PORT=6379"
+    ports:
+    - 81:10010
+  videos-api:
+    container_name: videos-api
+    image: aimvector/service-mesh:videos-api-1.0.0
+    build:
+      context: ./applications/videos-api
+    environment:
+    - "ENVIRONMENT=DEBUG"
+    - "REDIS_HOST=videos-db"
+    - "REDIS_PORT=6379"
+    ports:
+    - 82:10010
+  videos-db:
+    container_name: videos-db
+    image: redis:6.0-alpine
+    command: [ "redis-server" , "--dir", "/tmp", "--appendonly", "yes"]
+    volumes:
+      - ./applications/videos-db/appendonly.aof:/tmp/appendonly.aof
+  playlists-db:
+    container_name: playlists-db
+    image: redis:6.0-alpine
+    command: [ "redis-server" , "--dir", "/tmp", "--appendonly", "yes"]
+    volumes:
+      - ./applications/playlists-db/appendonly.aof:/tmp/appendonly.aof
