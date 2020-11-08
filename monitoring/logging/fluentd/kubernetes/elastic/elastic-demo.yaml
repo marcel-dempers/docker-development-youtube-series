@@ -14,21 +14,27 @@ spec:
       labels:
         app: elasticsearch
     spec:
+      initContainers:
+      - name: vm-max-fix
+        image: busybox
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
       containers:
       - name: elasticsearch
         image: elasticsearch:7.9.1
-        imagePullPolicy: IfNotExists
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9200
-      env:
-      - name: node.name
-        value: "elasticsearch"
-      - name: cluster.initial_master_nodes
-        value: "elasticsearch"
-      - name: bootstrap.memory_lock
-        value: "true"
-      - name: ES_JAVA_OPTS
-        value: "-Xms512m -Xmx512m"
+        env:
+        - name: node.name
+          value: "elasticsearch"
+        - name: cluster.initial_master_nodes
+          value: "elasticsearch"
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
 ---
 apiVersion: v1
 kind: Service

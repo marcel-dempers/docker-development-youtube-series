@@ -17,14 +17,14 @@ spec:
       containers:
       - name: kibana
         image: kibana:7.9.1
-        imagePullPolicy: IfNotExists
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5601
-      env:
-      - name: ELASTICSEARCH_URL
-        value: "http://elasticsearch:9200"
-      - name: ELASTICSEARCH_HOSTS
-        value: "http://elasticsearch:9200"
+        env:
+        - name: ELASTICSEARCH_URL
+          value: "http://elasticsearch:9200"
+        - name: ELASTICSEARCH_HOSTS
+          value: "http://elasticsearch:9200"
 ---
 apiVersion: v1
 kind: Service
