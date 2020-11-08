@@ -18,7 +18,7 @@ Checkout [kubectl](./kubectl.md) for detailed steps
 
 Checkout [deployments](./deployments/readme.md) for detailed steps
 
-<a href="https://www.youtube.com/watch?v=feLpGydQVio" title="Kubernetes"><img src="https://i.ytimg.com/vi/feLpGydQVio/hqdefault.jpg" width="25%" height="25%" alt="Kubernetes Guide" /></a>
+<a href="https://www.youtube.com/watch?v=DMpEZEakYVc" title="Kubernetes"><img src="https://i.ytimg.com/vi/DMpEZEakYVc/hqdefault.jpg" width="25%" height="25%" alt="Kubernetes Guide" /></a>
 
 ## Configuration Management
 
