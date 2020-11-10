@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: "{{ .Values.name }}"
-        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+        image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -56,4 +56,4 @@ spec:
           limits:
             memory: "1024Mi"
             cpu: "1"
-        {{- end}}
+        {{- end}} 
