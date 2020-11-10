@@ -47,6 +47,8 @@ chmod +x /usr/local/bin/helm
 
 ## Create our first Chart
 
+For reference in the rest of the guide, I have left my full templates in: <br/>
+`<GitRepo>/kubernetes/helm/example-app`
 ```
 cd kubernetes/helm
 
@@ -157,7 +159,7 @@ spec:
 
 # rollout the change
 
-helm upgrade example-app example-app --values ./example-app/example-app.values.yaml
+helm upgrade example-app example-app --values ./example-app/example-app-01.values.yaml
 ```
 
 ## If\Else and Default values
@@ -199,5 +201,5 @@ This may help you keep the `values.yaml` file small <br/>
 
 # rollout the change
 
-helm upgrade example-app example-app --values ./example-app/example-app.values.yaml
+helm upgrade example-app example-app --values ./example-app/example-app-01.values.yaml
 ```
