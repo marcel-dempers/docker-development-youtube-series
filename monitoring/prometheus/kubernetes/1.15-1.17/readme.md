@@ -36,3 +36,7 @@ kubectl -n monitoring port-forward prometheus-k8s-0 9090
 # Dashboards 
 kubectl -n monitoring port-forward <grafana-pod-name> 3000
 ```
+
+# Sources
+
+The source code for monitoring Kubernetes 1.15-1.17 comes from the [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus/tree/v0.3.0/manifests) v0.3.0 tree
