@@ -79,7 +79,7 @@ az aks create -n aks-getting-started \
 --ssh-key-value ./id_rsa.pub \
 --network-plugin kubenet \
 --service-principal $SERVICE_PRINCIPAL \
---client-secret $SERVICE_PRINCIPAL_SECRET \
+--client-secret "$SERVICE_PRINCIPAL_SECRET" \
 --output none
 
 # if your SP key is invalid, generate a new one:
