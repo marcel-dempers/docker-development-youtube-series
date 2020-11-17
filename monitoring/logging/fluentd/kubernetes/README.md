@@ -92,10 +92,17 @@ kubectl apply -f .\monitoring\logging\fluentd\kubernetes\fluentd-configmap.yaml
 Let's deploy our `daemonset`:
 
 ```
-kubectl apply -f .\monitoring\logging\fluentd\kubernetes\fluentd-rbac.yaml 
 kubectl apply -f .\monitoring\logging\fluentd\kubernetes\fluentd.yaml
-
 kubectl -n fluentd get pods
+
+```
+
+Let's deploy our example app that writes logs to `stdout`
+
+```
+kubectl apply -f .\monitoring\logging\fluentd\kubernetes\counter.yaml
+kubectl get pods
+
 ```
 
 ## Demo ElasticSearch and Kibana
