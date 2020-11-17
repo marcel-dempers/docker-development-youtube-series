@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.name }}"
+data:
+  config.json: |
+    {
+      "environment" : "dev"
+    }
+# kubectl create configmap example-config --from-file ./golang/configs/config.json

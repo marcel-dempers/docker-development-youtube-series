@@ -23,3 +23,7 @@ kubectl -n monitoring apply -f ./monitoring/prometheus/kubernetes/1.18.4/prometh
 kubectl -n monitoring create -f ./monitoring/prometheus/kubernetes/1.18.4/grafana/
 
 ```
+
+# Sources
+
+The source code for monitoring Kubernetes 1.18.4 comes from the [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus/tree/v0.6.0/manifests) v0.6.0 tree
