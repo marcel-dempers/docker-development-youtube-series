@@ -167,10 +167,10 @@ We should now be able to access the dashboard on `http://localhost:8888`
 ## Targets
 
 ```
-# add a route for shipa API
+# add a route for NGINX
 route add 10.100.10.10/32 MASK 255.255.255.255  $(minikube ip)
 
-# add a route for shipa ingress
+# add a route for Traefik
 route add 10.100.10.20/32 MASK 255.255.255.255  $(minikube ip)
 
 shipa target-add dev 10.100.10.10
@@ -204,9 +204,15 @@ shipa cluster-list
 
 ```
 shipa login
-shipa app-create helloworld static -t admin -o theonepool
+shipa app-create go-helloworld static -t admin -o theonepool
 
-shipa app-deploy -i aimvector/python:1.0.4 -a helloworld
+
+cd kubernetes\shipa\developers
+
+docker build aimvector/shipa-golang:v1
+docker push aimvector/shipa-golang:v1
+
+shipa app-deploy -i aimvector/shipa-golang:v1 -a go-helloworld
 
 ```
 
