@@ -11,8 +11,8 @@ data:
     # This source gets all logs from local docker host
     @include pods-kind-fluent.conf
     #@include pods-fluent.conf
-    @include file-fluent.conf
-    #@include elastic-fluent.conf
+    #@include file-fluent.conf
+    @include elastic-fluent.conf
   pods-kind-fluent.conf: |-
     <source>
       @type tail
