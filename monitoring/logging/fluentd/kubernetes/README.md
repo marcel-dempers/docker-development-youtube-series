@@ -70,7 +70,7 @@ This helps us prevent having a large complex file.
 
 <br/>
 
-We have 3 files in our `fluentd-configmap.yaml` :
+We have 5 files in our `fluentd-configmap.yaml` :
 * fluent.conf: Our main config which includes all other configurations
 * pods-kind-fluent.conf: `tail` config that sources all pod logs on the `kind` cluster.
   Note: `kind` cluster writes its log in a different format
@@ -92,6 +92,7 @@ kubectl apply -f .\monitoring\logging\fluentd\kubernetes\fluentd-configmap.yaml
 Let's deploy our `daemonset`:
 
 ```
+kubectl apply -f .\monitoring\logging\fluentd\kubernetes\fluentd-rbac.yaml 
 kubectl apply -f .\monitoring\logging\fluentd\kubernetes\fluentd.yaml
 kubectl -n fluentd get pods
 
