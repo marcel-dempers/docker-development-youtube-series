@@ -1,0 +1,3 @@
+auth:
+  adminUser: prod-aks-admin@shipa.io
+  adminPassword: shipa-prod-aks2020
