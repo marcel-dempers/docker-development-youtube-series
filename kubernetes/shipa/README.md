@@ -4,18 +4,6 @@
 
 To get the most out of Shipa, I'll be using real Cloud Provider Kubernetes as well as a local <br/>
 `minikube` cluster. <br/>
-To create a Kubernetes cluster, you can follow my guides on each Cloud provider below: <br/>
-
-## Kubernetes in the Cloud
-
-|Cloud   | Kubernetes   | Video  | Source Code  |   |
-|---|---|---|---|---|
-|Azure          | AKS  |[Source Code](../cloud/azure/getting-started.md) | <a href="https://youtu.be/eyvLwK5C2dw" title="AKS"><img src="https://i.ytimg.com/vi/eyvLwK5C2dw/hqdefault.jpg" width="25%" height="25%" alt="AKS Guide" /></a>  |   
-|Amazon         | EKS  |[Source Code](../cloud/amazon/getting-started.md)  |  <a href="https://youtu.be/QThadS3Soig" title="EKS"><img src="https://i.ytimg.com/vi/QThadS3Soig/hqdefault.jpg" width="25%" height="25%" alt="EKS Guide" /></a> |   
-|Google         | GKE  |[Source Code](../cloud/google/getting-started.md)  | <a href="https://youtu.be/-fbH5Qs3QXU" title="GKE"><img src="https://i.ytimg.com/vi/-fbH5Qs3QXU/hqdefault.jpg" width="25%" height="25%" alt="GKE Guide" /></a>  |   
-|Digital Ocean  | DO  |[Source Code](../cloud/digitalocean/getting-started.md)   | <a href="https://youtu.be/PvfBCE-xgBY" title="DO"><img src="https://i.ytimg.com/vi/PvfBCE-xgBY/hqdefault.jpg" width="25%" height="25%" alt="DO Guide" /></a>  |   
-|Linode         | LKE |[Source Code](../cloud/linode/getting-started.md)  | <a href="https://youtu.be/VSPUWEtqtnY" title="LKE"><img src="https://i.ytimg.com/vi/VSPUWEtqtnY/hqdefault.jpg" width="25%" height="25%" alt="LKE Guide" /></a>  |   
-
 
 ## Minikube 
 
@@ -32,6 +20,16 @@ kubectl get nodes
 NAME       STATUS   ROLES    AGE   VERSION
 minikube   Ready    master   45s   v1.18.2
 
+```
+
+## Minikube Traffic Routes
+
+```
+# add a route for accessing Shipa API
+route add 10.100.10.10/32 MASK 255.255.255.255  $(minikube ip)
+
+# add a route for accessing our Applications
+route add 10.100.10.20/32 MASK 255.255.255.255  $(minikube ip)
 ```
 
 # Getting Started with Shipa
@@ -163,15 +161,14 @@ shipa-postgres                    ClusterIP   10.104.18.123    <none>        543
 ## Targets
 
 ```
-# add a route for accessing Shipa API
-route add 10.100.10.10/32 MASK 255.255.255.255  $(minikube ip)
-
-# add a route for accessing our Applications
-route add 10.100.10.20/32 MASK 255.255.255.255  $(minikube ip)
-
 shipa target-add dev 10.100.10.10
 shipa target-list
 shipa target-set dev
+shipa login
+
+#username: admin@shipa.io
+#password: shipa2020
+
 ```
 
 ## Pools 
@@ -179,8 +176,16 @@ shipa target-set dev
 https://learn.shipa.io/docs/pool-management
 
 ```
-shipa pool-add prod --public --kube-namespace blue-team --provisioner kubernetes
+shipa pool-add dev --public --kube-namespace dev-team --provisioner kubernetes
 shipa pool-list
+
+```
+
+## Teams
+
+```
+shipa team-create dev-team
+shipa pool-constraint-set theonepool team dev-team --append
 
 ```
 
@@ -196,53 +201,141 @@ shipa cluster-list
 
 ```
 
-## Applications
+## Deploy Applications to Shipa (minikube)
 
 ```
-shipa login
-shipa app-create go-helloworld static -t admin -o theonepool
+cd kubernetes\shipa\developers\docker\golang
 
-
-cd kubernetes\shipa\developers
-
-docker build .-t aimvector/shipa-golang:v1
+docker build . -t aimvector/shipa-golang:v1
 docker push aimvector/shipa-golang:v1
 
-shipa app-deploy -i aimvector/shipa-golang:v1 -a go-helloworld
+# create an app: Golang
+shipa app-create go-helloworld static -t dev-team -o theonepool
 
+# deploy the app: Golang
+shipa app-deploy -i aimvector/shipa-golang:v1 -a go-helloworld
+shipa app-list
 
 cd .\kubernetes\shipa\developers\docker\python\
 
 docker build . -t aimvector/shipa-python:v1
 docker push aimvector/shipa-python:v1
 
-shipa app-create python-helloworld static -t admin -o theonepool
+# create an app: Python
+shipa app-create python-helloworld static -t dev-team -o theonepool
 shipa env set FLASK_APP=/app/server.py -a python-helloworld
+
+# deploy the app: Python
 shipa app-deploy -i aimvector/shipa-python:v1 -a python-helloworld
-
-
-
-# deploy to prod
-
-shipa app-create python-helloworld-prod static -t admin -o prod
-shipa env set FLASK_APP=/app/server.py -a python-helloworld-prod
-shipa app-deploy -i aimvector/shipa-python:v1 -a python-helloworld-prod
-
-
-shipa app-create go-helloworld-prod static -t admin -o prod
-shipa app-deploy -i aimvector/shipa-golang:v1 -a go-helloworld-prod
+shipa app-list
 
 ```
 
+## Kubernetes in the Cloud
+
+To create a Kubernetes cluster, you can follow my guides on each Cloud provider below: <br/>
+
+|Cloud   | Kubernetes   |  Source |  Video |   |
+|---|---|---|---|---|
+|Azure          | AKS  |[Source Code](../cloud/azure/getting-started.md) | <a href="https://youtu.be/eyvLwK5C2dw" title="AKS"><img src="https://i.ytimg.com/vi/eyvLwK5C2dw/hqdefault.jpg" width="25%" height="25%" alt="AKS Guide" /></a>  |   
+|Amazon         | EKS  |[Source Code](../cloud/amazon/getting-started.md)  |  <a href="https://youtu.be/QThadS3Soig" title="EKS"><img src="https://i.ytimg.com/vi/QThadS3Soig/hqdefault.jpg" width="25%" height="25%" alt="EKS Guide" /></a> |   
+|Google         | GKE  |[Source Code](../cloud/google/getting-started.md)  | <a href="https://youtu.be/-fbH5Qs3QXU" title="GKE"><img src="https://i.ytimg.com/vi/-fbH5Qs3QXU/hqdefault.jpg" width="25%" height="25%" alt="GKE Guide" /></a>  |   
+|Digital Ocean  | DO  |[Source Code](../cloud/digitalocean/getting-started.md)   | <a href="https://youtu.be/PvfBCE-xgBY" title="DO"><img src="https://i.ytimg.com/vi/PvfBCE-xgBY/hqdefault.jpg" width="25%" height="25%" alt="DO Guide" /></a>  |   
+|Linode         | LKE |[Source Code](../cloud/linode/getting-started.md)  | <a href="https://youtu.be/VSPUWEtqtnY" title="LKE"><img src="https://i.ytimg.com/vi/VSPUWEtqtnY/hqdefault.jpg" width="25%" height="25%" alt="LKE Guide" /></a>  |   
+
+
+## Deploy Shipa to Azure AKS
+
+Let's add Shipa to each one of our clusters running in the Cloud.
+In the video I will deploy Shipa to an Azure AKS cluster:
 
 ```
-kubectl apply -f shipa-admin-service-account.yaml
+# ensure we are pointing to AKS Or the
+kubectl get nodes
 
-# get the sa token
+# deploy Shipa to AKS
+
+cd kubernetes/shipa
+
+# create username + password override
+cat > ops/values.override.yaml << EOF
+auth:
+  adminUser: prod-aks-admin@shipa.io
+  adminPassword: shipa-prod-aks2020
+EOF
+
+kubectl create ns shipa-system
+
+kubectl apply -n shipa-system -f limits.yaml
+
+helm install shipa ./installs/shipa-helm-chart-1.1.1 --timeout=1000s --namespace=shipa-system -f ops/values.override.yaml
+
+#wait until the dashboard pod is up!
+kubectl --namespace=shipa-system get pods
+
+# get the ingress IP for the Shipa API
+kubectl --namespace=shipa-system get svc shipa-ingress-nginx  -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+
+# add the ingress IP as our Shipa target for AKS dev
+shipa target-add dev-aks 20.53.128.244 -s
+shipa target-set dev-aks
+shipa target-list
+
+# lets login, view the node, and dashboard app URL
+shipa login prod-aks-admin@shipa.io
+shipa node-list
+shipa app-list
+
+#add a host file entry for the dashboard, I.E:
+20.193.20.106 dashboard.20.193.20.106.shipa.cloud
+
+# create a team for developers
+shipa team-create dev-team
+
+#allow dev-team to deploy to AKS pool
+shipa pool-constraint-set theonepool team dev-team --append
+
+```
+
+## MultiCloud - Add Shipa to Amazon EKS
+
+```
+# add service account to EKS cluster to allow Shipa to connect
+kubectl apply -f ops/shipa-admin-service-account.yaml 
+
+#add a pool allow people to deploy to Amazon
+shipa pool-add amazon --public --kube-namespace dev-team --provisioner kubernetes
+
+# allow dev-team to deploy to Amazon
+shipa pool-constraint-set amazon  team dev-team --append
+
+# We will need the EKS token of the service account to allow connection
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep shipa-admin | awk '{print $1}')
-# get the k8s CA
 
+# We will also need the CA cert of Kubernetes
 kubectl get secret $(kubectl get secret | grep default-token | awk '{print $1}') -o jsonpath='{.data.ca\.crt}' | base64 -d
+```
+
+On the dashboard, we add the cluster using the above information.<br/>
+We can obtain the EKS address in the Amazon console. <br/>
+
+## Deploying Apps to MultiCloud
+
+```
+# create an app: Golang
+shipa app-create go-helloworld static -t dev-team -o theonepool
+
+# deploy the app: Golang
+shipa app-deploy -i aimvector/shipa-golang:v1 -a go-helloworld
+shipa app-list
+
+# create an app: Python
+shipa app-create python-helloworld static -t dev-team -o amazon
+shipa env set FLASK_APP=/app/server.py -a python-helloworld
+
+# deploy the app: Python
+shipa app-deploy -i aimvector/shipa-python:v1 -a python-helloworld
+shipa app-list
 
 ```
 
