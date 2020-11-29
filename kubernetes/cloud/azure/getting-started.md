@@ -20,7 +20,7 @@ az login
 
 az account list -o table
 SUBSCRIPTION=<id>
-az account set --subscription <SubscriptionId-id-here>
+az account set --subscription $SUBSCRIPTION
 
 ```
 
