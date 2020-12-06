@@ -9,20 +9,15 @@ kind create cluster --name certmanager --image kindest/node:v1.19.1
 ```
 
 
-## Issuer 
+## Concepts 
 
-https://cert-manager.io/docs/concepts/issuer/
+It's important to understand the various concepts and new Kubernetes resources that <br/>
+`cert-manager` introduces.
 
-
-## Certificate
-
-https://cert-manager.io/docs/concepts/certificate/
-
-
-## CertificateRequests
-
-## Orders and Challenges
-
+* Issuers [docs](https://cert-manager.io/docs/concepts/issuer/)
+* Certificate [docs](https://cert-manager.io/docs/concepts/certificate/)
+* CertificateRequests [docs](https://cert-manager.io/docs/concepts/certificaterequest/)
+* Orders and Challenges [docs](https://cert-manager.io/docs/concepts/acme-orders-challenges/)
 
 ## Installation 
 
@@ -95,20 +90,21 @@ replicaset.apps/cert-manager-webhook-578954cdd       1         1         1      
 Let's create some test certificates
 
 ```
- kubectl apply -f test.yaml
+kubectl create ns cert-manager-test
 
-  kubectl describe certificate -n cert-manager-test
+kubectl apply -f ./selfsigned/issuer.yaml
+
+kubectl apply -f ./selfsigned/certificate.yaml
+
+kubectl describe certificate -n cert-manager-test
+kubectl get secrets -n cert-manager-test
+
+kubectl delete ns cert-manager-test
 ```
 
 ## Configuration 
 
-
 https://cert-manager.io/docs/configuration/
-
-
-## DNS
-
-## HTTP
 
 ## Ingress Controller
 
@@ -120,7 +116,6 @@ kubectl create ns ingress-nginx
 kubectl -n ingress-nginx apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml
 
 kubectl -n ingress-nginx get pods
-kubectl -n ingress-nginx get svc
 
 kubectl -n ingress-nginx --address 0.0.0.0 port-forward svc/ingress-nginx-controller 80
 kubectl -n ingress-nginx --address 0.0.0.0 port-forward svc/ingress-nginx-controller 443
@@ -155,6 +150,17 @@ kubectl describe clusterissuer letsencrypt-cluster-issuer
 
 ```
 
+## Deploy a pod that uses SSL
+
+```
+kubectl apply -f .\kubernetes\deployments\
+kubectl apply -f .\kubernetes\services\
+kubectl get pods
+# deploy an ingress route
+kubectl apply -f .\kubernetes\cert-manager\ingress.yaml
+
+```
+
 ## Issue Certificate 
 
 ```
@@ -168,12 +174,4 @@ kubectl describe certificate example-app
 kubectl get secrets
 NAME                  TYPE                                  DATA   AGE
 example-app-tls       kubernetes.io/tls                     2      84m
-```
-
-## Deploy a pod that uses SSL
-
-```
-kubectl apply -f .\kubernetes\deployments\
-kubectl apply -f .\kubernetes\configmaps\
-kubectl apply -f .\kubernetes\services\
 ```
