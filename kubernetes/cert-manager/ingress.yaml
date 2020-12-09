@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: example-app
+spec:
+  tls:
+  - hosts:
+    - marcel.guru
+    secretName: example-app-tls
+  rules:
+  - host: marcel.guru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: example-service
+            port: 
+              number: 80
