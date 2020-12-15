@@ -168,7 +168,7 @@ pipeline {
                 #!/bin/bash
                 cd $WORKSPACE/docker-development-youtube-series/
                 #get kubectl for this demo
-                curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+                curl -O https://storage.googleapis.com/kubernetes-release/release/v1.8.4/bin/linux/amd64/kubectl
                 chmod +x ./kubectl
                 ./kubectl apply -f ./kubernetes/configmaps/configmap.yaml
                 ./kubectl apply -f ./kubernetes/secrets/secret.yaml
