@@ -22,7 +22,7 @@ spec:
       serviceAccountName: jenkins
       containers:
       - name: jenkins
-        image: jenkins/jenkins:2.237-alpine
+        image: jenkins/jenkins:2.263-alpine
         imagePullPolicy: IfNotPresent
         env:
         - name: JAVA_OPTS
