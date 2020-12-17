@@ -38,10 +38,10 @@ spec:
         resources:
           requests:
             memory: "2048Mi"
-            cpu: "2"
+            cpu: "1"
           limits:
             memory: "2048Mi"
-            cpu: "2"
+            cpu: "1"
       restartPolicy: Always
       securityContext:
         runAsUser: 0
