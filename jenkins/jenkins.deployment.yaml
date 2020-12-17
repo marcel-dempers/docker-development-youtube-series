@@ -22,7 +22,7 @@ spec:
       serviceAccountName: jenkins
       containers:
       - name: jenkins
-        image: jenkins/jenkins:2.263-alpine
+        image: jenkins/jenkins:lts
         imagePullPolicy: IfNotPresent
         env:
         - name: JAVA_OPTS
@@ -35,6 +35,13 @@ spec:
         volumeMounts:
         - mountPath: /var/jenkins_home
           name: jenkins
+        resources:
+          requests:
+            memory: "2048Mi"
+            cpu: "2"
+          limits:
+            memory: "2048Mi"
+            cpu: "2"
       restartPolicy: Always
       securityContext:
         runAsUser: 0
