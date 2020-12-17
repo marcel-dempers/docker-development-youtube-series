@@ -4,7 +4,7 @@ metadata:
   name: jenkins
 spec:
   capacity:
-    storage: 5Gi
+    storage: 7Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
