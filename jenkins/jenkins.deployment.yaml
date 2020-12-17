@@ -35,13 +35,13 @@ spec:
         volumeMounts:
         - mountPath: /var/jenkins_home
           name: jenkins
-        resources:
-          requests:
-            memory: "2048Mi"
-            cpu: "1"
-          limits:
-            memory: "2048Mi"
-            cpu: "1"
+#        resources:
+#          requests:
+#            memory: "2048Mi"
+#            cpu: "1"
+#          limits:
+#            memory: "2048Mi"
+#            cpu: "1"
       restartPolicy: Always
       securityContext:
         runAsUser: 0
