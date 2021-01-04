@@ -213,7 +213,7 @@ fmt.Println(customer)
 ## Arrays
 
 At the moment, we can only return 1 customer at a time on our function. <br/>
-Realisticly we need the ability to return more data, not just a single customer. <br/>
+Realistically we need the ability to return more data, not just a single customer. <br/>
 
 Arrays allow us to make a collection of variables of the same type. <br/>
 We can now return a list of customers! <br/>
