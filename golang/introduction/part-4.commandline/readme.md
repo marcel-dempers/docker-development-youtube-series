@@ -208,7 +208,7 @@ Let's define our subcommands in `main.go` :
 ```
 
 When a user runs our videos CLI tool, we may need to validate that 
-our application receives the right subcommands. So lets ensure add simple validation to check if the user has passed a subcommand
+our application receives the right subcommands. So lets ensure a simple validation to check if the user has passed a subcommand
 
 To check the arguments passed to our CLI, we use the ["os"](https://golang.org/pkg/os/) package. Check the Args variable, it holds usefull information passed to our application including its name.
 `var Args []string`
@@ -259,7 +259,7 @@ Now that we have seperate functions for each subcommand, we can take appropriate
 This allows us to parse everything after the `videos <subcommand>` arguments:
 
 ```
-addCmd.Parse(os.Args[2:])
+getCmd.Parse(os.Args[2:])
 ```
 
 ## Input Validation
