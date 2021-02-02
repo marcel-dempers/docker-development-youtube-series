@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playlists-db
+  labels:
+    app: playlists-db
+spec:
+  selector:
+    matchLabels:
+      app: playlists-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: playlists-db
+    spec:
+      initContainers:
+      - name: data
+        image: busybox
+        command: [ "sh", "-c" ]
+        args:
+          - |
+            cp /config/appendonly.aof /tmp/appendonly.aof
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/
+        - name: config
+          mountPath: /config/
+      containers:
+      - name: playlists-db
+        image: redis:6.0-alpine
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/
+        command: [ "redis-server"]
+        args: ["--dir", "/tmp", "--appendonly", "yes"]
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: playlists-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playlists-db
+  labels:
+    app: playlists-db
+spec:
+  type: ClusterIP
+  selector:
+    app: playlists-db
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
