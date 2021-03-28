@@ -7,9 +7,10 @@ import (
 	"github.com/go-redis/redis/v8"
 	"fmt"
 	"context"
+	"time"
+	"strings"
 	"os"
 	"math/rand"
-
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
@@ -25,6 +26,7 @@ var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
 var flaky = os.Getenv("FLAKY")
+var delay = os.Getenv("DELAY")
 
 var ctx = context.Background()
 var rdb *redis.Client
@@ -66,7 +68,7 @@ func main() {
 		span := tracer.StartSpan("/id GET", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 
-		if flaky == "true"{
+		if flaky == "true" {
 			if rand.Intn(90) < 30 {
 				panic("flaky error occurred ")
 		  } 
@@ -74,6 +76,10 @@ func main() {
 		
 		ctx := opentracing.ContextWithSpan(context.Background(), span)
 		video := video(w,r,p, ctx)
+
+		if strings.Contains(video, "jM36M39MA3I") && delay == "true" {
+					time.Sleep(6 * time.Second)
+		}
 
 		cors(w)
 		fmt.Fprintf(w, "%s", video)

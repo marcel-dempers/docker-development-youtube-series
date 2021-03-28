@@ -82,7 +82,6 @@ func main() {
 			 
 			 	span, _ := opentracing.StartSpanFromContext(ctx, "videos-api GET")
 			
-
 				v := videos{}
 
 				req, err := http.NewRequest("GET", "http://videos-api:10010/" + playlists[pi].Videos[vi].Id, nil)

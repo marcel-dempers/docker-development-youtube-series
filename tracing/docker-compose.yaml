@@ -22,6 +22,14 @@ services:
     - 81:10010
     networks:
     - tracing
+  playlists-db:
+    container_name: playlists-db
+    image: redis:6.0-alpine
+    command: [ "redis-server" , "--dir", "/tmp", "--appendonly", "yes"]
+    volumes:
+      - ./applications-go/playlists-db/appendonly.aof:/tmp/appendonly.aof
+    networks:
+    - tracing
   videos-api:
     container_name: videos-api
     image: aimvector/jaeger-tracing:videos-api-1.0.0
@@ -31,6 +39,8 @@ services:
     - "ENVIRONMENT=DEBUG"
     - "REDIS_HOST=videos-db"
     - "REDIS_PORT=6379"
+    - "DELAY=true"
+    #- "FLAKY=true"
     ports:
     - 82:10010
     networks:
@@ -41,14 +51,6 @@ services:
     command: [ "redis-server" , "--dir", "/tmp", "--appendonly", "yes"]
     volumes:
       - ./applications-go/videos-db/appendonly.aof:/tmp/appendonly.aof
-    networks:
-    - tracing
-  playlists-db:
-    container_name: playlists-db
-    image: redis:6.0-alpine
-    command: [ "redis-server" , "--dir", "/tmp", "--appendonly", "yes"]
-    volumes:
-      - ./applications-go/playlists-db/appendonly.aof:/tmp/appendonly.aof
     networks:
     - tracing
   jaeger:
