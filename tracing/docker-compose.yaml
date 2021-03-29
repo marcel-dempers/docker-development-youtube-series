@@ -39,7 +39,7 @@ services:
     - "ENVIRONMENT=DEBUG"
     - "REDIS_HOST=videos-db"
     - "REDIS_PORT=6379"
-    - "DELAY=true"
+    #- "DELAY=true"
     #- "FLAKY=true"
     ports:
     - 82:10010
