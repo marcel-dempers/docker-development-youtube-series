@@ -53,7 +53,6 @@ mv cert-manager.yaml cert-manager-1.0.4.yaml
 
 # install cert-manager 
 
-kubectl create ns cert-manager
 kubectl apply --validate=false -f cert-manager-1.0.4.yaml
 ```
 
