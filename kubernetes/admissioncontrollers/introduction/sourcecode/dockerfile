@@ -1,0 +1,21 @@
+FROM golang:1.15-alpine as builder
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh curl
+
+WORKDIR /app
+
+COPY go.mod /go.sum /app/
+RUN go mod download
+
+COPY /src /app/
+
+RUN CGO_ENABLED=0 go build -o /webhook
+RUN CGO_ENABLED=0 go test -v 
+
+FROM alpine:3.10
+
+COPY --from=builder /webhook /usr/local/bin/webhook
+RUN chmod +x /usr/local/bin/webhook
+
+ENTRYPOINT ["webhook"]

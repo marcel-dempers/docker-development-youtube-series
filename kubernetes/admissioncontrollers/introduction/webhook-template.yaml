@@ -1,0 +1,21 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: example-webhook
+webhooks:
+  - name: example-webhook.default.svc
+    timeoutSeconds: 30
+    objectSelector:
+      matchLabels:
+        example-webhook: "true"
+    clientConfig:
+      service:
+        name: example-webhook
+        namespace: default
+        path: "/mutate"
+      caBundle: "${CA_PEM_B64}"
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        resources: ["pods"]
