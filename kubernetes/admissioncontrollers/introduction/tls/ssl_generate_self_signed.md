@@ -1,5 +1,12 @@
+# Use CFSSL to generate certificates
+
+More about [CFSSL here]("https://github.com/cloudflare/cfssl")
+
 ```
-docker run -it --rm -v ${PWD}:/work -w /work debian:buster bash
+
+cd kubernetes\admissioncontrollers\introduction
+
+docker run -it --rm -v ${PWD}:/work -w /work debian bash
 
 apt-get update && apt-get install -y curl &&
 curl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/local/bin/cfssl && \
@@ -17,18 +24,18 @@ cfssl gencert \
   -config=./tls/ca-config.json \
   -hostname="example-webhook,example-webhook.default.svc.cluster.local,example-webhook.default.svc,localhost,127.0.0.1" \
   -profile=default \
-  ./tls/ca-csr.json | cfssljson -bare /tmp/webhook-server
+  ./tls/ca-csr.json | cfssljson -bare /tmp/example-webhook
 
 #make a secret
-cat <<EOF > ./tls/webhook-server-tls.yaml
+cat <<EOF > ./tls/example-webhook-tls.yaml
 apiVersion: v1
 kind: Secret
 metadata:
   name: example-webhook-tls
 type: Opaque
 data:
-  tls.crt: $(cat /tmp/webhook-server.pem | base64 | tr -d '\n')
-  tls.key: $(cat /tmp/webhook-server-key.pem | base64 | tr -d '\n') 
+  tls.crt: $(cat /tmp/example-webhook.pem | base64 | tr -d '\n')
+  tls.key: $(cat /tmp/example-webhook-key.pem | base64 | tr -d '\n') 
 EOF
 
 #generate CA Bundle + inject into template

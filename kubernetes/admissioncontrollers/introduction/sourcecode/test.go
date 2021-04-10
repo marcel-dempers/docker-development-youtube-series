@@ -1,18 +1,19 @@
-package main
+package main 
 
 import (
-	//"context"
-	"time"
-		"fmt"
-	//"net/http"
-	//"strconv"
-	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	//log "github.com/sirupsen/logrus"
+	"context"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"fmt"
 )
 
-func TestSchedule(){
-	for {
-			fmt.Println("sleeping...")
-			time.Sleep(20 * time.Second)
+func test(){
+
+	pods, err := clientSet.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
+
+	if err != nil {
+		panic(err.Error())
 	}
+
+	fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
+
 }

@@ -9,7 +9,7 @@ kind: ClusterRole
 metadata:
   name: example-webhook
 rules:
-- apiGroups: ["apps"]
+- apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
 ---

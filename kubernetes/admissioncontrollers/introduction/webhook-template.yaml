@@ -3,11 +3,14 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: example-webhook
 webhooks:
-  - name: example-webhook.default.svc
+  - name: example-webhook.default.svc.cluster.local
+    admissionReviewVersions:
+      - "v1beta"
+    sideEffects: "None"
     timeoutSeconds: 30
     objectSelector:
       matchLabels:
-        example-webhook: "true"
+        example-webhook-enabled: "true"
     clientConfig:
       service:
         name: example-webhook
@@ -16,6 +19,6 @@ webhooks:
       caBundle: "${CA_PEM_B64}"
     rules:
       - operations: [ "CREATE" ]
-        apiGroups: ["apps"]
+        apiGroups: [""]
         apiVersions: ["v1"]
         resources: ["pods"]

@@ -39,7 +39,7 @@ spec:
         runAsUser: 1234
       containers:
       - name: server
-        image: aimvector/example-webhook:latest
+        image: aimvector/example-webhook:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8443
