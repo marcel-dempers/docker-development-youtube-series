@@ -2,28 +2,42 @@ package main
 
 import (
   "net/http"
+	"log"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-  "flag"
-	"strconv"
+
 	"os"
 	"fmt"
 	"path/filepath"
-	"io/ioutil"
 	"k8s.io/client-go/kubernetes"
 	rest "k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 
-	apiv1 "k8s.io/api/core/v1"
+	"flag"
+	"strconv"
+	"io/ioutil"
 	"k8s.io/api/admission/v1beta1"
-	"encoding/json"
 	"errors"
+
+	apiv1 "k8s.io/api/core/v1"
+	"encoding/json"
 )
 
 var (
 	universalDeserializer = serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
 )
+
+var parameters ServerParameters
+
+type ServerParameters struct {
+	port           int    // webhook server port
+	certFile       string // path to the x509 certificate for https
+	keyFile        string // path to the x509 private key matching `CertFile`
+}
+
+var config *rest.Config
+var clientSet *kubernetes.Clientset
 
 type patchOperation struct {
 	Op    string      `json:"op"`
@@ -32,20 +46,10 @@ type patchOperation struct {
 }
 
 
-type ServerParameters struct {
-	port           int    // webhook server port
-	certFile       string // path to the x509 certificate for https
-	keyFile        string // path to the x509 private key matching `CertFile`
-}
-
-var parameters ServerParameters
-var config *rest.Config
-var clientSet *kubernetes.Clientset
-
 func main() {
 
 	useKubeConfig := os.Getenv("USE_KUBECONFIG")
-	kubeConfigFilePath := os.Getenv("KUBECONFIG")
+	kubeConfigFilePath := os.Getenv("KUBECONFIG")	
 
 	flag.IntVar(&parameters.port, "port", 8443, "Webhook server port.")
   flag.StringVar(&parameters.certFile, "tlsCertFile", "/etc/webhook/certs/tls.crt", "File containing the x509 Certificate for HTTPS.")
@@ -89,11 +93,8 @@ func main() {
 	test()
   http.HandleFunc("/", HandleRoot)
 	http.HandleFunc("/mutate", HandleMutate)
-  
-	err = http.ListenAndServeTLS(":" + strconv.Itoa(parameters.port), parameters.certFile, parameters.keyFile, nil)
-	if err != nil {
-			panic(err.Error())
-	}
+
+  log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(parameters.port), parameters.certFile, parameters.keyFile, nil))
 }
 
 func HandleRoot(w http.ResponseWriter, r *http.Request){
@@ -101,9 +102,9 @@ func HandleRoot(w http.ResponseWriter, r *http.Request){
 }
 
 func HandleMutate(w http.ResponseWriter, r *http.Request){
-
-	body, err := ioutil.ReadAll(r.Body)
-	err = ioutil.WriteFile("/tmp/request", body, 0644)
+	
+	 body, err := ioutil.ReadAll(r.Body)
+	// err = ioutil.WriteFile("/tmp/request", body, 0644)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -125,21 +126,23 @@ func HandleMutate(w http.ResponseWriter, r *http.Request){
 	)
 
 	var pod apiv1.Pod
-  err = json.Unmarshal(admissionReviewReq.Request.Object.Raw, &pod)
+
+	err = json.Unmarshal(admissionReviewReq.Request.Object.Raw, &pod)
 
 	if err != nil {
   	fmt.Errorf("could not unmarshal pod on admission request: %v", err)
 	}
 
 	var patches []patchOperation
+	
 	labels := pod.ObjectMeta.Labels
 	labels["example-webhook"] = "it-worked"
 
 	patches = append(patches, patchOperation{
-		Op:    "add",
-		Path:  "/metadata/labels",
-		Value: labels,
-	})
+				Op:    "add",
+				Path:  "/metadata/labels",
+				Value: labels,
+		})
 	
 	patchBytes, err := json.Marshal(patches)
 	if err != nil {
@@ -161,5 +164,4 @@ func HandleMutate(w http.ResponseWriter, r *http.Request){
 	}
 
 	w.Write(bytes)
-
 }

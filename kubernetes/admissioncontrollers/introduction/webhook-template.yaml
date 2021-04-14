@@ -5,7 +5,7 @@ metadata:
 webhooks:
   - name: example-webhook.default.svc.cluster.local
     admissionReviewVersions:
-      - "v1beta"
+      - "v1beta1"
     sideEffects: "None"
     timeoutSeconds: 30
     objectSelector:

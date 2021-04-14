@@ -1,8 +1,5 @@
 FROM golang:1.15-alpine as dev-env
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash
-
 WORKDIR /app
 
 FROM dev-env as build-env

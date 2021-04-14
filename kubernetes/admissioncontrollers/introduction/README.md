@@ -37,14 +37,21 @@ After the above, we should have: <br/>
 
 We always start with a `dockerfile` since we need a Go dev environment.
 
+```
+FROM golang:1.15-alpine as dev-env
+
+WORKDIR /app
+
+```
+
 Build and run the controller
 
 ```
 # get dev environment: webhook
 
 cd sourcecode
-docker build --target dev-env . -t webhook
-docker run -it --rm -p 80:80 --entrypoint bash -v ${HOME}/.kube/:/root/.kube/ -v ${PWD}:/app webhook
+docker build . -t webhook
+docker run -it --rm -p 80:80 -v ${PWD}:/app webhook sh
 
 ```
 
@@ -54,8 +61,8 @@ Let's define our basic main module and a web server
 ```
 go mod init example-webhook
 ```
-Source code:
 
+New file : `main.go`
 ```
 package main
 
@@ -95,7 +102,7 @@ NOTE: In Windows, container networking is not fully supported. Our container exp
 Let's exit the container and start with `--net host` so our container can access our kubernetes `kind` cluster 
 
 ```
-docker run -it --rm --net host --entrypoint bash -v ${HOME}/.kube/:/root/.kube/ -v ${PWD}:/app webhook
+docker run -it --rm --net host -v ${HOME}/.kube/:/root/.kube/ -v ${PWD}:/app webhook sh
 ```
 
 We can also test our access to our kubernetes cluster with the config that is mounted in:
@@ -293,10 +300,7 @@ var parameters ServerParameters
 
 # start our web server exposing TLS endpoint 
 
-	err = http.ListenAndServeTLS(":" + strconv.Itoa(parameters.port), parameters.certFile, parameters.keyFile, nil)
-	if err != nil {
-			panic(err.Error())
-	}
+	log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(parameters.port), parameters.certFile, parameters.keyFile, nil))
 
 ```
 
@@ -318,9 +322,37 @@ if err != nil {
 <hr/>
 
 Let's built what we have and deploy it to our kubernetes cluster
+We will firstly need to add a build step to our `dockerfile` to build the code </br>
+And we'll also need to create a smaller runtime layer in our `dockerfile`
+
+Full `dockerfile` :
 
 ```
-docker build ./sourcecode -f ./sourcecode/dockerfile -t aimvector/example-webhook:v1
+FROM golang:1.15-alpine as dev-env
+
+WORKDIR /app
+
+FROM dev-env as build-env
+COPY go.mod /go.sum /app/
+RUN go mod download
+
+COPY . /app/
+
+RUN CGO_ENABLED=0 go build -o /webhook
+
+FROM alpine:3.10 as runtime
+
+COPY --from=build-env /webhook /usr/local/bin/webhook
+RUN chmod +x /usr/local/bin/webhook
+
+ENTRYPOINT ["webhook"]
+
+```
+
+Let's build the container and push it to a registry:
+
+```
+docker build . -t aimvector/example-webhook:v1
 docker push aimvector/example-webhook:v1
 ```
 
@@ -359,14 +391,30 @@ kubectl cp example-webhook-756bcb566b-9kxjp:/tmp/request ./mock-request.json
 
 So lets grab the info from the admission request, so we can do something with it
 
-```
-# HandleMutate()
 
-fmt.Printf("Type: %v \t Event: %v \t Name: %v \n",
-  admissionReviewReq.Request.Kind,
-  admissionReviewReq.Request.Operation,
-  admissionReviewReq.Request.Name,
-)
+```
+  //dependencies 
+  "k8s.io/api/admission/v1beta1"
+  "errors"
+
+  //HandleMutate()
+
+  var admissionReviewReq v1beta1.AdmissionReview
+
+	if _, _, err := universalDeserializer.Decode(body, nil, &admissionReviewReq); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Errorf("could not deserialize request: %v", err)
+	} else if admissionReviewReq.Request == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errors.New("malformed admission review: request is nil")
+	}
+
+	fmt.Printf("Type: %v \t Event: %v \t Name: %v \n",
+		admissionReviewReq.Request.Kind,
+		admissionReviewReq.Request.Operation,
+		admissionReviewReq.Request.Name,
+	)
+
 ```
 
 # Mutation
@@ -385,12 +433,14 @@ err = json.Unmarshal(admissionReviewReq.Request.Object.Raw, &pod)
 if err != nil {
   fmt.Errorf("could not unmarshal pod on admission request: %v", err)
 }
+
 ```
 
 To perform a simple mutation on the object before the Kubernetes API sees the object, we can apply a patch to the operation.
 
 ```
-//main()
+//global
+
 type patchOperation struct {
 	Op    string      `json:"op"`
 	Path  string      `json:"path"`
@@ -432,17 +482,34 @@ Once you have completed all your patching, convert the patches to byte slice:
 Add it to the admission response
 
 ```
-admissionReviewResponse.Response.Patch = patchBytes
+  admissionReviewResponse := v1beta1.AdmissionReview{
+      Response: &v1beta1.AdmissionResponse{
+        UID: admissionReviewReq.Request.UID,
+        Allowed: true,
+      },
+    }
+
+  admissionReviewResponse.Response.Patch = patchBytes
+
+  bytes, err := json.Marshal(&admissionReviewResponse)
+    if err != nil {
+      fmt.Errorf("marshaling response: %v", err)
+    }
+  
+  w.Write(bytes)
+
+  //dependencies 
+  "encoding/json"
 ```
 
 # Build and push the updates
 
 ```
-docker build ./sourcecode -f ./sourcecode/dockerfile -t aimvector/example-webhook:v1
+docker build . -t aimvector/example-webhook:v1
 docker push aimvector/example-webhook:v1
 ```
 
-# Delete all pods
+# Delete all pods to get latest image
 
 ```
 kubectl delete pods --all
@@ -457,5 +524,5 @@ kubectl -n default  apply -f ./demo-pod.yaml
 See the injected label
 
 ```
-kubectl get pods demo-pod -o yaml
+kubectl get pods --show-labels
 ```

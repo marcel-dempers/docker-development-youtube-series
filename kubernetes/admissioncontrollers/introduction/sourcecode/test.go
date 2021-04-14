@@ -15,5 +15,4 @@ func test(){
 	}
 
 	fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
-
 }
