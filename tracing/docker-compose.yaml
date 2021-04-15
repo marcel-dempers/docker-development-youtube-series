@@ -18,6 +18,7 @@ services:
     - "ENVIRONMENT=DEBUG"
     - "REDIS_HOST=playlists-db"
     - "REDIS_PORT=6379"
+    - "JAEGER_HOST_PORT=jaeger:6831"
     ports:
     - 81:10010
     networks:
@@ -39,6 +40,7 @@ services:
     - "ENVIRONMENT=DEBUG"
     - "REDIS_HOST=videos-db"
     - "REDIS_PORT=6379"
+    - "JAEGER_HOST_PORT=jaeger:6831"
     #- "DELAY=true"
     #- "FLAKY=true"
     ports:

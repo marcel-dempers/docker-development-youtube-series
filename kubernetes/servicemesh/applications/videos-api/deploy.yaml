@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: videos-api
-        image: aimvector/service-mesh:videos-api-1.0.0
+        image: aimvector/service-mesh:videos-api-2.0.0
         imagePullPolicy : Always
         ports:
         - containerPort: 10010
@@ -34,6 +34,8 @@ spec:
           value: "6379"
         - name: "FLAKY"
           value: "false"
+        - name: "JAEGER_HOST_PORT"
+          value: "collector.linkerd-jaeger:14268"
 ---
 apiVersion: v1
 kind: Service

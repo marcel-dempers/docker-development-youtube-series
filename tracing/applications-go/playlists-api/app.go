@@ -23,6 +23,8 @@ const serviceName = "playlists-api"
 var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
+var jaeger_host_port = os.Getenv("JAEGER_HOST_PORT")
+
 var ctx = context.Background()
 var rdb *redis.Client
 
@@ -40,7 +42,7 @@ func main() {
 		// Log the emitted spans to stdout.
 		Reporter: &config.ReporterConfig{
 			LogSpans: true,
-			LocalAgentHostPort: "jaeger:6831",
+			LocalAgentHostPort: jaeger_host_port,
 		},
 	}
 
