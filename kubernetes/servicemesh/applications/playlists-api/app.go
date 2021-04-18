@@ -74,7 +74,7 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := opentracing.GlobalTracer().StartSpan("/ GET", ext.RPCServerOption(spanCtx))
+		span := opentracing.StartSpan("/ GET", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 
 		cors(w)
@@ -94,7 +94,8 @@ func main() {
 			vs := []videos{}
 			for vi := range playlists[pi].Videos {
 
-				span, _ := opentracing.StartSpanFromContext(ctx, "videos-api GET")
+				videoSpan := opentracing.StartSpan("videos-api GET", opentracing.ChildOf(span.Context()))
+				//span, _ := opentracing.StartSpanFromContext(ctx, "videos-api GET")
 				v := videos{}
 				
 				req, err := http.NewRequest("GET", "http://videos-api:10010/" + playlists[pi].Videos[vi].Id, nil)
@@ -109,15 +110,16 @@ func main() {
 				)
 
 				videoResp, err :=http.DefaultClient.Do(req)
-				span.Finish()
-
+				
 				if err != nil {
 					fmt.Println(err)
-					span.SetTag("error", true)
+					videoSpan.SetTag("error", true)
 					break
 				}
 
 				defer videoResp.Body.Close()
+				videoSpan.Finish()
+				
 				video, err := ioutil.ReadAll(videoResp.Body)
 
 				if err != nil {

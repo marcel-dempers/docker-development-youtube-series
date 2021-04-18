@@ -77,9 +77,9 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := opentracing.GlobalTracer().StartSpan("/id GET", ext.RPCServerOption(spanCtx))
+		span := opentracing.StartSpan("/id GET", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
-
+		
 		if flaky == "true"{
 			if rand.Intn(90) < 30 {
 				panic("flaky error occurred ")
@@ -116,22 +116,11 @@ func video(writer http.ResponseWriter, request *http.Request, p httprouter.Param
 
 	videoData, err := rdb.Get(ctx, id).Result()
 	if err == redis.Nil {
-
-		span.Tracer().Inject(
-			span.Context(),
-			opentracing.HTTPHeaders,
-			opentracing.HTTPHeadersCarrier(request.Header),
-		)
 		return "{}"
 
 	} else if err != nil {
 		panic(err)
 } else {
-		span.Tracer().Inject(
-					span.Context(),
-					opentracing.HTTPHeaders,
-					opentracing.HTTPHeadersCarrier(request.Header),
-				)
 		return videoData
 	}
 }
