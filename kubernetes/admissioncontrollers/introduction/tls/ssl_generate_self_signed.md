@@ -9,8 +9,8 @@ cd kubernetes\admissioncontrollers\introduction
 docker run -it --rm -v ${PWD}:/work -w /work debian bash
 
 apt-get update && apt-get install -y curl &&
-curl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/local/bin/cfssl && \
-curl https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/local/bin/cfssljson && \
+curl -L https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssl_1.5.0_linux_amd64 -o /usr/local/bin/cfssl && \
+curl -L https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssljson_1.5.0_linux_amd64 -o /usr/local/bin/cfssljson && \
 chmod +x /usr/local/bin/cfssl && \
 chmod +x /usr/local/bin/cfssljson
 
