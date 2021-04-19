@@ -17,18 +17,13 @@ import (
 	"flag"
 	"strconv"
 	"io/ioutil"
+
 	"k8s.io/api/admission/v1beta1"
-	"errors"
+  "errors"
 
 	apiv1 "k8s.io/api/core/v1"
 	"encoding/json"
 )
-
-var (
-	universalDeserializer = serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
-)
-
-var parameters ServerParameters
 
 type ServerParameters struct {
 	port           int    // webhook server port
@@ -36,20 +31,25 @@ type ServerParameters struct {
 	keyFile        string // path to the x509 private key matching `CertFile`
 }
 
-var config *rest.Config
-var clientSet *kubernetes.Clientset
-
 type patchOperation struct {
 	Op    string      `json:"op"`
 	Path  string      `json:"path"`
 	Value interface{} `json:"value,omitempty"`
 }
 
+var parameters ServerParameters
+
+var (
+	universalDeserializer = serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
+)
+
+var config *rest.Config
+var clientSet *kubernetes.Clientset
 
 func main() {
 
 	useKubeConfig := os.Getenv("USE_KUBECONFIG")
-	kubeConfigFilePath := os.Getenv("KUBECONFIG")	
+	kubeConfigFilePath := os.Getenv("KUBECONFIG")
 
 	flag.IntVar(&parameters.port, "port", 8443, "Webhook server port.")
   flag.StringVar(&parameters.certFile, "tlsCertFile", "/etc/webhook/certs/tls.crt", "File containing the x509 Certificate for HTTPS.")
@@ -89,11 +89,10 @@ func main() {
     panic(err.Error())
   }
   clientSet = cs
-
+	
 	test()
   http.HandleFunc("/", HandleRoot)
 	http.HandleFunc("/mutate", HandleMutate)
-
   log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(parameters.port), parameters.certFile, parameters.keyFile, nil))
 }
 
@@ -102,9 +101,9 @@ func HandleRoot(w http.ResponseWriter, r *http.Request){
 }
 
 func HandleMutate(w http.ResponseWriter, r *http.Request){
-	
-	 body, err := ioutil.ReadAll(r.Body)
-	// err = ioutil.WriteFile("/tmp/request", body, 0644)
+
+	body, err := ioutil.ReadAll(r.Body)
+	err = ioutil.WriteFile("/tmp/request", body, 0644)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -134,7 +133,7 @@ func HandleMutate(w http.ResponseWriter, r *http.Request){
 	}
 
 	var patches []patchOperation
-	
+
 	labels := pod.ObjectMeta.Labels
 	labels["example-webhook"] = "it-worked"
 
@@ -142,18 +141,20 @@ func HandleMutate(w http.ResponseWriter, r *http.Request){
 				Op:    "add",
 				Path:  "/metadata/labels",
 				Value: labels,
-		})
-	
+	})
+
 	patchBytes, err := json.Marshal(patches)
+	
 	if err != nil {
 		fmt.Errorf("could not marshal JSON patch: %v", err)
 	}
 
+
 	admissionReviewResponse := v1beta1.AdmissionReview{
-		Response: &v1beta1.AdmissionResponse{
-			UID: admissionReviewReq.Request.UID,
-			Allowed: true,
-		},
+      Response: &v1beta1.AdmissionResponse{
+        UID: admissionReviewReq.Request.UID,
+        Allowed: true,
+      },
 	}
 
 	admissionReviewResponse.Response.Patch = patchBytes
@@ -164,4 +165,5 @@ func HandleMutate(w http.ResponseWriter, r *http.Request){
 	}
 
 	w.Write(bytes)
+
 }
