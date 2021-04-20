@@ -102,11 +102,26 @@ cp ~/.kube/config .
 
 ## Get kubectl
 
+You have two options for installing `kubectl` <br/>
+
+Option 1: Install using `az` CLI
+
+```
+az aks install-cli
+```
+
+Option 2: Download the binary using `curl` and place in usr bin
+
 ```
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 
+```
+
+# Create example apps
+
+```
 cd ../..
 
 kubectl create ns example-app
