@@ -72,7 +72,7 @@
         if (location.hostname == "localhost"){
           playlistApiUrl = "http://localhost:81/"
         } else {
-          playlistApiUrl = "http://" + location.hostname + "/api/playlists"
+          playlistApiUrl = "http://" + location.hostname + ":" + location.port + "/api/playlists"
         }
 
         var app = angular.module('videos', []);
