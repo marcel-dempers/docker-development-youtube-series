@@ -1,15 +1,20 @@
-FROM golang:1.14-alpine as build
+FROM golang:1.16-alpine as dev-env
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git gcc musl-dev
 
-WORKDIR /src 
+WORKDIR /app
 
-COPY consumer.go /src 
+FROM dev-env as build-env
+COPY go.mod /go.sum /app/
+RUN go mod download
 
-RUN go build consumer.go
+COPY . /app/
 
-FROM alpine as runtime
+RUN CGO_ENABLED=0 go build -o /consumer
 
-COPY --from=build /src/consumer /app/consumer
+FROM alpine:3.10 as runtime
 
-CMD [ "/app/consumer" ]
+COPY --from=build-env /consumer /usr/local/bin/consumer
+RUN chmod +x /usr/local/bin/consumer
+
+ENTRYPOINT ["consumer"]

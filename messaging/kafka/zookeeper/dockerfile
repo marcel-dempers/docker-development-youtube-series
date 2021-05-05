@@ -15,4 +15,3 @@ COPY start-zookeeper.sh  /usr/bin
 RUN chmod +x  /usr/bin/start-zookeeper.sh
 
 CMD ["start-zookeeper.sh"]
-    
