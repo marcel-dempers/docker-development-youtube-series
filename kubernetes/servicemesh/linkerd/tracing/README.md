@@ -36,6 +36,7 @@ Deploy the Jaeger All-in-One image for demo purposes
 
  kubectl apply -f .\kubernetes\servicemesh\linkerd\tracing\jaeger-all-in-one.yaml
 
+kubectl port-forward svc/jaeger-query 16686:80
 
  Enable tracing :
 
