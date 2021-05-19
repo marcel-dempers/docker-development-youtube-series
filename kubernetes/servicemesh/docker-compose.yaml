@@ -13,6 +13,7 @@ services:
     build:
       context: ./applications/playlists-api
     environment:
+    - "JAEGER_REPORTER_LOG_SPANS=true"
     - "ENVIRONMENT=DEBUG"
     - "REDIS_HOST=playlists-db"
     - "REDIS_PORT=6379"
@@ -25,6 +26,7 @@ services:
     build:
       context: ./applications/videos-api
     environment:
+    - "JAEGER_REPORTER_LOG_SPANS=true"
     - "ENVIRONMENT=DEBUG"
     - "REDIS_HOST=videos-db"
     - "REDIS_PORT=6379"

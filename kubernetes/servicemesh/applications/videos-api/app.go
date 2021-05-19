@@ -77,7 +77,7 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := opentracing.StartSpan("/id GET", ext.RPCServerOption(spanCtx))
+		span := opentracing.StartSpan("videos-api /id GET", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 		
 		if flaky == "true"{

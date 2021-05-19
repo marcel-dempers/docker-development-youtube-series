@@ -74,7 +74,7 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := opentracing.StartSpan("/ GET", ext.RPCServerOption(spanCtx))
+		span := opentracing.StartSpan("playlists-api / GET", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 
 		cors(w)
@@ -103,7 +103,7 @@ func main() {
 					panic(err)
 				}
 
-				span.Tracer().Inject(
+				videoSpan.Tracer().Inject(
 					span.Context(),
 					opentracing.HTTPHeaders,
 					opentracing.HTTPHeadersCarrier(req.Header),
