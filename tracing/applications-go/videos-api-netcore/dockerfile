@@ -1,0 +1,16 @@
+#docker run -it -v ${PWD}:/work -p 5000:5000 -w /work aimvector/jaeger-tracing:videos-api-netcore-1.0.0 bash
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as dev
+
+WORKDIR /work/
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
+
+WORKDIR /work/
+COPY ./src/videos-api.csproj /work/videos-api.csproj
+RUN dotnet restore
+
+COPY ./src/ /work/
+RUN mkdir /out/
+RUN dotnet publish --no-restore --output /out/ --configuration Release
+
+ENTRYPOINT ["dotnet", "run"]

@@ -66,7 +66,7 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := tracer.StartSpan("/id GET", ext.RPCServerOption(spanCtx))
+		span := tracer.StartSpan("videos-api: GET /id", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 
 		if flaky == "true" {
@@ -99,7 +99,7 @@ func main() {
 
 func video(writer http.ResponseWriter, request *http.Request, p httprouter.Params, ctx context.Context)(response string){
 	
-	span, _ := opentracing.StartSpanFromContext(ctx, "redis-get")
+	span, _ := opentracing.StartSpanFromContext(ctx, "videos-api: redis-get")
 	defer span.Finish()
 	id := p.ByName("id")
 	

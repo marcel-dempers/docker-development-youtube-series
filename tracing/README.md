@@ -105,13 +105,13 @@ This is intentional to demonstrate a busy network.
 
 +------------+     +---------------+    +--------------+
 | videos-web +---->+ playlists-api +--->+ playlists-db |
-|            |     |               |    |              |
+|            |     |               |    |    [redis]   |
 +------------+     +-----+---------+    +--------------+
                          |
                          v
                    +-----+------+       +-----------+
                    | videos-api +------>+ videos-db |
-                   |            |       |           |
+                   |            |       |  [redis]  |
                    +------------+       +-----------+
 
 ```
