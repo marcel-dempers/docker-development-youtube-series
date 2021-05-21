@@ -109,7 +109,7 @@ func main() {
 
 func video(writer http.ResponseWriter, request *http.Request, p httprouter.Params, ctx context.Context)(response string){
 	
-	span, _ := opentracing.StartSpanFromContext(ctx, "redis-get")
+	span, _ := opentracing.StartSpanFromContext(ctx, "videos api - redis-get")
 	defer span.Finish()
 	id := p.ByName("id")
 	fmt.Print(id)

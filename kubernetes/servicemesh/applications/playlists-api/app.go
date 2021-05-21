@@ -163,7 +163,7 @@ func main() {
 
 func getPlaylists(ctx context.Context)(response string){
 
-	span, _ := opentracing.StartSpanFromContext(ctx, "redis-get")
+	span, _ := opentracing.StartSpanFromContext(ctx, "playlists-api - redis-get")
 	defer span.Finish()
 	playlistData, err := rdb.Get(ctx, "playlists").Result()
 	

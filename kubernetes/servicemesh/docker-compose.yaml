@@ -2,14 +2,14 @@ version: "3.4"
 services:
   videos-web:
     container_name: videos-web
-    image: aimvector/service-mesh:videos-web-2.0.4
+    image: aimvector/service-mesh:videos-web-2.0.5
     build:
       context: ./applications/videos-web
     ports:
       - 80:80
   playlists-api:
     container_name: playlists-api
-    image: aimvector/service-mesh:playlists-api-2.0.4
+    image: aimvector/service-mesh:playlists-api-2.0.5
     build:
       context: ./applications/playlists-api
     environment:
@@ -22,7 +22,7 @@ services:
     - 81:10010
   videos-api:
     container_name: videos-api
-    image: aimvector/service-mesh:videos-api-2.0.4
+    image: aimvector/service-mesh:videos-api-2.0.5
     build:
       context: ./applications/videos-api
     environment:
