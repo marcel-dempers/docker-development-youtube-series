@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: example-daemonset
+  namespace: default
+  labels:
+    app: example-daemonset
+spec:
+  selector:
+    matchLabels:
+      name: example-daemonset
+  template:
+    metadata:
+      labels:
+        name: example-daemonset
+    spec:
+      tolerations:
+      # this toleration is to have the daemonset runnable on master nodes
+      # remove it if your masters can't run pods
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
+      - name: example-daemonset
+        image: alpine:latest
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        command:
+        - "bin/sh"
+        - "-c"
+        - "echo 'Hello! I am running on '$NODE_NAME; while true; do sleep 300s ; done;"
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      terminationGracePeriodSeconds: 30
