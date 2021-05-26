@@ -129,7 +129,7 @@ Hello from daemonsets-worker2
 Let's deploy a headless service where `clusterIP: None`
 
 ```
-kubectl apply -f ./services/headlress-service.yaml
+kubectl apply -f ./services/headless-service.yaml
 ```
 
 There are a few ways to discover our pods:
