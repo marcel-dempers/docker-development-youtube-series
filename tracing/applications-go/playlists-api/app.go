@@ -23,6 +23,8 @@ const serviceName = "playlists-api"
 var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
+var jaeger_host_port = os.Getenv("JAEGER_HOST_PORT")
+
 var ctx = context.Background()
 var rdb *redis.Client
 
@@ -40,7 +42,7 @@ func main() {
 		// Log the emitted spans to stdout.
 		Reporter: &config.ReporterConfig{
 			LogSpans: true,
-			LocalAgentHostPort: "jaeger:6831",
+			LocalAgentHostPort: jaeger_host_port,
 		},
 	}
 
@@ -60,7 +62,7 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := tracer.StartSpan("/ GET", ext.RPCServerOption(spanCtx))
+		span := tracer.StartSpan("playlists-api: GET /", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 
 		cors(w)
@@ -80,7 +82,7 @@ func main() {
 			vs := []videos{}
 			for vi := range playlists[pi].Videos {
 			 
-			 	span, _ := opentracing.StartSpanFromContext(ctx, "videos-api GET")
+			 	span, _ := opentracing.StartSpanFromContext(ctx, "playlists-api: videos-api GET /id")
 			
 				v := videos{}
 
@@ -96,8 +98,8 @@ func main() {
 				)
 
 				videoResp, err :=http.DefaultClient.Do(req)
-			
 				span.Finish()
+				
 				if err != nil {
 					fmt.Println(err)
 					span.SetTag("error", true)
@@ -149,7 +151,7 @@ func main() {
 
 func getPlaylists(ctx context.Context)(response string){
 
-	span, _ := opentracing.StartSpanFromContext(ctx, "redis-get")
+	span, _ := opentracing.StartSpanFromContext(ctx, "playlists-api: redis-get")
 	defer span.Finish()
 	playlistData, err := rdb.Get(ctx, "playlists").Result()
 	

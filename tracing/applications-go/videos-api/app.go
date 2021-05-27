@@ -25,6 +25,7 @@ const serviceName = "videos-api"
 var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
+var jaeger_host_port = os.Getenv("JAEGER_HOST_PORT")
 var flaky = os.Getenv("FLAKY")
 var delay = os.Getenv("DELAY")
 
@@ -45,7 +46,7 @@ func main() {
 		// Log the emitted spans to stdout.
 		Reporter: &config.ReporterConfig{
 			LogSpans: true,
-			LocalAgentHostPort: "jaeger:6831",
+			LocalAgentHostPort: jaeger_host_port,
 		},
 	}
 
@@ -65,7 +66,7 @@ func main() {
 			opentracing.HTTPHeadersCarrier(r.Header),
 		)
 
-		span := tracer.StartSpan("/id GET", ext.RPCServerOption(spanCtx))
+		span := tracer.StartSpan("videos-api: GET /id", ext.RPCServerOption(spanCtx))
 		defer span.Finish()
 
 		if flaky == "true" {
@@ -98,7 +99,7 @@ func main() {
 
 func video(writer http.ResponseWriter, request *http.Request, p httprouter.Params, ctx context.Context)(response string){
 	
-	span, _ := opentracing.StartSpanFromContext(ctx, "redis-get")
+	span, _ := opentracing.StartSpanFromContext(ctx, "videos-api: redis-get")
 	defer span.Finish()
 	id := p.ByName("id")
 	
