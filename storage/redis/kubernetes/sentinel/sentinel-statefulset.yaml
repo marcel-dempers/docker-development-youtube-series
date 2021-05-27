@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
       - name: config
-        image: redis:6.0-alpine
+        image: redis:6.2.3-alpine
         command: [ "sh", "-c" ]
         args:
           - |
@@ -35,8 +35,9 @@ spec:
                 fi
             done
             echo "sentinel monitor mymaster $MASTER 6379 2" >> /tmp/master
-
             echo "port 5000
+            sentinel resolve-hostnames yes
+            sentinel announce-hostnames yes
             $(cat /tmp/master)
             sentinel down-after-milliseconds mymaster 5000
             sentinel failover-timeout mymaster 60000
@@ -49,7 +50,7 @@ spec:
           mountPath: /etc/redis/
       containers:
       - name: sentinel
-        image: redis:6.0-alpine
+        image: redis:6.2.3-alpine
         command: ["redis-sentinel"]
         args: ["/etc/redis/sentinel.conf"]
         ports:

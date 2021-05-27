@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod
+spec:
+  containers:
+  - name: pod
+    image: alpine
+    command:
+    - "/bin/sh"
+    - "-c" 
+    - "apk add --no-cache curl bash && sleep 60m"
+

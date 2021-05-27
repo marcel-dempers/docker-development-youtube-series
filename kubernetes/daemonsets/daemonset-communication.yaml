@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-communicate
+  namespace: default
+  labels:
+    app: daemonset-communicate
+spec:
+  selector:
+    matchLabels:
+      name: daemonset-communicate
+  template:
+    metadata:
+      labels:
+        name: daemonset-communicate
+    spec:
+      tolerations:
+      # this toleration is to have the daemonset runnable on master nodes
+      # remove it if your masters can't run pods
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      initContainers:
+      - name: create-file
+        image: alpine
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        command:
+        - "bin/sh"
+        - "-c"
+        - "echo 'Hello from '$NODE_NAME >  /usr/share/nginx/html/index.html"
+        volumeMounts:
+        - name: nginx-page
+          mountPath: /usr/share/nginx/html/
+      containers:
+      - name: daemonset-communicate
+        image: nginx:1.20.0-alpine
+        volumeMounts:
+        - name: nginx-page
+          mountPath: /usr/share/nginx/html/
+        resources:
+          limits:
+            memory: 500Mi
+          requests:
+            cpu: 10m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+          name: "http"
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: nginx-page
+        emptyDir: {}
