@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: videos-web
-        image: aimvector/service-mesh:videos-web-1.0.0
+        image: aimvector/service-mesh:videos-web-2.0.4
         imagePullPolicy : Always
         ports:
         - containerPort: 80

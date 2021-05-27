@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: playlists-api
-        image: aimvector/service-mesh:playlists-api-1.0.0
+        image: aimvector/service-mesh:playlists-api-2.0.4
         imagePullPolicy : Always
         ports:
         - containerPort: 10010
@@ -32,6 +32,8 @@ spec:
           value: "playlists-db"
         - name: "REDIS_PORT"
           value: "6379"
+        - name: "JAEGER_HOST_PORT"
+          value: "collector.linkerd-jaeger:14268"
 ---
 apiVersion: v1
 kind: Service

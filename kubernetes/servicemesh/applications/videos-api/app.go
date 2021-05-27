@@ -7,23 +7,78 @@ import (
 	"github.com/go-redis/redis/v8"
 	"fmt"
 	"context"
+	"time"
+	"strings"
 	"os"
 	"math/rand"
+	"github.com/opentracing/opentracing-go"
+	jaegercfg "github.com/uber/jaeger-client-go/config"
+	//"github.com/uber/jaeger-client-go"
+	"github.com/opentracing/opentracing-go/ext"
+	"github.com/uber/jaeger-client-go/zipkin"
+	jaegerlog "github.com/uber/jaeger-client-go/log"
+	"github.com/uber/jaeger-lib/metrics"
 )
+
+const serviceName = "videos-api"
 
 var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
+var jaeger_host_port = os.Getenv("JAEGER_HOST_PORT")
 var flaky = os.Getenv("FLAKY")
+var delay = os.Getenv("DELAY")
+
 
 var ctx = context.Background()
 var rdb *redis.Client
 
 func main() {
 
+  cfg := jaegercfg.Configuration{
+		Sampler: &jaegercfg.SamplerConfig{
+			Type:  "const",
+			Param: 1,
+		},
+
+		// Log the emitted spans to stdout.
+		Reporter: &jaegercfg.ReporterConfig{
+			LogSpans: true,
+			LocalAgentHostPort: jaeger_host_port,
+		},
+	}
+
+	jLogger := jaegerlog.StdLogger
+	jMetricsFactory := metrics.NullFactory
+
+	zipkinPropagator := zipkin.NewZipkinB3HTTPHeaderPropagator()
+
+	closer, err := cfg.InitGlobalTracer(
+	  serviceName,
+	  jaegercfg.Logger(jLogger),
+	  jaegercfg.Metrics(jMetricsFactory),
+	  jaegercfg.Injector(opentracing.HTTPHeaders, zipkinPropagator),
+	  jaegercfg.Extractor(opentracing.HTTPHeaders, zipkinPropagator),
+	  jaegercfg.ZipkinSharedRPCSpan(true),
+	)
+
+	
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+	}
+	defer closer.Close()
+
 	router := httprouter.New()
 
 	router.GET("/:id", func(w http.ResponseWriter, r *http.Request, p httprouter.Params){
+		
+		spanCtx, _ := opentracing.GlobalTracer().Extract(
+			opentracing.HTTPHeaders,
+			opentracing.HTTPHeadersCarrier(r.Header),
+		)
+
+		span := opentracing.StartSpan("videos-api /id GET", ext.RPCServerOption(spanCtx))
+		defer span.Finish()
 		
 		if flaky == "true"{
 			if rand.Intn(90) < 30 {
@@ -31,7 +86,12 @@ func main() {
 		  } 
 		}
 		
-		video := video(w,r,p)
+		ctx := opentracing.ContextWithSpan(context.Background(), span)
+		video := video(w,r,p, ctx)
+
+		if strings.Contains(video, "jM36M39MA3I") && delay == "true" {
+					time.Sleep(6 * time.Second)
+		}
 
 		cors(w)
 		fmt.Fprintf(w, "%s", video)
@@ -47,19 +107,22 @@ func main() {
 	log.Fatal(http.ListenAndServe(":10010", router))
 }
 
-func video(writer http.ResponseWriter, request *http.Request, p httprouter.Params)(response string){
+func video(writer http.ResponseWriter, request *http.Request, p httprouter.Params, ctx context.Context)(response string){
 	
+	span, _ := opentracing.StartSpanFromContext(ctx, "videos api - redis-get")
+	defer span.Finish()
 	id := p.ByName("id")
 	fmt.Print(id)
 
 	videoData, err := rdb.Get(ctx, id).Result()
 	if err == redis.Nil {
 		return "{}"
+
 	} else if err != nil {
 		panic(err)
 } else {
-	return videoData
-}
+		return videoData
+	}
 }
 
 type stop struct {

@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: videos-api
-        image: aimvector/service-mesh:videos-api-2.0.4
+        image: aimvector/jaeger-tracing:videos-api-netcore-1.0.0
         imagePullPolicy : Always
         ports:
         - containerPort: 10010
@@ -32,10 +32,18 @@ spec:
           value: "videos-db"
         - name: "REDIS_PORT"
           value: "6379"
-        - name: "FLAKY"
-          value: "false"
-        - name: "JAEGER_HOST_PORT"
-          value: "collector.linkerd-jaeger:14268"
+        - name: "JAEGER_AGENT_HOST"
+          value: "collection-sumologic-otelcol.sumologic"
+        - name: "JAEGER_AGENT_PORT"
+          value: "6831"
+        - name: "JAEGER_SERVICE_NAME"
+          value: "videos-api"
+        - name: "JAEGER_REPORTER_LOG_SPANS"
+          value: "true"
+        - name: "JAEGER_SAMPLER_TYPE"
+          value: "const"
+        - name: "JAEGER_PROPAGATION"
+          value: "jaeger"
 ---
 apiVersion: v1
 kind: Service

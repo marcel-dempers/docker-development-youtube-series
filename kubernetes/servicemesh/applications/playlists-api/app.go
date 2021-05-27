@@ -11,21 +11,76 @@ import (
 	"io/ioutil"
 	"context"
 	"github.com/go-redis/redis/v8"
+
+	"github.com/opentracing/opentracing-go"
+	jaegercfg "github.com/uber/jaeger-client-go/config"
+	"github.com/opentracing/opentracing-go/ext"
+	
+	"github.com/uber/jaeger-client-go/zipkin"
+	jaegerlog "github.com/uber/jaeger-client-go/log"
+	"github.com/uber/jaeger-lib/metrics"
 )
+
+const serviceName = "playlists-api"
 
 var environment = os.Getenv("ENVIRONMENT")
 var redis_host = os.Getenv("REDIS_HOST")
 var redis_port = os.Getenv("REDIS_PORT")
+var jaeger_host_port = os.Getenv("JAEGER_HOST_PORT")
 var ctx = context.Background()
 var rdb *redis.Client
 
 func main() {
 
+	 cfg := jaegercfg.Configuration{
+		Sampler: &jaegercfg.SamplerConfig{
+			Type:  "const",
+			Param: 1,
+		},
+
+		// Log the emitted spans to stdout.
+		Reporter: &jaegercfg.ReporterConfig{
+			LogSpans: true,
+			LocalAgentHostPort: jaeger_host_port,
+		},
+	}
+
+	jLogger := jaegerlog.StdLogger
+	jMetricsFactory := metrics.NullFactory
+
+	zipkinPropagator := zipkin.NewZipkinB3HTTPHeaderPropagator()
+
+	closer, err := cfg.InitGlobalTracer(
+	  serviceName,
+	  jaegercfg.Logger(jLogger),
+	  jaegercfg.Metrics(jMetricsFactory),
+	  jaegercfg.Injector(opentracing.HTTPHeaders, zipkinPropagator),
+	  jaegercfg.Extractor(opentracing.HTTPHeaders, zipkinPropagator),
+	  jaegercfg.ZipkinSharedRPCSpan(true),
+	)
+
+
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+	}
+	defer closer.Close()
+
 	router := httprouter.New()
 
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params){
+		
+		spanCtx, _ := opentracing.GlobalTracer().Extract(
+			opentracing.HTTPHeaders,
+			opentracing.HTTPHeadersCarrier(r.Header),
+		)
+
+		span := opentracing.StartSpan("playlists-api / GET", ext.RPCServerOption(spanCtx))
+		defer span.Finish()
+
 		cors(w)
-		playlistsJson := getPlaylists()
+
+		ctx := opentracing.ContextWithSpan(context.Background(), span)
+		playlistsJson := getPlaylists(ctx)
 		
 		playlists := []playlist{}
 		err := json.Unmarshal([]byte(playlistsJson), &playlists)
@@ -38,23 +93,39 @@ func main() {
 
 			vs := []videos{}
 			for vi := range playlists[pi].Videos {
-			 
+
+				videoSpan := opentracing.StartSpan("videos-api GET", opentracing.ChildOf(span.Context()))
+				//span, _ := opentracing.StartSpanFromContext(ctx, "videos-api GET")
 				v := videos{}
-				videoResp, err := http.Get("http://videos-api:10010/" + playlists[pi].Videos[vi].Id)
+				
+				req, err := http.NewRequest("GET", "http://videos-api:10010/" + playlists[pi].Videos[vi].Id, nil)
+				if err != nil {
+					panic(err)
+				}
+
+				videoSpan.Tracer().Inject(
+					span.Context(),
+					opentracing.HTTPHeaders,
+					opentracing.HTTPHeadersCarrier(req.Header),
+				)
+
+				videoResp, err :=http.DefaultClient.Do(req)
 				
 				if err != nil {
 					fmt.Println(err)
+					videoSpan.SetTag("error", true)
 					break
 				}
 
 				defer videoResp.Body.Close()
+				videoSpan.Finish()
+				
 				video, err := ioutil.ReadAll(videoResp.Body)
 
 				if err != nil {
 					panic(err)
 				}
 
-				
 				err = json.Unmarshal(video, &v)
 
 				if err != nil {
@@ -90,12 +161,16 @@ func main() {
 	log.Fatal(http.ListenAndServe(":10010", router))
 }
 
-func getPlaylists()(response string){
+func getPlaylists(ctx context.Context)(response string){
+
+	span, _ := opentracing.StartSpanFromContext(ctx, "playlists-api - redis-get")
+	defer span.Finish()
 	playlistData, err := rdb.Get(ctx, "playlists").Result()
 	
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("error occured retrieving playlists from Redis")
+		span.SetTag("error", true)
 		return "[]"
 	}
 
