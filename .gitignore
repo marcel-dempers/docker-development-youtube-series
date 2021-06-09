@@ -10,3 +10,4 @@ __pycache__/
 *.tfstate.*
 security/letsencrypt/introduction/certs/**
 kubernetes/shipa/installs/shipa-helm-chart-1.1.1/
+messaging/kafka/data/*
