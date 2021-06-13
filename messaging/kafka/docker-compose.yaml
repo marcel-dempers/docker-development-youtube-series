@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  zookeeper-1:
+    container_name: zookeeper-1
+    image: aimvector/zookeeper:2.7.0
+    build:
+      context: ./zookeeper
+    volumes:
+    - ./config/zookeeper-1/zookeeper.properties:/kafka/config/zookeeper.properties
+  kafka-1:
+    container_name: kafka-1
+    image: aimvector/kafka:2.7.0
+    build: 
+      context: .
+    volumes:
+    - ./config/kafka-1/server.properties:/kafka/config/server.properties
+    - ./data/kafka-1/:/tmp/kafka-logs/
+  kafka-2:
+    container_name: kafka-2
+    image: aimvector/kafka:2.7.0
+    build: 
+      context: .
+    volumes:
+    - ./config/kafka-2/server.properties:/kafka/config/server.properties
+    - ./data/kafka-2/:/tmp/kafka-logs/
+  kafka-3:
+    container_name: kafka-3
+    image: aimvector/kafka:2.7.0
+    build: 
+      context: .
+    volumes:
+    - ./config/kafka-3/server.properties:/kafka/config/server.properties
+    - ./data/kafka-3/:/tmp/kafka-logs/
+  kafka-producer:
+    container_name: kafka-producer
+    image: aimvector/kafka:2.7.0
+    build: 
+      context: .
+    working_dir: /kafka
+    entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
+  kafka-consumer:
+    container_name: kafka-consumer
+    image: aimvector/kafka:2.7.0
+    build: 
+      context: .
+    working_dir: /kafka
+    entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
