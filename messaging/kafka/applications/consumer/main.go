@@ -16,13 +16,15 @@ var kafkaTopic = os.Getenv("KAFKA_TOPIC")
 var kafkaVersion = os.Getenv("KAFKA_VERSION")
 var kafkaGroup = os.Getenv("KAFKA_GROUP")
 
+
 func main() {
+
   version, err := sarama.ParseKafkaVersion(kafkaVersion)
 	config := sarama.NewConfig()
 	config.Version = version
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRoundRobin
 	config.Consumer.Offsets.Initial = sarama.OffsetOldest
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
 	client, err := sarama.NewConsumerGroup(strings.Split(kafkaBrokers, ","), kafkaGroup, config)
 
@@ -30,7 +32,7 @@ func main() {
 	  fmt.Printf("Failed to init Kafka consumer group: %s", err)
 		panic(err)
 	}
-
+	
 	consumer := Consumer{
 		ready: make(chan bool),
 	}
@@ -54,9 +56,8 @@ func main() {
 			consumer.ready = make(chan bool)
 		}
 	}()
-
-	<-consumer.ready // Await till the consumer has been set up
-	fmt.Println("Sarama consumer up and running!...")
+  <-consumer.ready // Await till the consumer has been set up
+  fmt.Println("Sarama consumer up and running!...")
 
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM)
@@ -68,6 +69,7 @@ func main() {
 	}
 	cancel()
 	wg.Wait()
+
 	if err = client.Close(); err != nil {
 		fmt.Printf("Error closing client: %v", err)
 		panic(err)
@@ -75,10 +77,10 @@ func main() {
 
 }
 
-// Consumer represents a Sarama consumer group consumer
 type Consumer struct {
 	ready chan bool
 }
+
 
 // Setup is run at the beginning of a new session, before ConsumeClaim
 func (consumer *Consumer) Setup(sarama.ConsumerGroupSession) error {
@@ -112,4 +114,3 @@ func (consumer *Consumer) ConsumeClaim(session sarama.ConsumerGroupSession, clai
 
 	return nil
 }
-
