@@ -98,7 +98,7 @@ linkerd-control-plane   Ready    master   26m   v1.19.1
 Lets download the `linkerd` command line tool <br/>
 I grabbed the `edge-20.10.1` release using `curl`
 
-You can go to the [releases](https://github.com/linkerd/linkerd2/releases/) page to get it
+You can go to the [releases](https://github.com/linkerd/linkerd2/releases/) page to get the latest release.
 
 ```
 curl -L -o linkerd https://github.com/linkerd/linkerd2/releases/download/edge-20.10.1/linkerd2-cli-edge-20.10.1-linux-amd64 
