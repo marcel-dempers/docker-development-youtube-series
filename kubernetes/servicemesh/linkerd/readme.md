@@ -128,11 +128,22 @@ linkerd install > ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.10.1
 kubectl apply -f ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.10.1.yaml
 ```
 
+## Install Linkerd Add-Ons (on-cluster metrics stack)
+According to [official docs](https://linkerd.io/2.10/getting-started/#step-3-install-the-control-plane-onto-your-cluster), the latest version of linkerd does not install Prometheus, Grafana and  other add-ons by default. To install : 
+```
+linkerd viz install | kubectl apply -f -
+```
+
 Let's wait until all components are running
 
 ```
 watch kubectl -n linkerd get pods
 kubectl -n linkerd get svc
+```
+
+```
+watch kubectl -n linkerd-viz get pods
+kubectl -n linkerd-viz get svc
 ```
 
 ## Do a final check
@@ -146,7 +157,7 @@ linkerd check
 Let's access the `linkerd` dashboard via `port-forward`
 
 ```
-kubectl -n linkerd port-forward svc/linkerd-web 8084
+kubectl -n linkerd-viz port-forward svc/web 8084
 ```
 
 # Mesh our video catalog services
