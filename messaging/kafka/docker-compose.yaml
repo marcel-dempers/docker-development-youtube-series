@@ -7,6 +7,9 @@ services:
       context: ./zookeeper
     volumes:
     - ./config/zookeeper-1/zookeeper.properties:/kafka/config/zookeeper.properties
+    - ./data/zookeeper-1/:/tmp/zookeeper/
+    networks:
+    - kafka
   kafka-1:
     container_name: kafka-1
     image: aimvector/kafka:2.7.0
@@ -15,6 +18,8 @@ services:
     volumes:
     - ./config/kafka-1/server.properties:/kafka/config/server.properties
     - ./data/kafka-1/:/tmp/kafka-logs/
+    networks:
+    - kafka
   kafka-2:
     container_name: kafka-2
     image: aimvector/kafka:2.7.0
@@ -23,6 +28,8 @@ services:
     volumes:
     - ./config/kafka-2/server.properties:/kafka/config/server.properties
     - ./data/kafka-2/:/tmp/kafka-logs/
+    networks:
+    - kafka
   kafka-3:
     container_name: kafka-3
     image: aimvector/kafka:2.7.0
@@ -31,6 +38,8 @@ services:
     volumes:
     - ./config/kafka-3/server.properties:/kafka/config/server.properties
     - ./data/kafka-3/:/tmp/kafka-logs/
+    networks:
+    - kafka
   kafka-producer:
     container_name: kafka-producer
     image: aimvector/kafka:2.7.0
@@ -40,6 +49,8 @@ services:
     entrypoint: /bin/bash
     stdin_open: true
     tty: true
+    networks:
+    - kafka
   kafka-consumer:
     container_name: kafka-consumer
     image: aimvector/kafka:2.7.0
@@ -49,3 +60,20 @@ services:
     entrypoint: /bin/bash
     stdin_open: true
     tty: true
+    networks:
+    - kafka
+  kafka-consumer-go:
+    container_name: kafka-consumer-go
+    image: aimvector/kafka-consumer-go:1.0.0
+    build: 
+      context: ./applications/consumer
+    environment:
+    - "KAFKA_PEERS=kafka-1:9092,kafka-2:9092,kafka-3:9092"
+    - "KAFKA_TOPIC=Orders"
+    - "KAFKA_VERSION=2.7.0"
+    - "KAFKA_GROUP=orders"
+    networks:
+    - kafka
+networks: 
+  kafka:
+    name: kafka
