@@ -16,23 +16,26 @@ var kafkaTopic = os.Getenv("KAFKA_TOPIC")
 var kafkaVersion = os.Getenv("KAFKA_VERSION")
 var kafkaGroup = os.Getenv("KAFKA_GROUP")
 
+type Consumer struct {
+	ready chan bool
+}
 
 func main() {
 
-  version, err := sarama.ParseKafkaVersion(kafkaVersion)
+	version, err := sarama.ParseKafkaVersion(kafkaVersion)
 	config := sarama.NewConfig()
 	config.Version = version
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRoundRobin
 	config.Consumer.Offsets.Initial = sarama.OffsetOldest
-
-	ctx, cancel := context.WithCancel(context.Background())
+	
+  ctx, cancel := context.WithCancel(context.Background())
 	client, err := sarama.NewConsumerGroup(strings.Split(kafkaBrokers, ","), kafkaGroup, config)
 
-	if err != nil {
+  if err != nil {
 	  fmt.Printf("Failed to init Kafka consumer group: %s", err)
 		panic(err)
 	}
-	
+
 	consumer := Consumer{
 		ready: make(chan bool),
 	}
@@ -76,11 +79,6 @@ func main() {
 	}
 
 }
-
-type Consumer struct {
-	ready chan bool
-}
-
 
 // Setup is run at the beginning of a new session, before ConsumeClaim
 func (consumer *Consumer) Setup(sarama.ConsumerGroupSession) error {

@@ -14,7 +14,7 @@ Let's start our Kafka components:
 cd messaging/kafka
 
 #only start the kafka containers, not everything!
-docker compose up -d zookeeper-1 kafka-1 kafka-2 kafka-3
+docker compose up zookeeper-1 kafka-1 kafka-2 kafka-3
 
 #ensure its running!
 docker ps
