@@ -194,7 +194,7 @@ cat /tmp/kafka-logs/Orders-2/*.log
 
 So far we've taken a look at staring up Kafka and Zookeeper instances with
 docker commands. </br>
-We've explored the kafka configuration and how to produce and consume message. </br>
+We've explored the kafka configuration and how to produce and consume messages. </br>
 Let's put it all together in a docker compose file. </br>
 
 With compose we'd like to be able to build our containers, pointing to a 
