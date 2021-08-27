@@ -1,6 +1,10 @@
-def getCustomer(customerID):
-  customer = getCustomers()
-  return customer[customerID]
+class Customer:
+  def __init__(self, c="",f="",l=""):
+    self.customerID = c
+    self.firstName  = f
+    self.lastName   = l
+  def fullName(self):
+    return self.firstName + " " + self.lastName
 
 def getCustomers():
   customers = {
@@ -13,21 +17,13 @@ def getCustomers():
     "g": Customer("g", "Victor", "Savkov"),
     "h" : Customer("h", "Marcel", "Dempers")
   }
-  
   return customers
 
-class Customer:
-  def __init__(self, c="", f="", l=""):
-    self.customerID = c
-    self.firstName  = f
-    self.lastName   = l
-  def fullName(self):
-    return self.firstName + " " + self.lastName
+def getCustomer(customerID):
+  customer = getCustomers()
+  return customer[customerID]
+
 
 customers = getCustomers()
 for customerID in customers:
   print(customers[customerID].fullName())
-
-
-
-
