@@ -1,4 +1,6 @@
-FROM golang:1.12.5-alpine3.9 as debug
+FROM golang:1.17.0-alpine3.14 as debug
+
+WORKDIR /work
 
 # installing git
 RUN apk update && apk upgrade && \
@@ -8,19 +10,18 @@ RUN apk update && apk upgrade && \
         git \
         musl-dev
 
-ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+# RUN go get github.com/sirupsen/logrus
+# RUN go get github.com/buaazp/fasthttprouter
+# RUN go get github.com/valyala/fasthttp
+# RUN go get github.com/go-delve/delve/cmd/dlv
 
-RUN go get github.com/sirupsen/logrus
-RUN go get github.com/buaazp/fasthttprouter
-RUN go get github.com/valyala/fasthttp
-RUN go get github.com/go-delve/delve/cmd/dlv
+COPY ./src/* /work/
+RUN CGO_ENABLED=0 go build -gcflags "all=-N -l" -o /app
 
-WORKDIR /go/src/work
-COPY ./src /go/src/work/
+WORKDIR /
 
-RUN go build -o app
-### Run the Delve debugger ###
+### Install and run the Delve debugger ###
+RUN go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
 COPY ./dlv.sh /
 RUN chmod +x /dlv.sh 
 ENTRYPOINT [ "/dlv.sh"]
