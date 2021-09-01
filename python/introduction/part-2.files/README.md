@@ -6,7 +6,7 @@ programming for a number of reasons: </br>
 * Applications may need to read configuration files
 * In Data science, data is often sourced from files (`CSV`, `XML`, `JSON`, etc)
 * Data is often analysed in Python when its written in different stages of analysis
-* DevOps engineers often store state of infrastructure or data as files for automation purposes.
+* DevOps engineers often stores the state of infrastructure or data as files for automation purposes.
 
 Files are not the endgame for storage. </br>
 Remember there are things like Caches and Databases. </br>
@@ -66,7 +66,7 @@ def getCustomer(customerID):
 ## Opening Files
 
 Python provides an `open` function to open files. </br>
-`open()` takes a file path\name and acccess mode
+`open()` takes a file path\name and access mode
 
 ```
 "r" - Read - Default value. Opens a file for reading, error if the file does not exist
@@ -92,7 +92,7 @@ FileNotFoundError: [Errno 2] No such file or directory: 'customers.log'
 ```
 
 Let's use what we learned (`if` statements), to check if the file exists!
-We'll need a built in library for handing files
+We'll need a built in library for handling files
 
 ```
 import os.path
@@ -128,7 +128,7 @@ for customer in f:
 f.close()
 ```
 
-Now we know the file does not exist, lets create it!
+Now we know the file does not exist, let's create it!
 
 ```
 customers = getCustomers()
