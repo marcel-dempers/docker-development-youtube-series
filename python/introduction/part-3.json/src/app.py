@@ -14,16 +14,20 @@ def getCustomers():
   if os.path.isfile("customers.json"):
     with open('customers.json', newline='') as customerFile:
       data = customerFile.read()
-      customers = json.loads(data) 
+      customers = json.loads(data)
       return customers
   else: 
     return {}
 
-def updateCustomers(customer):
-  with open('customers.json', 'w', newline='') as customerFile:
-    customerJSON = json.dumps(customer) 
-    customerFile.write(customerJSON)
+def getCustomer(customerID):
+  customer = getCustomers()
+  return customer[customerID]
 
+def updateCustomers(customers):
+  with open('customers.json', 'w', newline='') as customerFile:
+    customerJSON = json.dumps(customers)
+    customerFile.write(customerJSON)
+    
 customers = {
     "a": Customer("a","James", "Baker"),
     "b": Customer("b", "Jonathan", "D"),
@@ -35,16 +39,15 @@ customers = {
     "h" : Customer("h", "Marcel", "Dempers")
 }
 
-
 customerDict = {}
+
 for id in customers:
   customerDict[id] = customers[id].__dict__
+
 
 updateCustomers(customerDict)
 
 customers = getCustomers()
+customers["i"] = Customer("i", "Bob", "Smith").__dict__
 
-customers["i"] = Customer("i", "Marcel", "Dempers").__dict__
 updateCustomers(customers)
-
-print(customers)
