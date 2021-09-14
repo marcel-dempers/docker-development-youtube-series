@@ -122,7 +122,7 @@ export KUBECONFIG=~/.kube/new-config
 Create a cluster entry which points to the cluster and contains the details of the CA certificate:
 
 ```
-kubectl config set-cluster dev-cluster --server=https://127.0.0.1:51972 \
+kubectl config set-cluster dev-cluster --server=https://127.0.0.1:52794 \
 --certificate-authority=ca.crt \
 --embed-certs=true
 
@@ -131,9 +131,9 @@ nano ~/.kube/new-config
 ```
 
 
-kubectl config set-credentials bob --client-certificate=bob.crt  --client-key=bob.key
+kubectl config set-credentials bob --client-certificate=bob.crt  --client-key=bob.key --embed-certs=true
 
-kubectl config set-context dev --cluster=dev-cluster --namespace=shopping --user=bob
+kubectl config set-context dev --cluster=dev-cluster --namespace=shopping --user=bob 
 
 kubectl config use-context dev
 
@@ -144,6 +144,7 @@ Error from server (Forbidden): pods is forbidden: User "Bob Smith" cannot list r
 ## Give Bob Smith Access
 
 ```
+cd kubernetes/rbac
 kubectl create ns shopping
 
 kubectl -n shopping apply -f .\role.yaml
@@ -163,9 +164,21 @@ Most business apps will not need to connect to the kubernetes API unless you are
 Generally applications will use a service account to connect. </br>
 You can read more about [Kubernetes Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/).
 
-
+Let's deploy a service account 
 
 ```
+kubectl -n shopping apply -f serviceaccount.yaml
+
+```
+Now we can deploy a pod that uses the service account 
+```
+kubectl -n shopping apply -f pod.yaml
+```
+Now we can test the access from within that pod by trying to list pods:
+
+```
+kubectl -n shopping exec -it shopping-api -- bash
+
 # Point to the internal API server hostname
 APISERVER=https://kubernetes.default.svc
 
@@ -183,4 +196,15 @@ CACERT=${SERVICEACCOUNT}/ca.crt
 
 # List pods through the API
 curl --cacert ${CACERT} --header "Authorization: Bearer $TOKEN" -s ${APISERVER}/api/v1/namespaces/shopping/pods/ 
+
+# we should see an error not having access
 ```
+
+Now we can allow this pod to list pods in the shopping namespace
+```
+kubectl -n shopping apply -f serviceaccount-role.yaml
+kubectl -n shopping apply -f serviceaccount-rolebinding.yaml
+```
+
+If we try run `curl` command again we can see now we are able to get a json 
+response with pod information
