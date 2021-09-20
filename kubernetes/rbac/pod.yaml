@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shopping-api
+spec:
+  containers:
+  - image: nginx
+    name: shopping-api
+  serviceAccountName: shopping-api
