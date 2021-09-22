@@ -51,3 +51,4 @@ customers = getCustomers()
 customers["i"] = Customer("i", "Bob", "Smith").__dict__
 
 updateCustomers(customers)
+print(customers)
