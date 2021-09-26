@@ -1,6 +1,6 @@
 version: "3.4"
 services:
-  csharp: #docker run -it -v ${PWD}:/work -w /work -p 5000:5000 aimvector/csharp:1.0.0 /bin/sh
+  csharp: #docker run --rm -it -v ${PWD}:/work -w /work -p 5000:5000 aimvector/csharp:1.0.0 /bin/sh
     container_name: csharp
     image: aimvector/csharp:1.0.0
     build:
@@ -10,7 +10,7 @@ services:
     - ./c#/src/:/work/
     ports:
       - 5000:5000
-  golang: #docker run -it -v ${PWD}:/go/src/work -v ${PWD}/golang/configs/:/configs -v ${PWD}/golang/secrets/:/secrets  -p 5001:5000 -p 2345:2345 --security-opt "seccomp:unconfined" aimvector/golang:1.0.0
+  golang: #docker run --rm -it -v ${PWD}:/go/src/work -v ${PWD}/golang/configs/:/configs -v ${PWD}/golang/secrets/:/secrets  -p 5001:5000 -p 2345:2345 --security-opt "seccomp:unconfined" aimvector/golang:1.0.0
     container_name: golang
     image: aimvector/golang:1.0.0
     build: 
@@ -25,7 +25,7 @@ services:
       - 2345:2345
     security_opt:
       - "seccomp:unconfined"
-  python: #docker run -it -v ${PWD}:/work -w /work -p 5003:5000 aimvector/python:1.0.0 /bin/sh
+  python: #docker run --rm -it -v ${PWD}:/work -w /work -p 5003:5000 aimvector/python:1.0.0 /bin/sh
     container_name: python
     image: aimvector/python:1.0.0
     build:
@@ -40,7 +40,7 @@ services:
     ports:
       - 5003:5000
       - 5678:5678
-  nodejs: #docker run -it -v ${PWD}:/work -w /work -p 5002:5000 aimvector/nodejs:1.0.0 /bin/sh
+  nodejs: #docker run --rm -it -v ${PWD}:/work -w /work -p 5002:5000 aimvector/nodejs:1.0.0 /bin/sh
     container_name: nodejs
     image: aimvector/nodejs:1.0.0
     build:
@@ -55,7 +55,7 @@ services:
     ports:
       - 5002:5000
       - 9229:9229            #debug port
-  spring-java: #docker run -it -v ${PWD}:/work -w /work -p 5002:5000 aimvector/nodejs:1.0.0 /bin/sh
+  spring-java: #docker run --rm -it -v ${PWD}:/work -w /work -p 5002:5000 aimvector/nodejs:1.0.0 /bin/sh
     container_name: spring-java
     image: aimvector/spring-java:1.0.0
     build:
