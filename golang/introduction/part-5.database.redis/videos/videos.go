@@ -33,13 +33,15 @@ func getVideo(id string)(video video) {
 	
 	value, err := redisClient.Get(ctx, id).Result()
 
+	if err == redis.Nil {
+		return video
+	}
+
 	if err != nil {
 		panic(err)
 	}
 
-	if err != redis.Nil {
-		err = json.Unmarshal([]byte(value), &video)
-	}
+	json.Unmarshal([]byte(value), &video)
 	
 	return video
 }

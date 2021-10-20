@@ -39,7 +39,29 @@ func main() {
 
 func HandleGetVideos(w http.ResponseWriter, r *http.Request){
 	
-	redisClient.Ping(ctx)
+	id, ok := r.URL.Query()["id"]
+  
+	if ok {
+
+    videoID := id[0]
+    video := getVideo(videoID)
+    
+		if video.Id == "" { //video not found, or empty ID
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("{}"))
+			return 
+		}
+
+		videoBytes, err  := json.Marshal(video)
+		if err != nil {
+  		panic(err)
+		}
+
+		w.Write(videoBytes)
+    return
+
+	}
+
 	videos := getVideos()
 	videoBytes, err  := json.Marshal(videos)
 
@@ -59,6 +81,21 @@ func HandleUpdateVideos(w http.ResponseWriter, r *http.Request){
 				panic(err)
 			}
 
+			_, ok := r.URL.Query()["id"]
+			if ok {
+				
+				var video video
+				err = json.Unmarshal(body, &video)
+				if err != nil {
+					w.WriteHeader(400)
+					fmt.Fprintf(w, "Bad request")
+				}
+
+				saveVideo(video)
+				return
+
+			}
+			
 			var videos []video
 			err = json.Unmarshal(body, &videos)
 			if err != nil {
@@ -67,6 +104,7 @@ func HandleUpdateVideos(w http.ResponseWriter, r *http.Request){
 			}
 
 			saveVideos(videos)
+			return
 
 		} else {
 			w.WriteHeader(405)
