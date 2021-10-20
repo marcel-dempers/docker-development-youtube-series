@@ -13,6 +13,13 @@ This is important for learning Go, however there are a few challenges for using 
 [In part 2](../part-2.json/readme.md), we've learnt how to use basic data structures like `json` so we can send\receive data. <br/>
 [In part 3](../part-3.http/readme.md), we've learnt how to write a HTTP service to expose our videos data <br/>
 
+## Start up a Redis Cluster
+
+Follow my Redis clustering Tutorial </br>
+
+<a href="https://youtube.com/playlist?list=PLHq1uqvAteVtlgFkmOlIqWro3XP26y_oW" title="Redis"><img src="https://i.ytimg.com/vi/L3zp347cWNw/hqdefault.jpg" width="50%" alt="Redis Guide" /></a>
+
+Code is over [here](../../../storage/redis/clustering/readme.md)
 
 ## Go Dev Environment
 
@@ -427,7 +434,90 @@ If we refresh our page, we can now see two records!
 
 Now that you have the fundamental knowledge of HTTP and Redis, </br>
 you can update the code to retrieve 1 video by ID, or delete a video by ID. </br>
-You can add search functionality and more!
+You can add search functionality and more! </br>
+
+Let's update our `/ GET` handler to be able to return a single video
+
+```
+func HandleGetVideos(w http.ResponseWriter, r *http.Request){
+	
+	id, ok := r.URL.Query()["id"]
+  
+	if ok {
+
+    videoID := id[0]
+    video := getVideo(videoID)
+    
+		if video.Id == "" { //video not found, or empty ID
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("{}"))
+			return 
+		}
+
+		videoBytes, err  := json.Marshal(video)
+		if err != nil {
+  		panic(err)
+		}
+
+		w.Write(videoBytes)
+    return
+		
+	}
+
+	videos := getVideos()
+	videoBytes, err  := json.Marshal(videos)
+
+	if err != nil {
+  	panic(err)
+	}
+
+	w.Write(videoBytes)
+}
+```
+
+We can also update our `/update POST` endpoint to be able to update a single video
+
+```
+func HandleUpdateVideos(w http.ResponseWriter, r *http.Request){
+
+	if r.Method == "POST" {
+
+			body, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				panic(err)
+			}
+
+			_, ok := r.URL.Query()["id"]
+			if ok {
+				
+				var video video
+				err = json.Unmarshal(body, &video)
+				if err != nil {
+					w.WriteHeader(400)
+					fmt.Fprintf(w, "Bad request")
+				}
+
+				saveVideo(video)
+				return
+
+			}
+			
+			var videos []video
+			err = json.Unmarshal(body, &videos)
+			if err != nil {
+				w.WriteHeader(400)
+				fmt.Fprintf(w, "Bad request")
+			}
+
+			saveVideos(videos)
+			return
+
+		} else {
+			w.WriteHeader(405)
+			fmt.Fprintf(w, "Method not Supported!")
+		}
+}
+```
 
 # Build our Docker container
 
