@@ -25,7 +25,6 @@ func getVideos()(videos []video){
 		video := getVideo(key)
 		videos = append(videos, video)
 	}
-
 	return videos
 }
 
@@ -33,23 +32,15 @@ func getVideo(id string)(video video) {
 	
 	value, err := redisClient.Get(ctx, id).Result()
 
-	if err == redis.Nil {
-		return video
-	}
-
 	if err != nil {
 		panic(err)
 	}
 
-	json.Unmarshal([]byte(value), &video)
+	if err != redis.Nil {
+		err = json.Unmarshal([]byte(value), &video)
+	}
 	
 	return video
-}
-
-func saveVideos(videos []video)(){
-	for _, video := range videos {
-		saveVideo(video)
-	}
 }
 
 func saveVideo(video video)(){
@@ -60,7 +51,14 @@ func saveVideo(video video)(){
 	}
 
 	err = redisClient.Set(ctx, video.Id, videoBytes, 0).Err()
-	if err != nil {
+  if err != nil {
 		panic(err)
+	}
+
+}
+
+func saveVideos(videos []video)(){
+	for _, video := range videos {
+		saveVideo(video)
 	}
 }

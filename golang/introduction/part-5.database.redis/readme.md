@@ -85,7 +85,7 @@ func main() {
 	http.HandleFunc("/", HandleGetVideos)
 	http.HandleFunc("/update", HandleUpdateVideos)
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":80", nil)
 }
 ```
 
@@ -314,7 +314,7 @@ If we look at our sentinel configuration, our master alias is set to `mymaster`
 ```
 docker run -it -p 80:80 `
   --net redis `
-  -e REDIS_SENTINELS="sentinel-1:5000,sentinel-2:5000,sentinel-3:5000" `
+  -e REDIS_SENTINELS="sentinel-0:5000,sentinel-1:5000,sentinel-2:5000" `
   -e REDIS_MASTER_NAME="mymaster" `
   -e REDIS_PASSWORD="a-very-complex-password-here" `
   -v ${PWD}:/work go sh
@@ -550,7 +550,7 @@ Run :
 ```
 docker run -it -p 80:80 `
   --net redis `
-  -e REDIS_SENTINELS="sentinel-1:5000,sentinel-2:5000,sentinel-3:5000" `
+  -e REDIS_SENTINELS="sentinel-0:5000,sentinel-1:5000,sentinel-2:5000" `
   -e REDIS_MASTER_NAME="mymaster" `
   -e REDIS_PASSWORD="a-very-complex-password-here" `
   videos
