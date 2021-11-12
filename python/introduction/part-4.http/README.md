@@ -235,7 +235,7 @@ Notice the HTTP status code `200` indicating success.
 Routes allow us to have many endpoints, so we could have endpoints such as:
 
 ```
-/            --> which returns all customers
+/all            --> which returns all customers
 /get/<customerID>    --> which returns one customer by CustomerID
 /add         --> which adds or updates a customer
 ```
@@ -404,10 +404,7 @@ Note if we break the `json` format, we get a `400` status code </br>
 
 `400` = Bad Request </br>
 
-Now we need to parse the request and validate it
-
-```
-```
+400 indicates a bad request, letting the client know they have to send the right formatted data.
 
 ## Docker
 
@@ -420,21 +417,23 @@ FROM python:3.9.6-alpine3.13 as dev
 WORKDIR /work
 
 FROM dev as runtime
-COPY ./src/ /app 
+WORKDIR /app
+COPY requirements.txt /app/
+RUN pip install -r /app/requirements.txt
 
-ENTRYPOINT [ "python", "/app/app.py" ]
+COPY ./src/ /app 
+ENV FLASK_APP=app.py
+
+CMD flask run -h 0.0.0 -p 5000
 
 ```
 
-Build and run our container.
-Notice the `customers.json` file gets created if it does not exist.
+Build our container.
 
 ```
 cd python\introduction\part-4.http
 
 docker build . -t customer-app
-
-docker run -p 5000:5000 customer-app
 
 ```
 
