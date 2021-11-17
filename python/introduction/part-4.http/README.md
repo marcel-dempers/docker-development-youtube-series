@@ -185,7 +185,7 @@ our application and needs grow. Best is to use a `requirements.txt` file.
 Let's create a `requirements.txt` file:
 
 ```
-Flask == 2.0.1
+Flask == 2.0.2
 ```
 
 We can install our dependencies using:
@@ -418,10 +418,10 @@ WORKDIR /work
 
 FROM dev as runtime
 WORKDIR /app
-COPY requirements.txt /app/
+COPY ./src/requirements.txt /app/
 RUN pip install -r /app/requirements.txt
 
-COPY ./src/ /app 
+COPY ./src/app.py /app/app.py
 ENV FLASK_APP=app.py
 
 CMD flask run -h 0.0.0 -p 5000

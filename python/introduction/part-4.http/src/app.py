@@ -24,10 +24,11 @@ def getCustomers():
 
 def getCustomer(customerID):
   customers = getCustomers()
+
   if customerID in customers:
     return customers[customerID]
-  else: 
-    return {} 
+  else:
+    return {}
 
 def updateCustomers(customers):
   with open(dataPath, 'w', newline='') as customerFile:
@@ -44,6 +45,7 @@ def get_customers():
 @app.route("/get/<string:customerID>", methods=['GET'])
 def get_customer(customerID):
     customer = getCustomer(customerID)
+
     if customer == {}:
       return {}, 404
     else:
@@ -59,7 +61,7 @@ def add_customer():
       return "firstName required", 400
     if "lastName" not in jsonData:
       return "lastName required", 400
-
+    
     customers = getCustomers()
     customers[jsonData["customerID"]] = Customer( jsonData["customerID"], jsonData["firstName"], jsonData["lastName"]).__dict__
     updateCustomers(customers)
