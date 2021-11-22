@@ -23,7 +23,7 @@ Code is over [here](../../../storage/redis/clustering/readme.md)
 
 ## Go Dev Environment
 
-The same as Part 1+2+3, we start with a [dockerfile](./dockerfile) where we declare our version of `go`.
+The same as Part 1+2+3+4, we start with a [dockerfile](./dockerfile) where we declare our version of `go`.
 
 The `dockerfile`:
 
