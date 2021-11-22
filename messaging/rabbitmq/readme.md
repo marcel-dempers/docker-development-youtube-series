@@ -29,9 +29,11 @@ docker exec -it rabbit-manager rabbitmqctl cluster_status
 
 # Enable Statistics
 
+```
 docker exec -it rabbit-1 rabbitmq-plugins enable rabbitmq_management
 docker exec -it rabbit-2 rabbitmq-plugins enable rabbitmq_management
 docker exec -it rabbit-3 rabbitmq-plugins enable rabbitmq_management
+```
 
 # Message Publisher
 
