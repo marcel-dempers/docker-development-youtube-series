@@ -11,7 +11,7 @@ Be sure to checkout: </br>
 
 Follow my Redis clustering Tutorial </br>
 
-<a href="https://youtube.com/playlist?list=PLHq1uqvAteVtlgFkmOlIqWro3XP26y_oW" title="Redis"><img src="https://i.ytimg.com/vi/L3zp347cWNw/hqdefault.jpg" width="50%" alt="Redis Guide" /></a>
+<a href="https://youtube.com/playlist?list=PLHq1uqvAteVtlgFkmOlIqWro3XP26y_oW" title="Redis"><img src="https://i.ytimg.com/vi/L3zp347cWNw/hqdefault.jpg" width="30%" alt="Redis Guide" /></a>
 
 Code is over [here](../../../storage/redis/clustering/readme.md)
 
