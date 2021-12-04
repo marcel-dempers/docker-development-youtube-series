@@ -1,6 +1,5 @@
 
 provider "kubernetes" {
-    load_config_file       = "false"
     host                   =  var.host
     client_certificate     =  var.client_certificate
     client_key             =  var.client_key
@@ -38,11 +37,11 @@ resource "kubernetes_deployment" "example" {
           name  = "example"
 
           resources {
-            limits {
+            limits = {
               cpu    = "0.5"
               memory = "512Mi"
             }
-            requests {
+            requests = {
               cpu    = "250m"
               memory = "50Mi"
             }

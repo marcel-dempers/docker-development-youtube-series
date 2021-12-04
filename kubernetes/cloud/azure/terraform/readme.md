@@ -11,7 +11,7 @@ We'll need the Azure CLI to gather information so we can build our Terraform fil
 
 ```
 # Run Azure CLI
-docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh mcr.microsoft.com/azure-cli:2.6.0
+docker run -it --rm -v ${PWD}:/work -w /work --entrypoint /bin/sh mcr.microsoft.com/azure-cli:2.30.0
 
 ```
 
@@ -62,7 +62,7 @@ For extra reference you can also take a look at the Microsoft Docs: [here](https
 ```
 # Get Terraform
 
-curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip
 
 unzip /tmp/terraform.zip
 chmod +x terraform && mv terraform /usr/local/bin/
