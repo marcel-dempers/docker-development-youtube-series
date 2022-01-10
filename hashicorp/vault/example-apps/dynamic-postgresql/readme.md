@@ -13,7 +13,6 @@ kubectl -n postgres exec -it <podname> bash
 psql --username=postgresadmin postgresdb
 ```
 
-```
 Enable the database engine
 
 ```
