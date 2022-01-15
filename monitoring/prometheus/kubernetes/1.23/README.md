@@ -74,12 +74,6 @@ Let's create the CRD's and prometheus operator
 kubectl create -f ./manifests/setup/
 ```
 
-#wait until CRDs are created
-
-```  
-until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
-```
-
 # Setup Manifests
 
 Apply rest of manifests
@@ -138,3 +132,39 @@ kubectl -n monitoring port-forward svc/grafana 3000
 ```
 
 Now our datasource should be healthy.
+
+## Check Prometheus 
+
+Similar to checking Grafana, we can also check Prometheus:
+
+```
+kubectl -n monitoring port-forward svc/prometheus-operated 9090
+```
+
+## Check Service Monitors 
+
+To see how Prometheus is configured on what to scrape , we list service monitors
+
+```
+kubectl -n monitoring get servicemonitors
+NAME                      AGE
+alertmanager-main         8m58s
+blackbox-exporter         8m57s
+coredns                   8m57s
+grafana                   8m57s
+kube-apiserver            8m57s
+kube-controller-manager   8m57s
+kube-scheduler            8m57s
+kube-state-metrics        8m57s
+kubelet                   8m57s
+node-exporter             8m57s
+prometheus-adapter        8m56s
+prometheus-k8s            8m56s
+prometheus-operator       8m56s
+
+kubectl -n monitoring describe servicemonitor node-exporter
+```
+
+Label selectors are used to map service monitor to kubernetes services. </br>
+
+That is how Prometheus is configured on what to scrape.
