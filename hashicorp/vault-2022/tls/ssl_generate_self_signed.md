@@ -4,7 +4,7 @@ More about [CFSSL here]("https://github.com/cloudflare/cfssl")
 
 ```
 
-cd hashicorp\vault\tls
+cd hashicorp\vault-2022\tls
 
 docker run -it --rm -v ${PWD}:/work -w /work debian bash
 
