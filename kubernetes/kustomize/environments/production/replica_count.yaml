@@ -2,5 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: example-deploy
+  namespace: example  
 spec:
   replicas: 6
