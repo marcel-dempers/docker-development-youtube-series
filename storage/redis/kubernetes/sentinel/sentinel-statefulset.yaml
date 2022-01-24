@@ -20,7 +20,7 @@ spec:
         args:
           - |
             REDIS_PASSWORD=a-very-complex-password-here
-            nodes=redis-0.redis.redis.svc.cluster.local,redis-1.redis.redis.svc.cluster.local,redis-2.redis.redis.svc.cluster.local
+            nodes=redis-0.redis,redis-1.redis,redis-2.redis
 
             for i in ${nodes//,/ }
             do
