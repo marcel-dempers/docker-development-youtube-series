@@ -1,0 +1,85 @@
+# Vault Helm Chart Value Overrides
+global:
+  enabled: true
+  tlsDisable: false
+
+injector:
+  enabled: true
+  # Use the Vault K8s Image https://github.com/hashicorp/vault-k8s/
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "0.14.1"
+
+  resources:
+      requests:
+        memory: 50Mi
+        cpu: 50m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+
+server:
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.9.2"
+
+  # These Resource Limits are in line with node requirements in the
+  # Vault Reference Architecture for a Small Cluster
+  resources:
+    requests:
+      memory: 50Mi
+      cpu: 500m
+    limits:
+      memory: 16Gi
+      cpu: 2000m
+
+  # For HA configuration and because we need to manually init the vault,
+  # we need to define custom readiness/liveness Probe settings
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+
+  # extraEnvironmentVars is a list of extra environment variables to set with the stateful set. These could be
+  # used to include variables required for auto-unseal.
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/userconfig/tls-ca/tls.crt
+
+  # extraVolumes is a list of extra volumes to mount. These will be exposed
+  # to Vault in the path `/vault/userconfig/<name>/`.
+  extraVolumes:
+    - type: secret
+      name: tls-server
+    - type: secret
+      name: tls-ca
+
+  standalone:
+    enabled: false
+
+  # Run Vault in "HA" mode.
+  ha:
+    enabled: true
+    replicas: 3
+    config: |
+      ui = true
+       
+      listener "tcp" {
+        tls_disable = 0
+        address     = "0.0.0.0:8200"
+        tls_cert_file = "/vault/userconfig/tls-server/tls.crt"
+        tls_key_file = "/vault/userconfig/tls-server/tls.key"
+        tls_min_version = "tls12"
+      }
+
+      storage "consul" {
+        path = "vault"
+        address = "consul-consul-server:8500"
+      }
+
+# Vault UI
+ui:
+  enabled: true
+  externalPort: 8200

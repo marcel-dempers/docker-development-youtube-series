@@ -1,4 +1,4 @@
-# Hashicorp Vault Guide
+# Hashicorp Vault Guide - Deprecated
 
 # Vault
 
