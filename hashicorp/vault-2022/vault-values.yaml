@@ -21,7 +21,7 @@ injector:
 server:
   image:
     repository: "hashicorp/vault"
-    tag: "1.9.0"
+    tag: "1.9.2"
 
   # These Resource Limits are in line with node requirements in the
   # Vault Reference Architecture for a Small Cluster

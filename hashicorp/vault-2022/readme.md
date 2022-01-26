@@ -115,7 +115,7 @@ Let's find what versions of vault are available:
 helm search repo hashicorp/vault --versions
 ```
 
-In this demo I will use the `0.18.0` chart </br>
+In this demo I will use the `0.19.0` chart </br>
 
 Let's firstly create a `values` file to customize vault.
 Let's grab the manifests:
@@ -123,7 +123,7 @@ Let's grab the manifests:
 ```
 helm template vault hashicorp/vault \
   --namespace vault \
-  --version 0.5.0 \
+  --version 0.19.0 \
   -f vault-values.yaml \
   > ./manifests/vault.yaml
 ```
@@ -160,7 +160,7 @@ kubectl -n vault port-forward svc/vault-ui 443:8200
 ```
 Now we can access the web UI [here]("https://localhost/")
 
-## Enable Kubernetes Autnetication
+## Enable Kubernetes Authentication
 
 For the injector to be authorised to access vault, we need to enable K8s auth
 

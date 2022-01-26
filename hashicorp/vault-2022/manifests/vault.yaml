@@ -8,7 +8,7 @@ metadata:
   name: vault
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -38,7 +38,7 @@ metadata:
   name: vault
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -50,7 +50,7 @@ metadata:
   name: vault-config
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -95,7 +95,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: vault-agent-injector-binding
-  namespace: vault
   labels:
     app.kubernetes.io/name: vault-agent-injector
     app.kubernetes.io/instance: vault
@@ -110,13 +109,12 @@ subjects:
   namespace: vault
 ---
 # Source: vault/templates/server-clusterrolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: vault-server-binding
-  namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -136,7 +134,7 @@ metadata:
   namespace: vault
   name: vault-discovery-role
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -146,13 +144,13 @@ rules:
   verbs: ["get", "watch", "list", "update", "patch"]
 ---
 # Source: vault/templates/server-discovery-rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: vault-discovery-rolebinding
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -175,9 +173,11 @@ metadata:
     app.kubernetes.io/name: vault-agent-injector
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
+  
 spec:
   ports:
-  - port: 443
+  - name: https
+    port: 443
     targetPort: 8080
   selector:
     app.kubernetes.io/name: vault-agent-injector
@@ -192,19 +192,19 @@ metadata:
   name: vault-active
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   annotations:
+
 spec:
-  type: ClusterIP
   publishNotReadyAddresses: true
   ports:
-    - name: http
+    - name: https
       port: 8200
       targetPort: 8200
-    - name: internal
+    - name: https-internal
       port: 8201
       targetPort: 8201
   selector:
@@ -214,26 +214,26 @@ spec:
     vault-active: "true"
 ---
 # Source: vault/templates/server-ha-standby-service.yaml
-# Service for active Vault pod
+# Service for standby Vault pod
 apiVersion: v1
 kind: Service
 metadata:
   name: vault-standby
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   annotations:
+
 spec:
-  type: ClusterIP
   publishNotReadyAddresses: true
   ports:
-    - name: http
+    - name: https
       port: 8200
       targetPort: 8200
-    - name: internal
+    - name: https-internal
       port: 8201
       targetPort: 8201
   selector:
@@ -250,12 +250,12 @@ metadata:
   name: vault-internal
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+
 spec:
   clusterIP: None
   publishNotReadyAddresses: true
@@ -263,7 +263,7 @@ spec:
     - name: "https"
       port: 8200
       targetPort: 8200
-    - name: internal
+    - name: https-internal
       port: 8201
       targetPort: 8201
   selector:
@@ -279,24 +279,21 @@ metadata:
   name: vault
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
   annotations:
-    # This must be set in addition to publishNotReadyAddresses due
-    # to an open issue where it may not work:
-    # https://github.com/kubernetes/kubernetes/issues/58662
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+
 spec:
   # We want the servers to become available even if they're not ready
   # since this DNS is also used for join operations.
   publishNotReadyAddresses: true
   ports:
-    - name: http
+    - name: https
       port: 8200
       targetPort: 8200
-    - name: internal
+    - name: https-internal
       port: 8201
       targetPort: 8201
   selector:
@@ -305,18 +302,13 @@ spec:
     component: server
 ---
 # Source: vault/templates/ui-service.yaml
-# Headless service for Vault server DNS entries. This service should only
-# point to Vault servers. For access to an agent, one should assume that
-# the agent is installed locally on the node and the NODE_IP should be used.
-# If the node can't run a Vault agent, then this service can be used to
-# communicate directly to a server agent.
 apiVersion: v1
 kind: Service
 metadata:
   name: vault-ui
   namespace: vault
   labels:
-    helm.sh/chart: vault-0.5.0
+    helm.sh/chart: vault-0.19.0
     app.kubernetes.io/name: vault-ui
     app.kubernetes.io/instance: vault
     app.kubernetes.io/managed-by: Helm
@@ -327,7 +319,7 @@ spec:
     component: server
   publishNotReadyAddresses: true
   ports:
-    - name: http
+    - name: https
       port: 8200
       targetPort: 8200
   type: ClusterIP
@@ -351,6 +343,7 @@ spec:
       app.kubernetes.io/name: vault-agent-injector
       app.kubernetes.io/instance: vault
       component: webhook
+  
   template:
     metadata:
       labels:
@@ -359,9 +352,20 @@ spec:
         component: webhook
     spec:
       
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: vault-agent-injector
+                  app.kubernetes.io/instance: "vault"
+                  component: webhook
+              topologyKey: kubernetes.io/hostname
+  
       
       
       serviceAccountName: "vault-agent-injector"
+      hostNetwork: false
       securityContext:
         runAsNonRoot: true
         runAsGroup: 1000
@@ -378,9 +382,11 @@ spec:
   
           image: "hashicorp/vault-k8s:0.14.1"
           imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
           env:
             - name: AGENT_INJECT_LISTEN
-              value: ":8080"
+              value: :8080
             - name: AGENT_INJECT_LOG_LEVEL
               value: info
             - name: AGENT_INJECT_VAULT_ADDR
@@ -388,7 +394,7 @@ spec:
             - name: AGENT_INJECT_VAULT_AUTH_PATH
               value: auth/kubernetes
             - name: AGENT_INJECT_VAULT_IMAGE
-              value: "vault:1.4.0"
+              value: "hashicorp/vault:1.9.2"
             - name: AGENT_INJECT_TLS_AUTO
               value: vault-agent-injector-cfg
             - name: AGENT_INJECT_TLS_AUTO_HOSTS
@@ -397,7 +403,23 @@ spec:
               value: standard
             - name: AGENT_INJECT_REVOKE_ON_SHUTDOWN
               value: "false"
+            - name: AGENT_INJECT_CPU_REQUEST
+              value: "250m"
+            - name: AGENT_INJECT_CPU_LIMIT
+              value: "500m"
+            - name: AGENT_INJECT_MEM_REQUEST
+              value: "64Mi"
+            - name: AGENT_INJECT_MEM_LIMIT
+              value: "128Mi"
+            - name: AGENT_INJECT_DEFAULT_TEMPLATE
+              value: "map"
+            - name: AGENT_INJECT_TEMPLATE_CONFIG_EXIT_ON_RETRY_FAILURE
+              value: "true"
             
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           args:
             - agent-inject
             - 2>&1
@@ -407,7 +429,7 @@ spec:
               port: 8080
               scheme: HTTPS
             failureThreshold: 2
-            initialDelaySeconds: 1
+            initialDelaySeconds: 5
             periodSeconds: 2
             successThreshold: 1
             timeoutSeconds: 5
@@ -417,7 +439,7 @@ spec:
               port: 8080
               scheme: HTTPS
             failureThreshold: 2
-            initialDelaySeconds: 2
+            initialDelaySeconds: 5
             periodSeconds: 2
             successThreshold: 1
             timeoutSeconds: 5
@@ -447,7 +469,7 @@ spec:
   template:
     metadata:
       labels:
-        helm.sh/chart: vault-0.5.0
+        helm.sh/chart: vault-0.19.0
         app.kubernetes.io/name: vault
         app.kubernetes.io/instance: vault
         component: server
@@ -482,9 +504,13 @@ spec:
         - name: userconfig-tls-server
           secret:
             secretName: tls-server
+            defaultMode: 420
         - name: userconfig-tls-ca
           secret:
             secretName: tls-ca
+            defaultMode: 420
+        - name: home
+          emptyDir: {}
       containers:
         - name: vault
           resources:
@@ -495,21 +521,24 @@ spec:
               cpu: 500m
               memory: 50Mi
   
-          securityContext:
-            capabilities:
-              add: ["IPC_LOCK"]
-          image: hashicorp/vault:1.9.0
+          image: hashicorp/vault:1.9.2
           imagePullPolicy: IfNotPresent
-          command: 
+          command:
           - "/bin/sh"
           - "-ec"
-  
           args: 
           - |
-            sed -E "s/HOST_IP/${HOST_IP?}/g" /vault/config/extraconfig-from-values.hcl > /tmp/storageconfig.hcl;
-            sed -Ei "s/POD_IP/${POD_IP?}/g" /tmp/storageconfig.hcl;
+            cp /vault/config/extraconfig-from-values.hcl /tmp/storageconfig.hcl;
+            [ -n "${HOST_IP}" ] && sed -Ei "s|HOST_IP|${HOST_IP?}|g" /tmp/storageconfig.hcl;
+            [ -n "${POD_IP}" ] && sed -Ei "s|POD_IP|${POD_IP?}|g" /tmp/storageconfig.hcl;
+            [ -n "${HOSTNAME}" ] && sed -Ei "s|HOSTNAME|${HOSTNAME?}|g" /tmp/storageconfig.hcl;
+            [ -n "${API_ADDR}" ] && sed -Ei "s|API_ADDR|${API_ADDR?}|g" /tmp/storageconfig.hcl;
+            [ -n "${TRANSIT_ADDR}" ] && sed -Ei "s|TRANSIT_ADDR|${TRANSIT_ADDR?}|g" /tmp/storageconfig.hcl;
+            [ -n "${RAFT_ADDR}" ] && sed -Ei "s|RAFT_ADDR|${RAFT_ADDR?}|g" /tmp/storageconfig.hcl;
             /usr/local/bin/docker-entrypoint.sh vault server -config=/tmp/storageconfig.hcl 
-  
+   
+          securityContext:
+            allowPrivilegeEscalation: false
           env:
             - name: HOST_IP
               valueFrom:
@@ -541,6 +570,8 @@ spec:
                   fieldPath: metadata.name
             - name: VAULT_CLUSTER_ADDR
               value: "https://$(HOSTNAME).vault-internal:8201"
+            - name: HOME
+              value: "/home/vault"
             
             
             - name: "VAULT_CACERT"
@@ -559,13 +590,15 @@ spec:
             - name: userconfig-tls-ca
               readOnly: true
               mountPath: /vault/userconfig/tls-ca
+            - name: home
+              mountPath: /home/vault
           ports:
             - containerPort: 8200
-              name: http
+              name: https
             - containerPort: 8201
-              name: internal
+              name: https-internal
             - containerPort: 8202
-              name: replication
+              name: https-rep
           readinessProbe:
             httpGet:
               path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
@@ -573,18 +606,19 @@ spec:
               scheme: HTTPS
             failureThreshold: 2
             initialDelaySeconds: 5
-            periodSeconds: 3
+            periodSeconds: 5
             successThreshold: 1
-            timeoutSeconds: 5
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
               path: "/v1/sys/health?standbyok=true"
               port: 8200
               scheme: HTTPS
+            failureThreshold: 2
             initialDelaySeconds: 60
-            periodSeconds: 3
+            periodSeconds: 5
             successThreshold: 1
-            timeoutSeconds: 5
+            timeoutSeconds: 3
           lifecycle:
             # Vault container doesn't receive SIGTERM from Kubernetes
             # and after the grace period ends, Kube sends SIGKILL.  This
@@ -599,11 +633,12 @@ spec:
                   # to this pod while it's terminating
                   "sleep 5 && kill -SIGTERM $(pidof vault)",
                 ]
+      
   
   volumeClaimTemplates:
 ---
 # Source: vault/templates/injector-mutating-webhook.yaml
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: vault-agent-injector-cfg
@@ -613,14 +648,63 @@ metadata:
     app.kubernetes.io/managed-by: Helm
 webhooks:
   - name: vault.hashicorp.com
+    sideEffects: None
+    admissionReviewVersions:
+    - "v1beta1"
+    - "v1"
     clientConfig:
       service:
         name: vault-agent-injector-svc
         namespace: vault
         path: "/mutate"
-      caBundle: 
+      caBundle: ""
     rules:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: [""]
         apiVersions: ["v1"]
         resources: ["pods"]
+    failurePolicy: Ignore
+---
+# Source: vault/templates/tests/server-test.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "vault-server-test"
+  namespace: vault
+  annotations:
+    "helm.sh/hook": test
+spec:
+  
+  containers:
+    - name: vault-server-test
+      image: hashicorp/vault:1.9.2
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: VAULT_ADDR
+          value: https://vault.vault.svc:8200
+        
+        - name: "VAULT_CACERT"
+          value: "/vault/userconfig/tls-ca/tls.crt"
+      command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Checking for sealed info in 'vault status' output"
+          ATTEMPTS=10
+          n=0
+          until [ "$n" -ge $ATTEMPTS ]
+          do
+            echo "Attempt" $n...
+            vault status -format yaml | grep -E '^sealed: (true|false)' && break
+            n=$((n+1))
+            sleep 5
+          done
+          if [ $n -ge $ATTEMPTS ]; then
+            echo "timed out looking for sealed info in 'vault status' output"
+            exit 1
+          fi
+
+          exit 0
+      volumeMounts:
+  volumes:
+  restartPolicy: Never
