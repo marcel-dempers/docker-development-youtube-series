@@ -121,17 +121,17 @@ Record the IP address of each VM so we can SSH to it:
 ```
 sudo ifconfig
 # record eth0
-linux-0 IP=192.168.0.22
-linux-1 IP=192.168.0.23
-linux-2 IP=192.168.0.24
+linux-0 IP=192.168.0.16
+linux-1 IP=192.168.0.17
+linux-2 IP=192.168.0.18
 ```
 
 In new Powershell windows, let's SSH to our VMs
 
 ```
-ssh linux-0@192.168.0.22
-ssh linux-1@192.168.0.23
-ssh linux-2@192.168.0.24
+ssh linux-0@192.168.0.16
+ssh linux-1@192.168.0.17
+ssh linux-2@192.168.0.18
 ```
 
 # Setup Docker
