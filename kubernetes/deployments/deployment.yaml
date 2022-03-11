@@ -43,6 +43,10 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "500m"
+      tolerations:
+      - key: "cattle.io/os"
+        value: "linux"
+        effect: "NoSchedule"      
 #NOTE: comment out `volumeMounts` section for configmap and\or secret guide
         # volumeMounts:
         # - name: secret-volume
