@@ -1,0 +1,12 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+nodes:
+- role: control-plane
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
+  extraPortMappings:
+  - containerPort: 30778
+    hostPort: 30778
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+- role: worker
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
