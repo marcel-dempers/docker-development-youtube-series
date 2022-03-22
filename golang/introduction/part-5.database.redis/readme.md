@@ -17,13 +17,13 @@ This is important for learning Go, however there are a few challenges for using 
 
 Follow my Redis clustering Tutorial </br>
 
-<a href="https://youtube.com/playlist?list=PLHq1uqvAteVtlgFkmOlIqWro3XP26y_oW" title="Redis"><img src="https://i.ytimg.com/vi/L3zp347cWNw/hqdefault.jpg" width="50%" alt="Redis Guide" /></a>
+<a href="https://youtube.com/playlist?list=PLHq1uqvAteVtlgFkmOlIqWro3XP26y_oW" title="Redis"><img src="https://i.ytimg.com/vi/L3zp347cWNw/hqdefault.jpg" width="30%" alt="Redis Guide" /></a>
 
 Code is over [here](../../../storage/redis/clustering/readme.md)
 
 ## Go Dev Environment
 
-The same as Part 1+2+3, we start with a [dockerfile](./dockerfile) where we declare our version of `go`.
+The same as Part 1+2+3+4, we start with a [dockerfile](./dockerfile) where we declare our version of `go`.
 
 The `dockerfile`:
 

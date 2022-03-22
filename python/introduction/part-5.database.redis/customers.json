@@ -1,0 +1,37 @@
+{
+  "a": {
+    "customerID": "a",
+    "firstName": "James",
+    "lastName": "Baker"
+  },
+  "b": {
+    "customerID": "b",
+    "firstName": "Jonathan",
+    "lastName": "D"
+  },
+  "c": {
+    "customerID": "c",
+    "firstName": "Aleem",
+    "lastName": "Janmohamed"
+  },
+  "d": {
+    "customerID": "d",
+    "firstName": "Ivo",
+    "lastName": "Galic"
+  },
+  "e": {
+    "customerID": "e",
+    "firstName": "Joel",
+    "lastName": "Griffiths"
+  },
+  "f": {
+    "customerID": "f",
+    "firstName": "Michael",
+    "lastName": "Spinks"
+  },
+  "g": {
+    "customerID": "g",
+    "firstName": "Victor",
+    "lastName": "Savkov"
+  }
+}
