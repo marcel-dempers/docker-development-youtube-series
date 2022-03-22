@@ -159,9 +159,9 @@ So let's setup a single server with [docker](https://rancher.com/docs/rancher/v2
 ## Persist data
 
 We will want to persist ranchers data across reboots. </br>
-Rancher stores its data under `/var/lib/rancher` 
+Rancher stores its data under `/var/lib/rancher` </br> 
 
-Let's create some space to save data:
+In this repo, let's create a space to persist data:
 
 ```
 cd kubernetes/rancher
