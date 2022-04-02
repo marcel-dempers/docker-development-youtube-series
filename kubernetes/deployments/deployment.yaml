@@ -7,7 +7,7 @@ metadata:
     app: example-app
     test: test
   annotations:
-    fluxcd.io/tag.example-app: semver:~1.0
+    fluxcd.io/tag.example-app: glob:1.0.*
     fluxcd.io/automated: 'true'
 spec:
   selector:
@@ -46,7 +46,7 @@ spec:
       tolerations:
       - key: "cattle.io/os"
         value: "linux"
-        effect: "NoSchedule"      
+        effect: "NoSchedule"
 #NOTE: comment out `volumeMounts` section for configmap and\or secret guide
         # volumeMounts:
         # - name: secret-volume
