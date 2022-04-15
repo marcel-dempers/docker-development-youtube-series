@@ -39,4 +39,4 @@ spec:
           valueFrom:
             secretKeyRef:
               name: wordpress
-              key: WORDPRESS_DB_PASSWORD
+              key: WORDPRESS_DB_NAME

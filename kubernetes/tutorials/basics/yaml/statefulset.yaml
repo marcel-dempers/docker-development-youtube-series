@@ -38,20 +38,23 @@ spec:
         - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
-              name: wordpress
-              key: WORDPRESS_DB_PASSWORD
+              name: mysql
+              key: MYSQL_DATABASE
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: wordpress
-              key: WORDPRESS_DB_USER
+              name: mysql
+              key: MYSQL_USER
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: wordpress
-              key: WORDPRESS_DB_PASSWORD
+              name: mysql
+              key: MYSQL_PASSWORD
         - name: MYSQL_RANDOM_ROOT_PASSWORD
-          value: "1"
+          valueFrom:
+            configMapKeyRef:
+              name: mysql
+              key: MYSQL_RANDOM_ROOT_PASSWORD
         volumeMounts:
         - name: db
           mountPath: /var/lib/mysql
