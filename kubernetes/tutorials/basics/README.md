@@ -236,6 +236,10 @@ To use an ingress, we need an ingress controller
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.3/deploy/static/provider/cloud/deploy.yaml
+
+kubectl -n ingress-nginx get pods
+
+kubectl -n ingress-nginx --address 0.0.0.0 port-forward svc/ingress-nginx-controller 80
 ```
 
 Create an Ingress
