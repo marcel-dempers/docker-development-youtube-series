@@ -1,4 +1,4 @@
-# Tutorial: The Basics 
+# Kubernetes Tutorial: The Basics 
 
 This guide is aimed to fast-track your Kubernetes learning by focusing on a practical hands-on overview guide. </br>
 
@@ -119,6 +119,12 @@ docker rm -f mysql
 docker network rm wordpress
 rm data
 ```
+
+## Kubernetes Tools: kubectl
+
+To manage and work with Kubernetes, you need `kubectl` </br>
+Let's grab that from [here](https://kubernetes.io/docs/tasks/tools/)
+
 
 ## Run Kubernetes Locally
 
