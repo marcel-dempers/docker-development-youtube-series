@@ -13,3 +13,4 @@ kubernetes/shipa/installs/shipa-helm-chart-1.1.1/
 messaging/kafka/data/*
 kubernetes/portainer/volume*
 kubernetes/rancher/volume/*
+kubernetes/portainer/business/volume-ce
