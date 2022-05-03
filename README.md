@@ -8,7 +8,7 @@ The Ultimate Swiss Army knife for DevOps, Developers and Platform Engineers
 
 | Steps  | Playlist :tv: | Source :octocat: | 
 |---|---|---|
-| Learn Kubernetes :snowflake:  | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVvUEdqaBeMK2awVThNujwMd" title="Kubernetes"><img src="https://i.ytimg.com/vi/8h4FoWK7tIA/hqdefault.jpg" width="50%" alt="Kubernetes Guide" /></a>  | [source](./kubernetes/readme.md)   | 
+| [Learn Kubernetes](./kubernetes/README.md) :snowflake: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVvUEdqaBeMK2awVThNujwMd" title="Kubernetes"><img src="https://i.ytimg.com/vi/8h4FoWK7tIA/hqdefault.jpg" width="50%" alt="Kubernetes Guide" /></a>  | [source](./kubernetes/readme.md)   | 
 | Learn about CI/CD tools :whale: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVsSsrnZimHEf7NJ1MlRhQUj" title="CI/CD"><img src="https://i.ytimg.com/vi/myCcJJ_Fk10/hqdefault.jpg" width="50%" alt="CI/CD Guide" /></a>  |   |   |   |
 | Deploy Kubernetes to the cloud :partly_sunny: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVsUhzNBkn-rPzXtPNpJu1-k" title="Cloud K8s"><img src="https://i.ytimg.com/vi/3jA9EfkSAUU/hqdefault.jpg" width="50%" alt="Cloud Guide" /></a>  | [source](./kubernetes/cloud/readme.md)  | 
 | Monitoring Kubernetes :mag: | <a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVuEXCrRkPFWLXRKWNLOVUHn" title="Cloud K8s"><img src="https://i.ytimg.com/vi/5o37CGlNLr8/hqdefault.jpg" width="50%" alt="Cloud Guide" /></a>   | [source](./monitoring/prometheus/kubernetes/readme.md)  | 
