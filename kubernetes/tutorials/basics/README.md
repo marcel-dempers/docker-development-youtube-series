@@ -197,6 +197,11 @@ kubectl -n cms get pods
 
 Services [documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
 
+```
+kubectl -n cms apply -f .\yaml\service.yaml
+kubectl -n cms get svc
+```
+
 # Storage Class
 
 StorageClass [documentation](https://kubernetes.io/docs/concepts/storage/storage-classes/)

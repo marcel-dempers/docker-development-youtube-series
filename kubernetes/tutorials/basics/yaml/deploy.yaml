@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: wordpress
-        image: wordpress
+        image: aimvector/wordpress-example
         ports:
         - containerPort: 80
         env:

@@ -30,7 +30,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: mysql
-        image: mysql:5.7
+        image: aimvector/mysql-example
         ports:
         - containerPort: 3306
           name: db
