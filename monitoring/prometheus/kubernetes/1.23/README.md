@@ -116,6 +116,60 @@ kubectl -n monitoring port-forward svc/grafana 3000
 
 Then access Grafana on [localhost:3000](http://localhost:3000/)
 
+# Grafna admin credentials fix
+
+Grafana no longer  comes preconfigured with the user: admin password: admin
+
+
+In order to fix that and be able to continue with the video you need to define a default admin user and password. 
+The following configuraiton is not for production and not safe:
+```
+vim grafana-admin-secret.yaml
+```
+
+paste and save the following: 
+```api
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 8.3.3
+  name: grafana-admin
+  namespace: monitoring
+data:
+  user: YWRtaW4=
+  password: YWRtaW4=
+```
+  
+now inject the secret to the grafana deployment by modifying the grafan-deployment.yaml container section: 
+```api
+
+      containers:
+      - image: grafana/grafana:8.3.3
+        name: grafana
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: grafana-admin
+              key: user
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-admin
+              key: password
+```
+
+deploy the secret, delete the grafana deployment  and re-deploy it:
+```api
+kubectl create -f grafana-admin-secret.yaml
+kubectl  -n monitoring delete deployment grafana
+kubectl create -f grafana-deployment.yaml
+```
+
 # Fix Grafana Datasource
 
 Now for some reason, the Prometheus data source in Grafana does not work out the box.
