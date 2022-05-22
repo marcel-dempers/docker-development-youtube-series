@@ -122,3 +122,25 @@ We also specify all our manifests path that portainer needs to deploy:
 * kubernetes/portainer/example-application/ingress.yaml
 
 Portainer will now poll our repo and deploy any updates, GitOps style!
+
+## Oauth Setup example | Business edition
+
+Here are the values I used for the Oauth settings:
+
+| Field | Value |
+|-------|-------|
+|  Client ID     |  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx     |
+|  Client secret     |   xxxxxxxxxxxxxxxxxxxx    |
+|  Authorization URL  |  https://login.microsoftonline.com/`<tenant-id>`/oauth2/authorize  |    
+|  Access token URL  | https://login.microsoftonline.com/`<tenant-id>`/oauth2/token   |     
+|  Resource URL   | https://login.microsoftonline.com/`<tenant-id>`/openid/userinfo   |     
+|  Redirect URL   | https://localhost:9443/   |     
+|  Logout URL   |  https://login.microsoftonline.com/`<tenant-id>`/oauth2/logout  |     
+|  User identifier   |  unique_name  |     
+|  Scopes   | openid profile   |  
+
+
+
+
+
+
