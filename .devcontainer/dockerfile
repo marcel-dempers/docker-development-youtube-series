@@ -2,7 +2,7 @@ FROM alpine:latest
 
 ARG KIND_VERSION=0.14.0
 
-RUN apk add --no-cache curl 
+RUN apk add --no-cache curl docker-cli
 
 RUN curl -L https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind && \
     chmod +x /usr/local/bin/kind 
