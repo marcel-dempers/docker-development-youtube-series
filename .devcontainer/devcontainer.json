@@ -27,3 +27,16 @@
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "root"
   }
+
+  //Notes:
+  // Set site url for wordpress
+
+    // mysql -u exampleuser -p exampledb
+
+    // UPDATE wp_options
+    // SET option_value = 'https://docker-development-youtube-series-4rjv9rg7hqrg9-80.githubpreview.dev'
+    // WHERE option_name = 'home';
+
+    // UPDATE wp_options
+    // SET option_value = 'https://docker-development-youtube-series-4rjv9rg7hqrg9-80.githubpreview.dev'
+    // WHERE option_name = 'siteurl';
