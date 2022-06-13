@@ -1,0 +1,42 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.162.0/containers/javascript-node
+{
+    "name": "kubernetes-tutorial-basic",
+    "build": {
+      "dockerfile": "dockerfile",
+      "args": { "KIND_VERSION": "0.14.0" }
+    },
+    "mounts": ["type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"],
+  
+    // Set *default* container specific settings.json values on container create.
+    "settings": {
+      "terminal.integrated.shell.linux": "/bin/sh"
+    },
+  
+    // Add the IDs of extensions you want installed when the container is created.
+    // "extensions": [
+    //   "dbaeumer.vscode-eslint"
+    // ],
+  
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [],
+  
+    // Use 'postCreateCommand' to run commands after the container is created.
+    // "postCreateCommand": "yarn install",
+  
+    // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "root"
+  }
+
+  //Notes:
+  // Set site url for wordpress
+
+    // mysql -u exampleuser -p exampledb
+
+    // UPDATE wp_options
+    // SET option_value = 'https://docker-development-youtube-series-4rjv9rg7hqrg9-80.githubpreview.dev'
+    // WHERE option_name = 'home';
+
+    // UPDATE wp_options
+    // SET option_value = 'https://docker-development-youtube-series-4rjv9rg7hqrg9-80.githubpreview.dev'
+    // WHERE option_name = 'siteurl';
