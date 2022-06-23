@@ -65,33 +65,49 @@ Use "datree [command] --help" for more information about a command.
 
 We have a number of Kubernetes manifests in this repo. </br>
 Datree does a few things for us. </br>
-* YAML validation
-* Schema validation. 
-* Policy checks (there are 21 built-in policies at time of this demo)
+* YAML validation ( Is this YAML well formatted ? )
+* Schema validation. ( Is this a Kubernetes YAML file ? For the right version ? )
+* Policy checks ( Checks YAML against best practise policies )
 
 </br>
 
 Let's test my example manifests under the `kubernetes` directory
 
+### YAML validation
+
+If we break the YAML file format, we can detect that with the YAML validation feature
+
 ```
 datree test ./kubernetes/deployments/deployment.yaml
+```
+
+### Policy checks
+
+When we fix our YAML file, notice if we run `datree test` again, we get some policy checks failing
+
+```
+datree test ./kubernetes/deployments/deployment.yaml
+
+```
+
+Let's test some other types of Kubernetes objects
+
+```
 datree test ./kubernetes/services/service.yaml
 datree test ./kubernetes/configmaps/configmap.yaml
 datree test ./kubernetes/statefulsets/statefulset.yaml
 datree test ./kubernetes/ingress/ingress.yaml
 ```
 
-Notice on my `ingress.yaml` the schema validation fails. </br>
-This is a neat feature of `datree` since it checks for a few things: </br>
+### Schema validation
 
-* Ensures the YAML is Kubernetes friendly. 
-* Ensures its compatible with a Kubernetes version
-
-It defaults to `1.19.0` as per time of this demo, and we can also change that on our account, or on the CLI
+Datree kan also check if our YAML matches the target Kubernetes version schema.
+For example, our Ingress YAML is a newer version of Kubernetes
 
 ```
-datree test --schema-version "1.19.0" ./kubernetes/ingress/ingress.yaml
-datree test --schema-version "1.14.0" ./kubernetes/ingress/ingress.yaml
+datree test --schema-version 1.14.0 ./kubernetes/ingress/ingress-nginx-example.yaml
+datree test --schema-version 1.19.0 ./kubernetes/ingress/ingress-nginx-example.yaml
+
 ```
 
 We can also test a directory of YAML files. </br>
@@ -100,4 +116,10 @@ Let's test my latest Kubernetes tutorial that contains a Wordpress + MySQL + Ing
 ```
 datree test kubernetes/tutorials/basics/yaml/*
 ```
+
+# CI/CD examples
+
+We can even run datree in GitHub Actions and various [CI/CD integrations](https://hub.datree.io/cicd-examples). </br>
+
+
 
