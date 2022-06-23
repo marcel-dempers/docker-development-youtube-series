@@ -14,10 +14,18 @@ docker run -it -v ${PWD}:/work -w /work --net host alpine sh
 Let's install `curl` and `unzip`
 
 ```
-apk add curl unzip
+apk add curl unzip bash
 ```
 
-And finally grab the `datree` [1.5.9](https://github.com/datreeio/datree/releases/tag/1.5.9) binary
+We can install the latest version of Datree with the command advertised:
+
+```
+curl https://get.datree.io | /bin/bash
+```
+
+
+Or we can grab a specific version of `datree` on the GitHub releases page. </br>
+For example: [1.5.9](https://github.com/datreeio/datree/releases/tag/1.5.9) binary
 
 ```
 curl -L https://github.com/datreeio/datree/releases/download/1.5.9/datree-cli_1.5.9_Linux_x86_64.zip -o /tmp/datree.zip
