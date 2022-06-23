@@ -117,9 +117,112 @@ Let's test my latest Kubernetes tutorial that contains a Wordpress + MySQL + Ing
 datree test kubernetes/tutorials/basics/yaml/*
 ```
 
+# Policies
+
+We can log into the Datree UI to get a view of the policy management screens
+
+```
+datree config set token <token>
+```
+
+Now that we have a token set, lets run a `datree test` command to see how `datree` checks our YAML against policies and provides us a UI for the output
+
+```
+datree test ./kubernetes/deployments/deployment.yaml
+```
+
+We can then review this test on the [Datree UI](https://hub.datree.io/)
+
 # CI/CD examples
 
 We can even run datree in GitHub Actions and various [CI/CD integrations](https://hub.datree.io/cicd-examples). </br>
 
 
+# Admission Controller
 
+So far, `datree` helps us detect misconfigurations on our local machine as well as at our CI level. </br>
+But what about the things that don't flow via our CI ? </br>
+
+When folks deploy stuff directly to our clusters via `kubectl` or `helm`. </br>
+Datree now allows us to not only detect but prevent  misconfigurations being applied using a new admission controller feature. </br>
+
+The admission controller is available [here](https://github.com/datreeio/admission-webhook-datree)
+
+## Create a Kubernetes cluster
+
+Let's start by creating a local `kind` [cluster](https://kind.sigs.k8s.io/)
+
+Note that we create a Kubernetes 1.24 cluster. </br>
+So we want to use `datree` to validate and ensure our manifests comply with that version of Kubernetes. <br/>
+
+```
+kind create cluster --name datree --image kindest/node:v1.24.2
+```
+
+We'll need a `datree` token so our admission controller can read our policies
+
+```
+DATREE_TOKEN=[your-token]
+
+```
+
+## Installation 
+
+Let's grab the `datree` manifests
+```
+curl -L https://get.datree.io/admission-webhook -o datree.sh
+chmod +x datree.sh
+bash datree.sh
+```
+
+With the admission controller now deployed, `datree` will validate things coming into the cluster. <br/>
+For example, if we bypass our CI/CD, `datree` will catch our deployment and run our policy checks
+
+
+```
+kubectl apply -f kubernetes/deployments/deployment.yaml
+```
+
+Output:
+
+```
+Error from server: error when creating "kubernetes/deployments/deployment.yaml": admission webhook "webhook-server.datree.svc" denied the request: 
+---
+webhook-example-deploy-Deployment.tmp.yaml
+
+[V] YAML validation
+[V] Kubernetes schema validation
+
+[X] Policy check
+
+❌  Ensure each container has a configured liveness probe  [1 occurrence]
+    - metadata.name: example-deploy (kind: Deployment)
+💡  Missing property object `livenessProbe` - add a properly configured livenessProbe to catch possible deadlocks
+
+❌  Ensure each container has a configured readiness probe  [1 occurrence]
+    - metadata.name: example-deploy (kind: Deployment)
+💡  Missing property object `readinessProbe` - add a properly configured readinessProbe to notify kubelet your Pods are ready for traffic
+
+❌  Prevent workload from using the default namespace  [1 occurrence]
+    - metadata.name: example-deploy (kind: Deployment)
+💡  Incorrect value for key `namespace` - use an explicit namespace instead of the default one (`default`)
+
+
+(Summary)
+
+- Passing YAML validation: 1/1
+
+- Passing Kubernetes (v1.24.2) schema validation: 1/1
+
+- Passing policy check: 0/1
++-----------------------------------+-----------------------+
+| Enabled rules in policy "Default" | 21                    |
+| Configs tested against policy     | 1                     |
+| Total rules evaluated             | 21                    |
+| Total rules skipped               | 0                     |
+| Total rules failed                | 3                     |
+| Total rules passed                | 18                    |
+| See all rules in policy           | https://app.datree.io |
++-----------------------------------+-----------------------+
+
+```
