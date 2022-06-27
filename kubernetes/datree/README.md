@@ -226,3 +226,33 @@ webhook-example-deploy-Deployment.tmp.yaml
 +-----------------------------------+-----------------------+
 
 ```
+
+## Helm
+
+Let's install `helm` in our container
+
+```
+apk add tar
+curl -L https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz -o /tmp/helm.tar.gz && \
+tar -xzf /tmp/helm.tar.gz -C /tmp && \
+chmod +x /tmp/linux-amd64/helm && \
+mv /tmp/linux-amd64/helm /usr/local/bin/helm
+
+```
+
+Let's install the `helm` plugin for `datree`
+
+```
+helm plugin install https://github.com/datreeio/helm-datree
+
+```
+
+Now we can test a `helm` chart we have in our repo from my `helm` tutorial </br>
+
+```
+
+cd kubernetes/helm
+
+helm datree test example-app \
+-- --values ./example-app/example-app-01.values.yaml
+```
