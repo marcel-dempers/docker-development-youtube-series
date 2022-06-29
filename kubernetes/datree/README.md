@@ -256,3 +256,12 @@ cd kubernetes/helm
 helm datree test example-app \
 -- --values ./example-app/example-app-01.values.yaml
 ```
+
+## VSCode Extension
+
+Datree also has a [VSCode Extension](https://github.com/SuyashSonawane/vscode-datree)
+
+For it to work, we need to have `datree` CLI installed and have a TOKEN set. </br>
+We also need to have run `datree test` at least once, so we know things are working. </br>
+
+Once we have the extension installed, we can evaluate our manifests inside VSCode </br>
