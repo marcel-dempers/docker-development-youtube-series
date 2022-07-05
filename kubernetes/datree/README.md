@@ -8,7 +8,7 @@ I like to start all my work inside a docker container. </br>
 Let's run a small Alpine linux container
 
 ```
-docker run -it -v ${PWD}:/work -w /work --net host alpine sh
+docker run -it -v ${PWD}:/work -v ${HOME}/.kube/:/root/.kube/ -w /work --net host alpine sh 
 ```
 
 Let's install `curl` and `unzip`
@@ -25,10 +25,10 @@ curl https://get.datree.io | /bin/bash
 
 
 Or we can grab a specific version of `datree` on the GitHub releases page. </br>
-For example: [1.5.9](https://github.com/datreeio/datree/releases/tag/1.5.9) binary
+For example: [1.5.20](https://github.com/datreeio/datree/releases/tag/1.5.20) binary
 
 ```
-curl -L https://github.com/datreeio/datree/releases/download/1.5.9/datree-cli_1.5.9_Linux_x86_64.zip -o /tmp/datree.zip
+curl -L https://github.com/datreeio/datree/releases/download/1.5.20/datree-cli_1.5.20_Linux_x86_64.zip -o /tmp/datree.zip
 
 unzip /tmp/datree.zip -d /tmp && \
 chmod +x /tmp/datree && \
@@ -152,21 +152,36 @@ The admission controller is available [here](https://github.com/datreeio/admissi
 
 Let's start by creating a local `kind` [cluster](https://kind.sigs.k8s.io/)
 
-Note that we create a Kubernetes 1.24 cluster. </br>
+Note that we create a Kubernetes 1.23 cluster. </br>
 So we want to use `datree` to validate and ensure our manifests comply with that version of Kubernetes. <br/>
 
 ```
-kind create cluster --name datree --image kindest/node:v1.24.2
+kind create cluster --name datree --image kindest/node:v1.23.6
+```
+
+Let's also grab `kubectl`:
+
+```
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+mv ./kubectl /usr/local/bin/kubectl
 ```
 
 We'll need a `datree` token so our admission controller can read our policies
 
 ```
-DATREE_TOKEN=[your-token]
+export DATREE_TOKEN=[your-token]
 
 ```
 
 ## Installation 
+
+I will need some dependencies since I am running in a lightweight `alpine` container. </br>
+OpenSSL is needed by the webhook install to generate certificates. </br>
+
+```
+apk add openssl
+```
 
 Let's grab the `datree` manifests
 ```
@@ -186,6 +201,7 @@ kubectl apply -f kubernetes/deployments/deployment.yaml
 Output:
 
 ```
+kubectl apply -f kubernetes/deployments/deployment.yaml
 Error from server: error when creating "kubernetes/deployments/deployment.yaml": admission webhook "webhook-server.datree.svc" denied the request: 
 ---
 webhook-example-deploy-Deployment.tmp.yaml
@@ -212,9 +228,10 @@ webhook-example-deploy-Deployment.tmp.yaml
 
 - Passing YAML validation: 1/1
 
-- Passing Kubernetes (v1.24.2) schema validation: 1/1
+- Passing Kubernetes (v1.23.6) schema validation: 1/1
 
 - Passing policy check: 0/1
+
 +-----------------------------------+-----------------------+
 | Enabled rules in policy "Default" | 21                    |
 | Configs tested against policy     | 1                     |
@@ -224,7 +241,6 @@ webhook-example-deploy-Deployment.tmp.yaml
 | Total rules passed                | 18                    |
 | See all rules in policy           | https://app.datree.io |
 +-----------------------------------+-----------------------+
-
 ```
 
 ## Helm
@@ -232,7 +248,7 @@ webhook-example-deploy-Deployment.tmp.yaml
 Let's install `helm` in our container
 
 ```
-apk add tar
+apk add tar git
 curl -L https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz -o /tmp/helm.tar.gz && \
 tar -xzf /tmp/helm.tar.gz -C /tmp && \
 chmod +x /tmp/linux-amd64/helm && \
