@@ -1,4 +1,5 @@
 
+# Introduction to Datree
 
 ## Installation 
 
@@ -11,10 +12,11 @@ Let's run a small Alpine linux container
 docker run -it -v ${PWD}:/work -v ${HOME}/.kube/:/root/.kube/ -w /work --net host alpine sh 
 ```
 
-Let's install `curl` and `unzip`
+Let's install `curl` and `unzip` because the installation script uses those. <br/>
+We will also install `sudo` since we are running in a container as root and install scripts have `sudo` commands in them.
 
 ```
-apk add curl unzip bash
+apk add curl unzip bash sudo
 ```
 
 We can install the latest version of Datree with the command advertised:
@@ -36,7 +38,7 @@ mv /tmp/datree /usr/local/bin/datree
 
 ```
 
-Now we an run the `datree` command:
+Now we can run the `datree` command:
 
 ```
 datree
@@ -67,18 +69,18 @@ We have a number of Kubernetes manifests in this repo. </br>
 Datree does a few things for us. </br>
 * YAML validation ( Is this YAML well formatted ? )
 * Schema validation. ( Is this a Kubernetes YAML file ? For the right version ? )
-* Policy checks ( Checks YAML against best practise policies )
+* Policy checks ( Checks YAML to ensure good practises are followed )
 
 </br>
 
-Let's test my example manifests under the `kubernetes` directory
+Let's test my example manifests under our datree folder `kubernetes\datree\example`
 
 ### YAML validation
 
 If we break the YAML file format, we can detect that with the YAML validation feature
 
 ```
-datree test ./kubernetes/deployments/deployment.yaml
+datree test ./kubernetes/datree/example/deployment.yaml
 ```
 
 ### Policy checks
@@ -86,7 +88,7 @@ datree test ./kubernetes/deployments/deployment.yaml
 When we fix our YAML file, notice if we run `datree test` again, we get some policy checks failing
 
 ```
-datree test ./kubernetes/deployments/deployment.yaml
+datree test ./kubernetes/datree/example/deployment.yaml
 
 ```
 
@@ -101,7 +103,7 @@ datree test ./kubernetes/ingress/ingress.yaml
 
 ### Schema validation
 
-Datree kan also check if our YAML matches the target Kubernetes version schema.
+Datree can also check if our YAML matches the target Kubernetes version schema.
 For example, our Ingress YAML is a newer version of Kubernetes
 
 ```
@@ -110,28 +112,56 @@ datree test --schema-version 1.19.0 ./kubernetes/ingress/ingress-nginx-example.y
 
 ```
 
-We can also test a directory of YAML files. </br>
+We can also test a directory of YAML files and include `*` wildcard in your scans. </br>
 Let's test my latest Kubernetes tutorial that contains a Wordpress + MySQL + Ingress setup:
 
 ```
-datree test kubernetes/tutorials/basics/yaml/*
+datree test kubernetes/tutorials/basics/yaml/*.y*ml
 ```
 
 # Policies
 
-We can log into the Datree UI to get a view of the policy management screens
+Now if we take a look at the CLI output of `datree` we notice a link in the Summary output. </br>
+The URL is in the form of `https://app.datree.io/login?t=<token>` </br>
 
 ```
-datree config set token <token>
+(Summary)
+
+- Passing YAML validation: 4/4
+
+- Passing Kubernetes (1.20.0) schema validation: 4/4
+
+- Passing policy check: 2/4
+
++-----------------------------------+------------------------------------------------------+
+| Enabled rules in policy "Default" | 21                                                   |
+| Configs tested against policy     | 5                                                    |
+| Total rules evaluated             | 84                                                   |
+| Total rules skipped               | 0                                                    |
+| Total rules failed                | 14                                                   |
+| Total rules passed                | 70                                                   |
+| See all rules in policy           | https://app.datree.io/login?t=xxxxxxxxxxxxxxxxxxxxxx |
++-----------------------------------+------------------------------------------------------+
 ```
 
-Now that we have a token set, lets run a `datree test` command to see how `datree` checks our YAML against policies and provides us a UI for the output
+We can use this URL to access the Datree UI to get a view of the policy management screens </br>
+Checkout the link to access the UI which helps us manage our policies. </br>
+
+## Policy examples
+
+One of the key features about policies is that we can apply rule sets for specific environments. </br>
+Perhaps you have a development environment where policies are a little loose and a staging server that </br>
+has tighter restrictions to match production, or even a regulated environment that has very tight controls. </br>
+
+We can use the Datree UI to create policies with different sets of rules. </br>
+
+We can then tell `datree` about the policy we want it to test against:
 
 ```
-datree test ./kubernetes/deployments/deployment.yaml
+datree test kubernetes/datree/example/deployment.yaml -p production
 ```
 
-We can then review this test on the [Datree UI](https://hub.datree.io/)
+For a new policy, we notice that 0 rules are enabled, so now we have the flexibility to set up the rules we want to protect this environment. </br>
 
 # CI/CD examples
 
@@ -193,9 +223,10 @@ bash datree.sh
 With the admission controller now deployed, `datree` will validate things coming into the cluster. <br/>
 For example, if we bypass our CI/CD, `datree` will catch our deployment and run our policy checks
 
+I have a separate example deployment in our datree folder that we can play with:
 
 ```
-kubectl apply -f kubernetes/deployments/deployment.yaml
+kubectl apply -f kubernetes/datree/example/deployment.yaml
 ```
 
 Output:
@@ -243,9 +274,77 @@ webhook-example-deploy-Deployment.tmp.yaml
 +-----------------------------------+-----------------------+
 ```
 
+Now to get this deployment fixed up, let's go ahead and comply to some of the policies </br>
+Under the `deployment.yaml` I have included a `livenessProbe` as well as a `readinessProbe` </br>
+Let's add those in. </br>
+And finally we need to also add CPU and Memory requests and limit values. </br>
+
+The last one is simple. We should avoid using the default namespace. So I will create an `example` namespace where I will keep all example apps.
+
+```
+kubectl create ns examples
+```
+
+And finally we can deploy our resource, and specify a namespace:
+
+```
+kubectl apply -n examples -f kubernetes/datree/example/deployment.yaml
+deployment.apps/example-deploy created
+
+```
+
+## Kubectl
+
+But what about resources already in your cluster ? </br>
+Datree covers this with their `kubectl` plugin.
+
+We can grab the install script right off the [GitHub Release](https://github.com/datreeio/kubectl-datree/releases) page. </br>
+For this demo I'll grab the `v0.11` version </br>
+
+Installation: 
+
+```
+curl -L https://github.com/datreeio/kubectl-datree/releases/download/v0.1.1/manual_install.sh -o /tmp/kubectl-plugin.sh
+chmod +x /tmp/kubectl-plugin.sh
+bash /tmp/kubectl-plugin.sh
+
+```
+
+Now we have datree inside `kubectl` and can perform checks in our cluster. </br>
+We can check our entire namespace now, which should be pretty clean:
+
+```
+kubectl datree test -- --namespace examples
+Fetching resources, this may take some time depending on the amount of resources in your cluster...
+
+(Summary)
+
+- Passing YAML validation: 1/1
+
+- Passing Kubernetes (1.24.2) schema validation: 1/1
+
+- Passing policy check: 1/1
+
++-----------------------------------+------------------------------------------------------+
+| Enabled rules in policy "Default" | 21                                                   |
+| Configs tested against policy     | 1                                                    |
+| Total rules evaluated             | 21                                                   |
+| Total rules skipped               | 0                                                    |
+| Total rules failed                | 0                                                    |
+| Total rules passed                | 21                                                   |
+| See all rules in policy           | https://app.datree.io/login?t=bkVXgLsNQQ1F58hbu7tceE |
++-----------------------------------+------------------------------------------------------+
+
+The following cluster resources in namespace 'examples' were checked:
+
+deployment.apps/example-deploy
+
+```
+
 ## Helm
 
-Let's install `helm` in our container
+What if I don't use `kubectl` and use `helm` instead ? </br>
+Let's install `helm` in our container </br>
 
 ```
 apk add tar git
@@ -256,10 +355,10 @@ mv /tmp/linux-amd64/helm /usr/local/bin/helm
 
 ```
 
-Let's install the `helm` plugin for `datree`
+Let's install the `helm` plugin for `datree` <br/>
 
 ```
-helm plugin install https://github.com/datreeio/helm-datree
+helm plugin install https://github.com/datreeio/helm-datree 
 
 ```
 
@@ -273,11 +372,12 @@ helm datree test example-app \
 -- --values ./example-app/example-app-01.values.yaml
 ```
 
-## VSCode Extension
+## Kustomize
 
-Datree also has a [VSCode Extension](https://github.com/SuyashSonawane/vscode-datree)
+What if I don't use `helm` and use `kustomize` ? <br/>
+Datree has out the box built in `kustomize` support <br/>
+Let's test our `kustomize` template from a video I did on `kustomize`
 
-For it to work, we need to have `datree` CLI installed and have a TOKEN set. </br>
-We also need to have run `datree test` at least once, so we know things are working. </br>
-
-Once we have the extension installed, we can evaluate our manifests inside VSCode </br>
+```
+datree kustomize test .\kubernetes\kustomize\
+```
