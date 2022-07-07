@@ -12,6 +12,8 @@ Let's run a small Alpine linux container
 docker run -it -v ${PWD}:/work -v ${HOME}/.kube/:/root/.kube/ -w /work --net host alpine sh 
 ```
 
+### Install some dependancies 
+
 Let's install `curl` and `unzip` because the installation script uses those. <br/>
 We will also install `sudo` since we are running in a container as root and install scripts have `sudo` commands in them.
 
@@ -19,12 +21,15 @@ We will also install `sudo` since we are running in a container as root and inst
 apk add curl unzip bash sudo
 ```
 
+### Automatic Installation
+
 We can install the latest version of Datree with the command advertised:
 
 ```
 curl https://get.datree.io | /bin/bash
 ```
 
+### Manual Installation
 
 Or we can grab a specific version of `datree` on the GitHub releases page. </br>
 For example: [1.5.20](https://github.com/datreeio/datree/releases/tag/1.5.20) binary
@@ -63,10 +68,10 @@ Use "datree [command] --help" for more information about a command.
 
 ```
 
-## Test Kubernetes Manifests
+## Testing Kubernetes Manifests
 
 We have a number of Kubernetes manifests in this repo. </br>
-Datree does a few things for us. </br>
+Datree does a few things for us: </br>
 * YAML validation ( Is this YAML well formatted ? )
 * Schema validation. ( Is this a Kubernetes YAML file ? For the right version ? )
 * Policy checks ( Checks YAML to ensure good practises are followed )
@@ -150,11 +155,9 @@ Checkout the link to access the UI which helps us manage our policies. </br>
 ## Policy examples
 
 One of the key features about policies is that we can apply rule sets for specific environments. </br>
-Perhaps you have a development environment where policies are a little loose and a staging server that </br>
-has tighter restrictions to match production, or even a regulated environment that has very tight controls. </br>
+Perhaps you have a development environment where policies are a little loose and a staging server that has tighter restrictions to match production, or even a regulated environment that has very tight controls. </br>
 
 We can use the Datree UI to create policies with different sets of rules. </br>
-
 We can then tell `datree` about the policy we want it to test against:
 
 ```
@@ -332,7 +335,7 @@ Fetching resources, this may take some time depending on the amount of resources
 | Total rules skipped               | 0                                                    |
 | Total rules failed                | 0                                                    |
 | Total rules passed                | 21                                                   |
-| See all rules in policy           | https://app.datree.io/login?t=bkVXgLsNQQ1F58hbu7tceE |
+| See all rules in policy           | https://app.datree.io/login?t=xxxxxxxxxxxxxxxxxxxxxx |
 +-----------------------------------+------------------------------------------------------+
 
 The following cluster resources in namespace 'examples' were checked:
@@ -374,8 +377,8 @@ helm datree test example-app \
 
 ## Kustomize
 
-What if I don't use `helm` and use `kustomize` ? <br/>
-Datree has out the box built in `kustomize` support <br/>
+What if I don't use `helm` and use `kustomize` instead ? <br/>
+Datree has out the box built-in `kustomize` support <br/>
 Let's test our `kustomize` template from a video I did on `kustomize`
 
 ```
