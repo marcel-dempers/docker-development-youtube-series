@@ -5,16 +5,17 @@
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name vpa --image kindest/node:v1.19.1
+kind create cluster --name vpa --image kindest/node:v1.24.0
 ```
+
 <hr/>
 
 ## Metric Server
 
 <br/>
 
-* For `Cluster Autoscaler` - On cloud-based clusters, Metric server may already be installed. <br/>
-* For `HPA` - We're using kind
+- For `Cluster Autoscaler` - On cloud-based clusters, Metric server may already be installed. <br/>
+- For `HPA` - We're using kind
 
 [Metric Server](https://github.com/kubernetes-sigs/metrics-server) provides container resource metrics for use in autoscaling pipelines <br/>
 
@@ -36,10 +37,10 @@ You can disable TLS by adding the following to the metrics-server container args
 Deployment: <br/>
 
 ```
-cd kubernetes\autoscaling
-kubectl -n kube-system apply -f .\components\metric-server\metricserver-0.3.7.yaml
+cd kubernetes/autoscaling
+kubectl -n kube-system apply -f ./components/metric-server/metricserver-0.3.7.yaml
 
-#test 
+#test
 kubectl -n kube-system get pods
 
 #note: wait for metrics to populate!
@@ -59,7 +60,7 @@ docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/work -w /work --net host debian
 # install git
 apt-get update && apt-get install -y git curl nano
 
-# install kubectl 
+# install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
@@ -81,13 +82,13 @@ kubectl -n kube-system get pods
 ```
 # build
 
-cd kubernetes\autoscaling\components\application
+cd kubernetes/autoscaling/components/application
 docker build . -t aimvector/application-cpu:v1.0.0
 
 # push
 docker push aimvector/application-cpu:v1.0.0
 
-# deploy 
+# deploy
 kubectl apply -f deployment.yaml
 
 # metrics
@@ -100,8 +101,8 @@ kubectl top pods
 Let's deploy a simple traffic generator pod
 
 ```
-cd kubernetes\autoscaling\components\application
-kubectl apply -f .\traffic-generator.yaml
+cd kubernetes/autoscaling/components/application
+kubectl apply -f ./traffic-generator.yaml
 
 # get a terminal to the traffic-generator
 kubectl exec -it traffic-generator sh
@@ -118,7 +119,7 @@ wrk -c 5 -t 5 -d 99999 -H "Connection: Close" http://application-cpu
 
 ```
 
-kubectl apply -f .\vertical-pod-autoscaling\vpa.yaml
+kubectl apply -f ./vertical-pod-autoscaling/vpa.yaml
 
 kubectl describe vpa application-cpu
 

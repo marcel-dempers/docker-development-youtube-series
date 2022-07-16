@@ -12,11 +12,11 @@ HPA allows us to scale pods when their resource utilisation goes over a threshol
 
 ## Requirements
 
-### A Cluster 
+### A Cluster
 
-* For both autoscaling guides, we'll need a cluster. <br/>
-* For `Cluster Autoscaler` You need a cloud based cluster that supports the cluster autoscaler <br/>
-* For `HPA` We'll use [kind](http://kind.sigs.k8s.io/)
+- For both autoscaling guides, we'll need a cluster. <br/>
+- For `Cluster Autoscaler` You need a cloud based cluster that supports the cluster autoscaler <br/>
+- For `HPA` We'll use [kind](http://kind.sigs.k8s.io/)
 
 ### Cluster Autoscaling - Creating an AKS Cluster
 
@@ -28,19 +28,19 @@ RESOURCEGROUP=aks-getting-started
 SERVICE_PRINCIPAL=
 SERVICE_PRINCIPAL_SECRET=
 
-az aks create -n $NAME \
---resource-group $RESOURCEGROUP \
---location australiaeast \
---kubernetes-version 1.16.10 \
---nodepool-name default \
---node-count 1 \
---node-vm-size Standard_F4s_v2  \
---node-osdisk-size 250 \
---service-principal $SERVICE_PRINCIPAL \
---client-secret $SERVICE_PRINCIPAL_SECRET \
---output none \
---enable-cluster-autoscaler \
---min-count 1 \
+az aks create -n $NAME /
+--resource-group $RESOURCEGROUP /
+--location australiaeast /
+--kubernetes-version 1.16.10 /
+--nodepool-name default /
+--node-count 1 /
+--node-vm-size Standard_F4s_v2  /
+--node-osdisk-size 250 /
+--service-principal $SERVICE_PRINCIPAL /
+--client-secret $SERVICE_PRINCIPAL_SECRET /
+--output none /
+--enable-cluster-autoscaler /
+--min-count 1 /
 --max-count 5
 ```
 
@@ -54,8 +54,8 @@ kind create cluster --name hpa --image kindest/node:v1.18.4
 
 ### Metric Server
 
-* For `Cluster Autoscaler` - On cloud-based clusters, Metric server may already be installed. <br/>
-* For `HPA` - We're using kind
+- For `Cluster Autoscaler` - On cloud-based clusters, Metric server may already be installed. <br/>
+- For `HPA` - We're using kind
 
 [Metric Server](https://github.com/kubernetes-sigs/metrics-server) provides container resource metrics for use in autoscaling pipelines <br/>
 
@@ -76,12 +76,11 @@ You can disable TLS by adding the following to the metrics-server container args
 
 Deployment: <br/>
 
-
 ```
-cd kubernetes\autoscaling
-kubectl -n kube-system apply -f .\components\metric-server\metricserver-0.3.7.yaml
+cd kubernetes/autoscaling
+kubectl -n kube-system apply -f ./components/metric-server/metricserver-0.3.7.yaml
 
-#test 
+#test
 kubectl -n kube-system get pods
 
 #note: wait for metrics to populate!
@@ -93,20 +92,20 @@ kubectl top nodes
 
 For all autoscaling guides, we'll need a simple app, that generates some CPU load <br/>
 
-* Build the app
-* Push it to a registry
-* Ensure resource requirements are set
-* Deploy it to Kubernetes
-* Ensure metrics are visible for the app
+- Build the app
+- Push it to a registry
+- Ensure resource requirements are set
+- Deploy it to Kubernetes
+- Ensure metrics are visible for the app
 
 ```
 # build
 
-cd kubernetes\autoscaling\components\application
-docker build . -t aimvector/application-cpu:v1.0.0
+cd kubernetes/autoscaling/components/application
+docker build . -t aimvector/application-cpu:v1.0.2
 
 # push
-docker push aimvector/application-cpu:v1.0.0
+docker push aimvector/application-cpu:v1.0.2
 
 # resource requirements
 resources:
@@ -117,7 +116,7 @@ resources:
     memory: "500Mi"
     cpu: "2000m"
 
-# deploy 
+# deploy
 kubectl apply -f deployment.yaml
 
 # metrics
@@ -136,8 +135,8 @@ For Pod Autoscaling (HPA), continue</br>
 Let's deploy a simple traffic generator pod
 
 ```
-cd kubernetes\autoscaling\components\application
-kubectl apply -f .\traffic-generator.yaml
+cd kubernetes/autoscaling/components/application
+kubectl apply -f ./traffic-generator.yaml
 
 # get a terminal to the traffic-generator
 kubectl exec -it traffic-generator sh
@@ -167,7 +166,7 @@ kubectl get pods
 kubectl top pods
 kubectl get hpa/application-cpu  -owide
 
-kubectl describe hpa/application-cpu 
+kubectl describe hpa/application-cpu
 
 ```
 
@@ -178,4 +177,3 @@ based on recommendations.
 This helps us tune the request values based on actual CPU and Memory usage.<br/>
 
 More [here](./vertical-pod-autoscaling/readme.md)
-
