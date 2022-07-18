@@ -6,7 +6,7 @@ Requirements:
 * Kind or Minikube
 
 For this tutorial, I will be using Kubernetes 1.21.
-If you are watching the old guide for Kuberentes 1.17, go [here](..\vault\readme.md)
+If you are watching the old guide for Kubernetes 1.17, go [here](..\vault\readme.md)
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
