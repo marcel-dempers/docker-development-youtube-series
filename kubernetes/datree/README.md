@@ -166,6 +166,47 @@ datree test kubernetes/datree/example/deployment.yaml -p production
 
 For a new policy, we notice that 0 rules are enabled, so now we have the flexibility to set up the rules we want to protect this environment. </br>
 
+## Helm
+
+What if I don't use `kubectl` and use `helm` instead ? </br>
+Let's install `helm` in our container </br>
+
+```
+apk add tar git
+curl -L https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz -o /tmp/helm.tar.gz && \
+tar -xzf /tmp/helm.tar.gz -C /tmp && \
+chmod +x /tmp/linux-amd64/helm && \
+mv /tmp/linux-amd64/helm /usr/local/bin/helm
+
+```
+
+Let's install the `helm` plugin for `datree` <br/>
+
+```
+helm plugin install https://github.com/datreeio/helm-datree 
+
+```
+
+Now we can test a `helm` chart we have in our repo from my `helm` tutorial </br>
+
+```
+
+cd kubernetes/helm
+
+helm datree test example-app \
+-- --values ./example-app/example-app-01.values.yaml
+```
+
+## Kustomize
+
+What if I don't use `helm` and use `kustomize` instead ? <br/>
+Datree has out the box built-in `kustomize` support <br/>
+Let's test our `kustomize` template from a video I did on `kustomize`
+
+```
+datree kustomize test .\kubernetes\kustomize\
+```
+
 # CI/CD examples
 
 We can even run datree in GitHub Actions and various [CI/CD integrations](https://hub.datree.io/cicd-examples). </br>
@@ -342,45 +383,4 @@ The following cluster resources in namespace 'examples' were checked:
 
 deployment.apps/example-deploy
 
-```
-
-## Helm
-
-What if I don't use `kubectl` and use `helm` instead ? </br>
-Let's install `helm` in our container </br>
-
-```
-apk add tar git
-curl -L https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz -o /tmp/helm.tar.gz && \
-tar -xzf /tmp/helm.tar.gz -C /tmp && \
-chmod +x /tmp/linux-amd64/helm && \
-mv /tmp/linux-amd64/helm /usr/local/bin/helm
-
-```
-
-Let's install the `helm` plugin for `datree` <br/>
-
-```
-helm plugin install https://github.com/datreeio/helm-datree 
-
-```
-
-Now we can test a `helm` chart we have in our repo from my `helm` tutorial </br>
-
-```
-
-cd kubernetes/helm
-
-helm datree test example-app \
--- --values ./example-app/example-app-01.values.yaml
-```
-
-## Kustomize
-
-What if I don't use `helm` and use `kustomize` instead ? <br/>
-Datree has out the box built-in `kustomize` support <br/>
-Let's test our `kustomize` template from a video I did on `kustomize`
-
-```
-datree kustomize test .\kubernetes\kustomize\
 ```
