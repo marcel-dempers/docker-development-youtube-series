@@ -204,7 +204,7 @@ Datree has out the box built-in `kustomize` support <br/>
 Let's test our `kustomize` template from a video I did on `kustomize`
 
 ```
-datree kustomize test .\kubernetes\kustomize\
+datree kustomize test .\kubernetes\kustomize\application\
 ```
 
 # CI/CD examples
