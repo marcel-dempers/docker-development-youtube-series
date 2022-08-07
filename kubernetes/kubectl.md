@@ -1,5 +1,7 @@
 
-VIDEO : https://youtu.be/feLpGydQVio
+Kubectl Basics: 
+
+<a href="https://youtu.be/feLpGydQVio" title="Kubernetes"><img src="https://i.ytimg.com/vi/feLpGydQVio/hqdefault.jpg" width="30%" alt="kubectl basics" /></a>
 
 ## Configs
 
