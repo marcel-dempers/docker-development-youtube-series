@@ -104,7 +104,7 @@ If it does not appear, that means your Prometheus instance is not selecting the 
 ## Deploy our example app
 
 ```
-kubectl -n default apply -f kubernetes\servicemonitors\example-app\
+kubectl -n default apply -f ./kubernetes/servicemonitors/example-app/
 ```
 
 Now we should see a target in the Prometheus [Targets](http://localhost:9090/targets) page. </br>
