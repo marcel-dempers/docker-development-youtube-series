@@ -5,20 +5,30 @@ You can use `minikube` or any Kubernetes cluster. </br>
 
 Kind is an amazing tool for running test clusters locally as it runs in a container which makes it lightweight and easy to run throw-away clusters for testing purposes. </br>
 
+## Download KUBECTL
+
+We can download `kubectl` from the [Official Docs](https://kubernetes.io/docs/tasks/tools/) </br>
+
 ## Create a kubernetes cluster
 
+In this guide we will run two clusters side by side so we can demonstrate cluster access. </br>
+Create two clusters:
+
 ```
-# create two clusters
 kind create cluster --name dev --image kindest/node:v1.23.5
 kind create cluster --name prod --image kindest/node:v1.23.5
 
-# see cluster up and running
+```
+
+See cluster up and running:
+
+```
 kubectl get nodes
 NAME                  STATUS   ROLES                  AGE     VERSION
 prod-control-plane   Ready    control-plane,master   2m12s   v1.23.5
 ```
 
-# Understanding the KUBECONFIG
+## Understanding the KUBECONFIG
 
 Default location of the `kubeconfig` file is in `<users-directory>/.kube/config`
 
@@ -54,7 +64,20 @@ export KUBECONFIG=<path>
 $ENV:KUBECONFIG="C:\Users\aimve\.kube\config"
 ```
 
-# Working with Kubernetes resources
+We can export seperate configs using `kind` </br>
+This is possible with cloud based clusters as well:
+
+```
+kind --name dev export kubeconfig --kubeconfig C:\Users\aimve\.kube\dev-config 
+
+kind --name prod export kubeconfig --kubeconfig C:\Users\aimve\.kube\prod-config 
+
+#switch to prod
+$ENV:KUBECONFIG="C:\Users\aimve\.kube\prod-config"
+kubectl get nodes
+```
+
+## Working with Kubernetes resources
 
 Now that we have cluster access, next we can read resources from the cluster
 with the `kubectl get` command.
@@ -82,7 +105,7 @@ kubectl get secrets
 kubectl get ingress
 ```
 
-## KUBECTL Create resources
+## Create resources in a namespace
 
 We can create a namespace with the `kubectl create` command:
 
@@ -154,4 +177,12 @@ mysql       ClusterIP   10.96.146.75   <none>        3306/TCP   17s
 wordpress   ClusterIP   10.96.157.6    <none>        80/TCP     17s
 
 kubectl -n wordpress-site port-forward svc/wordpress 80
+```
+
+## Clean up
+
+```
+kind delete cluster --name dev
+kind delete cluster --name prod
+
 ```
