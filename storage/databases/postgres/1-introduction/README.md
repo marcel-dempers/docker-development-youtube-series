@@ -20,7 +20,7 @@ cd storage/databases/postgres/1-introduction
 docker compose up
 ```
 
-We can access our database from the adminer webpage on `http://localhost8080` </br>
+We can access our database from the adminer web page on `http://localhost8080` </br>
 
 
 When running containers, its always important to pull the image by tag </br>
@@ -29,10 +29,10 @@ We will do that in the next step. </br>
 
 ## Persisting Data
 
-To persist data to Postgres, we simply mount a docker volume. </br>
+To persist data to PostgreSQL, we simply mount a docker volume. </br>
 This is the way to persist container data. </br>
-Postgres stores its data by default under `/var/lib/postgresql/data` 
-Also take note we are running a specific version of Postges now:
+PostgreSQL stores its data by default under `/var/lib/postgresql/data` 
+Also take note we are running a specific version of PostgreSQL now:
 
 ```
 docker run -it --rm --name postgres `
@@ -77,8 +77,8 @@ Run it again with the above `docker run` command and list our record with the ab
 
 ## Networking
 
-Postgres by default uses port `5432`. </br>
-Since we are running in Docker, we can bind a differnt port if we wish with Docker's `-p` flag. </br>
+PostgreSQL by default uses port `5432`. </br>
+Since we are running in Docker, we can bind a different port if we wish with Docker's `-p` flag. </br>
 For example, we can expose port `5000` outside the container :
 
 ```
@@ -88,15 +88,15 @@ docker run -it --rm --name postgres `
   -p 5000:5432 `
   postgres:15.0
 ```
-Note that this does not change the port which Postgres runs on. </br>
+Note that this does not change the port which PostgreSQL runs on. </br>
 To change that, we need to explore the configuration.
 
 ## Configuration 
 
 PostgreSQL can be configured using environment variables as well as a config file. </br>
 
-Postgres has a ton of configuration options. </br>
-In the next chapter, we will explore the configuration of Postgres. </br>
+PostgreSQL has a ton of configuration options. </br>
+In the next chapter, we will explore the configuration of PostgreSQL. </br>
 
 ## Docker Compose
 
@@ -122,3 +122,7 @@ services:
     ports:
       - 8080:8080
 ```
+
+That's it for chapter one! </br>
+In [chapter 2](../2-configuration/README.md), we will take a look at Configuration and how to start our PostgreSQL instance with a custom configuration file. </br>
+We will also explore the customization options available. </br>

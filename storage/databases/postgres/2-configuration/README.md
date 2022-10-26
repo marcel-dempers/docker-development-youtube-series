@@ -51,7 +51,7 @@ If we take a look at our `docker` mount that we defined in our `docker run` comm
 
 `-v ${PWD}/pgdata:/var/lib/postgresql/data ` </br>
 
-The `{PWD}/pgdata` folder that we have mounted contains not only data, but some defaut configuration files that we can explore. </br>
+The `{PWD}/pgdata` folder that we have mounted contains not only data, but some default configuration files that we can explore. </br>
 
 Three files are important here:
 
@@ -106,17 +106,84 @@ This is not a feature that we will need in this series, so we will skip this con
 This configuration file is the main one for PostgreSQL. </br>
 As you can see this is a large file with in-depth tuning and customization capability. </br>
 
+### File Locations
+
+Let's set our data directory locations as well as config file locations </br>
+Our volume mount path in the container is also short and simple. </br>
+Note that we also split config from data so we have separate paths :
+
 ```
-docker run -d --rm --name postgres-1 `
-  --net postgres `
-  -e POSTGRES_USER=postgresadmin `
-  -e POSTGRES_PASSWORD=admin123 `
-  -e POSTGRES_DB=postgresdb `
-  -e PGDATA=/var/lib/postgresql/data/pgdata `
-  -p 5000:5432 `
-  -v ${PWD}/archive:/mnt/server/archive `
-  -v ${PWD}/postgres-1/pgdata:/var/lib/postgresql/data/pgdata `
-  -v ${PWD}/postgres-1/postgresql.conf:/etc/postgresql/postgresql.conf `
-  -v ${PWD}/postgres-1/pg_hba.conf:/var/lib/postgresql/data/pgdata/pg_hba.conf `
-  postgres:14.4 -c 'config_file=/etc/postgresql/postgresql.conf'
+data_directory = '/data'
+hba_file = '/config/pg_hba.conf'
+ident_file = '/config/pg_ident.conf'
 ```
+
+### Connection and Authentication
+
+The shared_buffers parameter determines how much memory is dedicated to the server for caching data. The value should be set to 15% to 25% of the machine's total RAM. For example: if your machine's RAM size is 32 GB, then the recommended value for shared_buffers is 8 GB </br>
+
+We will take a look at `WAL` (Write Ahead Log), Archiving, Primary, and Standby configurations in a future chapter on replication </br>
+
+```
+port = 5432
+listen_addresses = '*'
+max_connections = 100
+shared_buffers = 128MB
+dynamic_shared_memory_type = posix
+max_wal_size = 1GB
+min_wal_size = 80MB
+log_timezone = 'Etc/UTC'
+datestyle = 'iso, mdy'
+timezone = 'Etc/UTC'
+
+#locale settings
+lc_messages = 'en_US.utf8'			# locale for system error message
+lc_monetary = 'en_US.utf8'			# locale for monetary formatting
+lc_numeric = 'en_US.utf8'			# locale for number formatting
+lc_time = 'en_US.utf8'				# locale for time formatting
+
+default_text_search_config = 'pg_catalog.english'
+
+```
+
+We can also include other configurations from other locations with the `include_dir` and `include` options. </br>
+We will skip these for the sake of keeping things simple. </br>
+Nested configurations can over complicate a setup and makes it hard to troubleshoot when issues occur. </br>
+
+### Specifying Custom Configuration
+
+If we run on Linux, we need to ensure that the `postgres` user which has a user ID of `999` by default, should have access to the configuration files. </br>
+
+```
+sudo chown 999:999 config/postgresql.conf
+sudo chown 999:999 config/pg_hba.conf
+sudo chown 999:999 config/pg_ident.conf
+```
+
+There is another important gotcha here. </br>
+The `PGDATA` variable tells PostgreSQL where our data directory is. </br>
+Similarly, we've learnt that our configuration file also has `data_directory` which tells PostgreSQL the same. </br>
+
+However, the latter is only read by PostgreSQL after initialization has occurred. </br>
+PostgreSQL's initialization phase sets up directory permissions on the data directory. </br>
+If we leave out `PGDATA`, then we will get errors that the data directory is invalid. </br>
+Hence `PGDATA` is important here. </br>
+
+## Running our PostgreSQL
+
+Finally, we can run our database with our custom configuration files:
+
+```
+docker run -it --rm --name postgres `
+-e POSTGRES_USER=postgresadmin `
+-e POSTGRES_PASSWORD=admin123 `
+-e POSTGRES_DB=postgresdb `
+-e PGDATA="/data" `
+-v ${PWD}/pgdata:/data `
+-v ${PWD}/config:/config `
+-p 5000:5432 `
+postgres:15.0 -c 'config_file=/config/postgresql.conf'
+```
+
+That's it for chapter two! </br>
+In [chapter 3](../3-replication/README.md), we will take a look at Replication and how to replicate our data to another PostgreSQL instance for better availability.
