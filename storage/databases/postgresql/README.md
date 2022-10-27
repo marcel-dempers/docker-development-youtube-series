@@ -9,7 +9,7 @@ wal_keep_size    or by configuring a replication slot for the standby
 
 ```
 
-cd storage\databases\postgres\docker
+cd storage/databases/postgresqlql/docker
 docker network create postgres
 
 docker run -d --rm --name postgres-1 `

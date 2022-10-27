@@ -26,7 +26,7 @@ docker network create postgres
 Start with instance 1: 
 
 ```
-cd storage/databases/postgres/3-replication
+cd storage/databases/postgresql/3-replication
 
 docker run -it --rm --name postgres-1 `
 --net postgres `
@@ -90,7 +90,7 @@ The utility is in the PostgreSQL docker image, so let's run it without running a
 Note that we also mount our blank data directory as we will make a new backup in there: 
 
 ```
-cd storage/databases/postgres/3-replication
+cd storage/databases/postgresql/3-replication
 
 docker run -it --rm `
 --net postgres `
@@ -109,7 +109,7 @@ Now we should see PostgreSQL data ready for our second instance in `${PWD}/postg
 ## Start standby instance
 
 ```
-cd storage/databases/postgres/3-replication
+cd storage/databases/postgresql/3-replication
 
 docker run -it --rm --name postgres-2 `
 --net postgres `

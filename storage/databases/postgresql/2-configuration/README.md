@@ -11,7 +11,7 @@ Let's start where we left off, and review our simple PostgreSQL database:
 ## Run a simple PostgreSQL database (docker)
 
 ```
-cd storage/databases/postgres/2-configuration
+cd storage/databases/postgresql/2-configuration
 docker run -it --rm --name postgres `
   -e POSTGRES_PASSWORD=admin123 `
   -v ${PWD}/pgdata:/var/lib/postgresql/data `

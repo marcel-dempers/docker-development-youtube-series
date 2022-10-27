@@ -15,7 +15,7 @@ PostgreSQL [Docker Image](https://hub.docker.com/_/postgres)
 ## Run a simple PostgreSQL database (compose)
 
 ```
-cd storage/databases/postgres/1-introduction
+cd storage/databases/postgresql/1-introduction
 
 docker compose up
 ```
