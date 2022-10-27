@@ -19,3 +19,5 @@ kubernetes/portainer/business/volume*
 pgdata
 storage/databases/postgres/docker/backup/
 storage/databases/postgres/docker/archive/
+storage/databases/postgres/3-replication/postgres-1/archive/*
+storage/databases/postgres/3-replication/postgres-2/archive/*
