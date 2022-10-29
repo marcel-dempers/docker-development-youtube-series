@@ -68,7 +68,7 @@ Hence it is "writing ahead". </br>
 
 More documentation for configuration [wal_level](https://www.postgresql.org/docs/current/runtime-config-wal.html) and [max_wal_senders](https://www.postgresql.org/docs/current/runtime-config-replication.html)
 ```
-wal_level = hot_standby
+wal_level = replica
 max_wal_senders = 3
 ```
 
@@ -184,3 +184,8 @@ CREATE TABLE customers (firstname text, customer_id serial, date_created timesta
 
 That's it for chapter three! </br>
 Now we understand how to [run PostgreSQL](../1-introduction/README.md), how to [configure PostgreSQL](../2-configuration/README.md) and how to setup replication for better availability.
+
+## Summary
+
+
+<img src="./summary.png" alt="Summary">

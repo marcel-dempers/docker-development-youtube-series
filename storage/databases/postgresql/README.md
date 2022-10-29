@@ -65,7 +65,7 @@ host     replication     replicationUser         0.0.0.0/0        md5
 ```
 docker exec -it postgres-1 bash
 
-wal_level = hot_standby
+wal_level = replica
 archive_mode = on
 archive_command = 'test ! -f /mnt/server/archive/%f && cp %p /mnt/server/archive/%f'
 max_wal_senders = 3
