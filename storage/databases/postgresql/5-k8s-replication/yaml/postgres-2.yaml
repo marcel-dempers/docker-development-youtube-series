@@ -68,6 +68,7 @@ spec:
       labels:
         app: postgres-2
     spec:
+      terminationGracePeriodSeconds: 30
       initContainers:
       - name: init
         image: postgres:15.0

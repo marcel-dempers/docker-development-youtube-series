@@ -1,7 +1,31 @@
-# Running PostgreSQL in Kubernetes (Primary and Standby)
+# Running PostgreSQL in Kubernetes (Basic)
 
+In chapters [one](../1-introduction/README.md), [two](../2-configuration/README.md) and [three](../3-replication/README.md) we've managed to stand up a Primary and Stand-By PostgreSQL instances using containers. </br>
 
-## Create a cluster
+We've learnt the fundamentals of how to persist and store data, how to configure instances and how to setup streaming replication from a Primary container to a Stand-by container. </br>
+
+## The challenges
+
+We have encountered a few challenges along the way, but running PostgreSQL in a container is pretty similar to just running it on a server outside of a container. </br>
+
+</hr>
+
+Kubernetes will add a bunch more complexity which we'll cover in this chapter. </br>
+A few points to note:
+
+* If you are not familiar with running PostreSQL in a container, this chapter is not for you. Please go back to [Chapter 1](../1-introduction/README.md)
+* If you are not familiar with configuration of PostreSQL, do not attempt to run it in Kubernetes. Please go back to [Chapter 2](../2-configuration/README.md)
+* If you are not familiar with Streaming Replication, Do not attempt to run PostreSQL in Kubernetes. Please go back to [Chapter 3](../3-replication/README.md)
+* If you are not familiar with [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/), Do not attempt to run PostreSQL in Kubernetes
+* We will not be using Popular PostgreSQL controllers\operators or Helm charts in this guide. Operators and controllers simply automate things, and those open source tooling assumes you understand all the above mentioned tech.
+
+If something goes wrong and you're using operators or controllers and don't have a background in how PostgreSQL works, you will lose data. </br>
+
+And finally - The work in this guide has not been tested for Production workloads and written purely for educational purposes. </br>
+
+## Create a Kubernetes cluster
+
+In this chapter, we will start by creating a test Kubernetes cluster using [kind](https://kind.sigs.k8s.io/) </br>
 
 ```
 
@@ -13,13 +37,17 @@ postgresql-control-plane   Ready    control-plane,master   31s   v1.23.5
 
 ```
 
-## Deploy our first PostgreSQL instance
+## Setting up our PostgreSQL environment
 
 Deploy a namespace to hold our resources: 
 
 ```
 kubectl create ns postgresql
 ```
+
+In [Chapter 3](../3-replication/README.md), we defined a few environment variables in our `docker run` command. </br>
+Some of those values are sensitive, so in Kubernetes we'll place sensitive values in a Kubernetes [secret](https://kubernetes.io/docs/concepts/configuration/secret/). </br>
+
 
 Create our secret for our first PostgreSQL instance:
 
@@ -32,25 +60,46 @@ kubectl -n postgresql create secret generic postgresql `
   --from-literal REPLICATION_PASSWORD='replicationPassword'
 ```
 
-Deploy our first instance which will act as our primary:
+## Deploy our first PostgreSQL instance
+
+### Statefulsets
+
+As we know we're going to need state and persist data, we'll go create a [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+
+I've taken a copy of the Statefulset from the Kubernetes site and created a [statefulset.yaml](./yaml/statefulset.yaml) for reference. </br>
+
+In the video, we'll replace some of these values so our PostgreSQL will fit. </br>
+
+* We replace the name of `nginx` with `postgres`
+* Tweak the k8s service
+* Tweak the [statefulset.yaml](./yaml/statefulset.yaml)
+* Add environment variables and secret mappings.
+* Add our configurations in a [Configmap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+We will take a look at Replication in the following chapter, so our replication user will not exist in the database just yet. </br>
+
+Deploy our PostgreSQL instance:
 
 ```
-kubectl -n postgresql apply -f storage/databases/postgresql/4-kubernetes/yaml/postgres-1.yaml
+kubectl -n postgresql apply -f storage/databases/postgresql/4-k8s-basic/yaml/statefulset.yaml
 ```
 
-
-## Check our installation
+### Check our installation
 
 ```
 kubectl -n postgresql get pods
 
-# check the initialization logs (should be clear)
-kubectl -n postgresql logs postgres-1-0 -c init
-
 # check the database logs
-kubectl -n postgresql logs postgres-1-0
+kubectl -n postgresql logs postgres-0
 
-kubectl -n postgresql exec -it postgres-1-0 -- bash
+```
+You will notice archive errors in the logs, because the archive directory does not exist in our volume. </br>
+We will address this soon. </br>
+
+Let's check our instance further:
+
+```
+kubectl -n postgresql exec -it postgres-0 -- bash
 
 # login to postgres
 psql --username=postgresadmin postgresdb
@@ -70,79 +119,62 @@ CREATE TABLE customers (firstname text, customer_id serial, date_created timesta
 # check the data directory
 ls -l /data/pgdata
 
-# check the archive 
+# check the archive (does not exist!)
 ls -l /data/archive
 ```
 
-## Deploy our Standby Server
+### Init containers
+
+[Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) play a big role in fulfilling specific needs in IT workloads </br>
+
+Init containers run before other containers in our pods. It can greatly assist when we need to do manual tasks. Like creating users, setting up tables, etc. </br>
+Init containers can help us initialise things, like creating this `/data/archive` directory </br>
+
+Now it may seem overkill for simply creating a directory, however this init container will play a big role in our next chapter on replication. </br>
+
+We can use init containers to setup our postgres as a primary, or a standby server. Stay tuned! </br>
+
+Let's create our init container:
 
 ```
-kubectl -n postgresql apply -f storage/databases/postgresql/4-kubernetes/yaml/postgres-2.yaml
+initContainers:
+- name: init
+  image: postgres:15.0
+  command: [ "bash", "-c" ]
+  args:
+  - |
+    #create archive directory
+    mkdir -p /data/archive && chown -R 999:999 /data/archive
 ```
 
-
-runuser -u postgres -- pg_ctl reload
-
-
-
-## Failover 
-
-Now lets say `postgres-1` fails. </br>
-PostgreSQL does not have built-in automated failver and recovery and requires tooling to perform this. </br>
-
-When `postgres-1` fails, we would use a utility called [pg_ctl](https://www.postgresql.org/docs/current/app-pg-ctl.html) to promote our stand-by server to a new primary server. </br>
-
-Then we have to build a new stand-by server just like we did in this guide. </br>
-We would also need to configure replication on the new primary, the same way we did in this guide. </br>
-
-Let's stop the primary server to simulate failure:
+This init container also needs to share the volume of the database container:
 
 ```
-kubectl -n postgresql delete sts postgres-1
-
-# notice the failure in replication from postgres-1 
- kubectl -n postgresql logs postgres-2-0
+volumeMounts:
+- name: data
+  mountPath: /data
+  readOnly: false
 ```
 
-Then log into `postgres-2` and promote it to primary:
-```
-kubectl -n postgresql exec -it postgres-2-0 -- bash
-psql --username=postgresadmin postgresdb
-
-# confirm we cannot create a table as its a stand-by server
-CREATE TABLE customers (firstname text, customer_id serial, date_created timestamp);
-
-# quit out of postgresql
-\q 
-
-# run pg_ctl as postgres user (cannot be run as root!)
-runuser -u postgres -- pg_ctl promote
-
-# confirm we can create a table as its a primary server
-CREATE TABLE customers (firstname text, customer_id serial, date_created timestamp);
-```
-
-## Setup Replication on the new Primary
+And redeploy!
 
 ```
-  #replication
-  wal_level = replica
-  archive_mode = on
-  archive_command = 'test ! -f /data/archive/%f && cp %p /data/archive/%f'
-  max_wal_senders = 3
-```
+kubectl -n postgresql apply -f storage/databases/postgresql/4-k8s-basic/yaml/statefulset.yaml
 
-Reconfigure the `postgres-2` instance:
+# check our install
 
-```
-kubectl -n postgresql apply -f storage/databases/postgresql/4-kubernetes/yaml/postgres-2.yaml
-
-# check our new instance
 kubectl -n postgresql get pods
-kubectl -n postgresql logs postgres-2-0 -c init
-kubectl -n postgresql logs postgres-2-0
-kubectl -n postgresql exec -it postgres-2-0 -- bash
+kubectl -n postgresql logs postgres-0
+kubectl -n postgresql exec -it postgres-0 -- bash
+ls /data
+ls /data/archive/
+
+# check if our table was persisted!
+psql --username=postgresadmin postgresdb
+\dt
+\q
 ```
 
-That's it for chapter three! </br>
-Now we understand how to [run PostgreSQL](../1-introduction/README.md), how to [configure PostgreSQL](../2-configuration/README.md) and how to setup replication for better availability.
+That's it for chapter four! </br>
+Now we've successfully managed to lift our PostgreSQL container and deploy it to Kubernetes. </br>
+In the next chapter we'll take what we've learnt here and combine our previous studies to setup a Primary and Stand-By instance of PostgreSQL in Kubernetes </br>
