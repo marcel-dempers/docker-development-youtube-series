@@ -1,14 +1,11 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-1
-data:
+  name: postgres
+data: 
   pg_hba.conf: |+
     # TYPE  DATABASE        USER            ADDRESS                 METHOD
-
     host     replication     replicationuser         0.0.0.0/0        md5
-
     # "local" is for Unix domain socket connections only
     local   all             all                                     trust
     # IPv4 local connections:
@@ -51,72 +48,32 @@ data:
     archive_mode = on
     archive_command = 'test ! -f /data/archive/%f && cp %p /data/archive/%f'
     max_wal_senders = 3
-
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres-1
+  name: postgres
 spec:
-  serviceName: postgres-1
-  replicas: 1
   selector:
     matchLabels:
-      app: postgres-1
+      app: postgres
+  serviceName: "postgres"
+  replicas: 1
   template:
     metadata:
       labels:
-        app: postgres-1
+        app: postgres
     spec:
+      terminationGracePeriodSeconds: 30
       initContainers:
       - name: init
         image: postgres:15.0
         command: [ "bash", "-c" ]
         args:
         - |
-          if [ ${STANDBY_MODE} == "on" ]; 
-          then
-            # initialize from backup if data dir is empty
-            if [ -z "$(ls -A ${PGDATA})" ]; then
-              export PGPASSWORD=${REPLICATION_PASSWORD}
-              pg_basebackup -h ${PRIMARY_SERVER_ADDRESS} -p 5432 -U ${REPLICATION_USER} -D ${PGDATA} -Fp -Xs -R
-            fi
-          else
-            #create archive directory
-            mkdir -p /data/archive && chown -R 999:999 /data/archive
-            
-            #create a init template
-            echo "CREATE USER #REPLICATION_USER REPLICATION LOGIN ENCRYPTED PASSWORD '#REPLICATION_PASSWORD';" > init.sql
-
-            # add credentials
-            sed -i 's/#REPLICATION_USER/'${REPLICATION_USER}'/g' init.sql
-            sed -i 's/#REPLICATION_PASSWORD/'${REPLICATION_PASSWORD}'/g' init.sql
-
-            mkdir -p /docker-entrypoint-initdb.d/
-            cp init.sql /docker-entrypoint-initdb.d/init.sql
-          fi
-        env:
-        - name: STANDBY_MODE
-          value: "off"
-        - name: PRIMARY_SERVER_ADDRESS
-          value: ""
-        - name: PGDATA
-          value: "/data/pgdata"
-        - name: REPLICATION_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgresql
-              key: REPLICATION_USER
-              optional: false
-        - name: REPLICATION_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgresql
-              key: REPLICATION_PASSWORD
-              optional: false
+          #create archive directory
+          mkdir -p /data/archive && chown -R 999:999 /data/archive
         volumeMounts:
-        - mountPath: /docker-entrypoint-initdb.d
-          name: initdb
         - name: data
           mountPath: /data
           readOnly: false
@@ -124,6 +81,9 @@ spec:
       - name: postgres
         image: postgres:15.0
         args: ["-c", "config_file=/config/postgresql.conf"]
+        ports:
+        - containerPort: 5432
+          name: database
         env:
         - name: PGDATA
           value: "/data/pgdata"
@@ -145,12 +105,7 @@ spec:
               name: postgresql
               key: POSTGRES_DB
               optional: false
-        ports:
-        - containerPort: 5432
-          name: database
         volumeMounts:
-        - name: initdb
-          mountPath: /docker-entrypoint-initdb.d
         - name: config
           mountPath: /config
           readOnly: false
@@ -160,10 +115,8 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: postgres-1
+          name: postgres
           defaultMode: 0755
-      - name: initdb
-        emptyDir: {}
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -177,12 +130,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-1
+  name: postgres
+  labels:
+    app: postgres
 spec:
-  clusterIP: None
   ports:
   - port: 5432
     targetPort: 5432
     name: postgres
+  clusterIP: None
   selector:
-    app: postgres-1
+    app: postgres

@@ -19,6 +19,9 @@ A few points to note:
 * If you are not familiar with [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/), Do not attempt to run PostreSQL in Kubernetes
 * We will not be using Popular PostgreSQL controllers\operators or Helm charts in this guide. Operators and controllers simply automate things, and those open source tooling assumes you understand all the above mentioned tech.
 
+One caveat to think of before running PostgreSQL in Kubernetes, or any database for that matter, is how would you handle cluster upgrades? </br>
+Most cloud providers uprade by rolling new nodes and deleting old nodes, meaning your primary server may be deleted and start on a new node without any data. </br> If you don't have a strategy here, you will lose your data. </br>
+
 If something goes wrong and you're using operators or controllers and don't have a background in how PostgreSQL works, you will lose data. </br>
 
 And finally - The work in this guide has not been tested for Production workloads and written purely for educational purposes. </br>
@@ -28,13 +31,11 @@ And finally - The work in this guide has not been tested for Production workload
 In this chapter, we will start by creating a test Kubernetes cluster using [kind](https://kind.sigs.k8s.io/) </br>
 
 ```
-
 kind create cluster --name postgresql --image kindest/node:v1.23.5
 
 kubectl get nodes
 NAME                       STATUS   ROLES                  AGE   VERSION
 postgresql-control-plane   Ready    control-plane,master   31s   v1.23.5
-
 ```
 
 ## Setting up our PostgreSQL environment
