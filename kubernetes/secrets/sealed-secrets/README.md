@@ -2,6 +2,16 @@
 
 Checkout the [Sealed Secrets GitHub Repo](https://github.com/bitnami-labs/sealed-secrets) </br>
 
+There are a number of use-cases where this is a really great concept. </br>
+
+1) GitOps - Storing your YAML manifests in Git and using GitOps tools to sync the manifests to your clusters (For example Flux and ArgoCD!)
+
+2) Giving a team access to secrets without revealing the secret material.
+
+developer: "I want to confirm my deployed secret value is X in the cluster" </br>
+
+developer can compare `sealedSecret` YAML in Git, with the `sealedSecret` in the cluster and confirm the value is the same. </br>
+
 ## Create a kubernetes cluster
 
 In this guide we we'll need a Kubernetes cluster for testing. Let's create one using [kind](https://kind.sigs.k8s.io/) </br>
@@ -135,7 +145,7 @@ cat kubernetes/secrets/secret.yaml
 
 If you run `kubeseal` you will see it pause and expect input from `stdin`. </br>
 You can paste your secret YAML and press CTRL+D to terminate `stdin`. </br>
-You will notive it writes a `sealedSecret` to `stdout`. </br>
+You will notice it writes a `sealedSecret` to `stdout`. </br>
 We can then automate this using `|` characters. </br>
 
 Create a sealed secret using `stdin` :
@@ -154,7 +164,6 @@ Deploy the sealed secret
 
 ```
 kubectl apply -f kubernetes/secrets/sealed-secrets/sealed-secret.yaml
-sealedsecret.bitnami.com/mysecret created
 ```
 
 Now few seconds later, see the secret
@@ -167,15 +176,22 @@ mysecret              Opaque                                1      25s
 
 ## How the encryption key is managed
 
-TODO:  How the encryption key is managed and stored 
+By default the controller generates a key as we saw earlier and stores it in a Kubernetes secret. </br>
+By default, the controller will generate a new active key every 30 days.
+It keeps old keys so it can decrypt previous encrypted sealed secrets and will use the active key with new encryption. </br>
 
-TODO:  Set a duration to test `--key-renew-period=<value>`
+It's important to keep these keys secured. </br>
+When the controller starts it consumes all the secrets and will start using them </br>
+This means we can backup these keys in a Vault and use them to migrate our clusters if we wanted to. </br>
+
+We can also override the renewal period to increase or decrease the value. `0` turns it off </br>
+
+To showcase this I can set `--key-renew-period=<value>` to 5min to watch how it works. </br>
 
 ```
 apk add nano
 export KUBE_EDITOR=nano
 ```
-
 Set the flag on the command like so to add a new key every 5 min for testing:
 
 ```
@@ -194,11 +210,9 @@ You should see a new key created under secrets in the `kube-system` namespace
 kubectl -n kube-system get secrets
 ```
 
-
 ## Backup your encryption keys
 
-TODO: * backup encryption keys 
-TODO:  migrating kubernetes clusters
+To get your keys out for backup purpose, it's as simple as grabbing a secret by label using `kubectl` :
 
 ```
 kubectl get secret -n kube-system \
@@ -206,10 +220,11 @@ kubectl get secret -n kube-system \
   -o yaml \
   >  kubernetes/secrets/sealed-secrets/sealed-secret-keys.key
 ```
+This can be used when migrating from one cluster to another, or simply for keeping backups. </br>
 
 ## Migrate your encryption keys to a new cluster 
 
-Delete & Deploy a new Kubernetes cluster
+To test this, lets delete our cluster and recreate it. </br>
 
 ```
 kind delete cluster --name sealedsecrets
@@ -231,22 +246,40 @@ kubectl -n kube-system get pods
 kubectl apply -f kubernetes/secrets/sealed-secrets/sealed-secret-keys.key
 ```
 
-restart the controller:
-```
-kubectl delete pod -n kube-system -l name=sealed-secrets-controller
-```
-
 ### apply our old sealed secret
 
 ```
 kubectl apply -f kubernetes/secrets/sealed-secrets/sealed-secret.yaml
 ```
 
-TODO:  Encrypted sealed secrets across namespaces  https://github.com/bitnami-labs/sealed-secrets#scopes
+### see sealed secret status
+
+To troubleshoot the secret, you can use the popular `kubectl describe` command. </br>
+Note that we're unable to decrypt the secret. </br>
+Why is that ? </br>
+
+We'll this is because the encryption key secrets are read when the controller starts. </br> 
+So we will need to restart the controller to that it can read ingest the encryption keys:
+
+```
+kubectl delete pod -n kube-system -l name=sealed-secrets-controller
+```
 
 ## Re-encrypting secrets with the latest key
 
+We can also use `kubeseal --re-encrypt` to encrypt a secret again. </br>
+Let's say we want to encrypt with the latest key. </br>
+This will re-encrypt the sealed secret without having to pull the actual secret to the client </br>
+
 ```
-kubeseal --re-encrypt <my_sealed_secret.json >tmp.json \
-  && mv tmp.json my_sealed_secret.json
+cat ./kubernetes/secrets/sealed-secrets/sealed-secret.yaml \
+| kubeseal --re-encrypt -o yaml
+```
+
+I can then save this to override the original old local sealed secret file:
+
+```
+cat ./kubernetes/secrets/sealed-secrets/sealed-secret.yaml \
+| kubeseal --re-encrypt -o yaml \
+> tmp.yaml && mv tmp.yaml ./kubernetes/secrets/sealed-secrets/sealed-secret.yaml
 ```
