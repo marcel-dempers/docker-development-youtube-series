@@ -4,7 +4,7 @@ Checkout the [Sealed Secrets GitHub Repo](https://github.com/bitnami-labs/sealed
 
 ## Create a kubernetes cluster
 
-In this guide we we''ll need a Kubernetes cluster for testing. Let's create one using [kind](https://kind.sigs.k8s.io/) </br>
+In this guide we we'll need a Kubernetes cluster for testing. Let's create one using [kind](https://kind.sigs.k8s.io/) </br>
 
 ```
 kind create cluster --name sealedsecrets --image kindest/node:v1.23.5
@@ -34,6 +34,15 @@ chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 ```
 
+### install helm
+
+```
+curl -o /tmp/helm.tar.gz -LO https://get.helm.sh/helm-v3.10.1-linux-amd64.tar.gz
+tar -C /tmp/ -zxvf /tmp/helm.tar.gz
+mv /tmp/linux-amd64/helm /usr/local/bin/helm
+chmod +x /usr/local/bin/helm
+```
+
 ### test cluster access:
 ```
 /work # kubectl get nodes
@@ -53,40 +62,52 @@ curl -L -o ./kubernetes/secrets/sealed-secrets/controller-v0.19.1.yaml https://g
 
 ```
 
-### alternative install Helm
+### install using Helm
 
-TODO:  cover helm https://github.com/bitnami-labs/sealed-secrets#helm-chart
+You can also install the controller using `helm`
 
-### install the controller
+```
+helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+helm search repo sealed-secrets --versions
+helm template sealed-secrets --version 2.7.0 -n kube-system sealed-secrets/sealed-secrets \
+> ./kubernetes/secrets/sealed-secrets/controller-helm-v0.19.1.yaml
+
+```
+With `helm template` we can explore the YAML and then replace the `helm template` with `helm install`
+to install the chart 
+
+### install using YAML manifest
 
 ```
 kubectl apply -f kubernetes/secrets/sealed-secrets/controller-v0.19.1.yaml
 ```
 
-### Check the install
+### Check the installation
+
+The controller deploys to the `kube-system` namespace by default.
 
 ```
 kubectl -n kube-system get pods
 ```
 
-TODO:  check the logs with `kubectl -n kube-system logs` command
+Check the logs of the sealed secret controller 
 
-TODO:  important logs 
+```
+kubectl -n kube-system logs -l name=sealed-secrets-controller --tail -1
+```
+
+From the logs we can see that it writes the encryption key its going to use as a kubernetes secret </br>
+Example log:
 
 ```
 2022/11/05 21:38:20 New key written to kube-system/sealed-secrets-keymwzn9
-2022/11/05 21:38:20 Certificate is
------BEGIN CERTIFICATE-----
- < cert content >
- -----END CERTIFICATE-----
-
-2022/11/05 21:38:20 HTTP server serving on :808
 ```
 
-TODO:  check our secret 
+## Encryption keys
 
 ```
-kubectl get secret -n kube-system sealed-secrets-keymwzn9 -o yaml
+kubectl -n kube-system get secrets
+kubectl -n kube-system get secret sealed-secrets-keygxlvg -o yaml
 ```
 
 ## Download KubeSeal
@@ -97,15 +118,10 @@ we'll want to download kubeseal from the assets section
 
 curl -L -o /tmp/kubeseal.tar.gz \
 https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.19.1/kubeseal-0.19.1-linux-amd64.tar.gz
-
-apk add tar
 tar -xzf /tmp/kubeseal.tar.gz -C /tmp/
-
 chmod +x /tmp/kubeseal
 mv /tmp/kubeseal /usr/local/bin/
 ```
-
-### run kubeseal
 
 We can now run `kubeseal --help`
 
@@ -117,13 +133,18 @@ Looks at our existing Kubernetes secret YAML
 cat kubernetes/secrets/secret.yaml 
 ```
 
-Create a sealed secret using `stdin` 
+If you run `kubeseal` you will see it pause and expect input from `stdin`. </br>
+You can paste your secret YAML and press CTRL+D to terminate `stdin`. </br>
+You will notive it writes a `sealedSecret` to `stdout`. </br>
+We can then automate this using `|` characters. </br>
+
+Create a sealed secret using `stdin` :
 
 ```
  cat kubernetes/secrets/secret.yaml | kubeseal -o yaml  > kubernetes/secrets/sealed-secrets/sealed-secret.yaml
 ```
 
-Create a sealed secret using file
+Create a sealed secret using a YAML file:
 
 ```
 kubeseal -f kubernetes/secrets/secret.yaml -o yaml > kubernetes/secrets/sealed-secrets/sealed-secret.yaml
