@@ -26,7 +26,7 @@ spec:
             if [ "$(redis-cli -h sentinel -p 5000 ping)" != "PONG" ]; then
               echo "master not found, defaulting to redis-0"
 
-              if [ "$(hostname)" == "redis-0" ]; then
+              if [ "$(hostname)" = "redis-0" ]; then
                 echo "this is redis-0, not updating config..."
               else
                 echo "updating redis.conf..."
