@@ -26,7 +26,7 @@ spec:
             do
                 echo "finding master at $i"
                 MASTER=$(redis-cli --no-auth-warning --raw -h $i -a $REDIS_PASSWORD info replication | awk '{print $1}' | grep master_host: | cut -d ":" -f2)
-                if [ "$MASTER" == "" ]; then
+                if [ "$MASTER" = "" ]; then
                     echo "no master found"
                     MASTER=
                 else
