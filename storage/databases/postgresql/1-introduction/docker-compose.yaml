@@ -1,10 +1,14 @@
 version: '3.1'
 services:
   db:
-    image: postgres
+    image: postgres:15.0
     restart: always
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_PASSWORD: admin123
+    ports:
+    - 5000:5432
+    volumes:
+    - ./pgdata:/var/lib/postgresql/data
   adminer:
     image: adminer
     restart: always
