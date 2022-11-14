@@ -14,3 +14,6 @@ messaging/kafka/data/*
 kubernetes/portainer/volume*
 kubernetes/rancher/volume/*
 kubernetes/portainer/business/volume*
+
+#ignore postgres data for sample and database tutorials
+pgdata
