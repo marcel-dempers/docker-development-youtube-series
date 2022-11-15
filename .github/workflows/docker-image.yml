@@ -1,0 +1,18 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]  
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker Python image
+      run: |
+        docker build ./python aimvector/python:1.0.0
+    - name: Build the Docker Node image
+      run: |
+        docker build ./node aimvector/nodejs:1.0.0
