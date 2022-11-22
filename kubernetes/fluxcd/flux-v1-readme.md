@@ -1,4 +1,4 @@
-# Flux Getting Started Guide
+# Flux Getting Started Guide (old v1)
 
 # 1 - Kubernetes
 
