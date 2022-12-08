@@ -33,6 +33,8 @@ RUN touch /fluentd/etc/disable.conf
 # Copy plugins
 COPY plugins /fluentd/plugins/
 COPY entrypoint.sh /fluentd/entrypoint.sh
+# chmod needed in full Linux env :)
+RUN chmod 755 /fluentd/entrypoint.sh
 
 # Environment variables
 ENV FLUENTD_OPT=""
