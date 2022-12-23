@@ -1,14 +1,15 @@
-FROM golang:1.14-alpine as build
+FROM golang:1.16-alpine as build
 
 RUN apk add --no-cache git
 
 WORKDIR /src 
 
-RUN go get github.com/julienschmidt/httprouter
-RUN go get github.com/sirupsen/logrus
-RUN go get github.com/streadway/amqp
+COPY go.mod ./
+COPY go.sum ./
 
-COPY publisher.go /src 
+RUN go mod download
+
+COPY publisher.go ./
 
 RUN go build publisher.go
 
