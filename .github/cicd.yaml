@@ -1,10 +1,9 @@
 on:
   workflow_dispatch:
   push:
-    branches: [ datree-scoping ]
+    branches: [ datree-scoring ]
 env:
   DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }} 
-
 jobs:
   k8sPolicyCheck:
     runs-on: ubuntu-latest
