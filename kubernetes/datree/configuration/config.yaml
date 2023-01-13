@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-scanning-filters
+  namespace: datree
+data:
+  skiplist: |
+    - local-path-storage;(.*);(.*)

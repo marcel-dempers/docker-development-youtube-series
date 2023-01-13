@@ -56,7 +56,7 @@ helm search repo datree-webhook --versions
 Grab the manifest:
 ```
 CHART_VERSION="0.3.22"
-APP_VERSION="0.1.41"
+APP_VERSION="0.1.46"
 DATREE_TOKEN=""
 
 mkdir ./kubernetes/datree/manifests/
@@ -85,13 +85,22 @@ kubectl -n datree get pods
 ## View our Cluster Score
 
 Now with Datree installed in our cluster, we can review it's current scoring in the Datree [Dashboard](https://app.datree.io/overview) </br>
-
 As we are running a test cluster or if you run in the cloud, there may be some cloud components in namespaces that you may want to ignore. </br>
 
-We can do this by labeling a namespace which is [documented here](https://hub.datree.io/configuration/behavior#ignore-a-namespace)
+We can do this by labeling a namespace which is [documented here](https://hub.datree.io/configuration/behavior#ignore-a-namespace) </br>
+</p>
+OR </br>
+
+We can do this by using the [configuration file](https://hub.datree.io/configuration/behavior#ignore-a-namespace) for datree
+
 
 ```
+# skip namespace using label
 kubectl label namespaces local-path-storage "admission.datree/validate=skip"
+# skip namespace using configmap
+
+kubectl -n datree apply -f kubernetes/datree/configuration/config.yaml
+kubectl rollout restart deployment -n datree
 ```
 
 According to the dashboard, we still have a `D` score, let's rerun the scan:
@@ -142,15 +151,68 @@ kubectl get job "scan-job" -n datree -o json | jq 'del(.spec.selector)' | jq 'de
 
 Now we can follow the dashboard, to check our `namespace` for policy issues and start fixing them. </br>
 
-Datree has a ton of features and capabilities. </br>
-We can even run it locally using the CLI
 
+Summary of our fixes:
+
+```
+spec:
+  containers:
+    - name: wordpress
+      image: wordpress:5.9-apache
+
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: wordpress
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            limits:
+              memory: "500Mi"
+            requests:
+              memory: "500Mi"
+
+spec:
+  containers:
+    - name: wordpress
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: wordpress
+        volumeMounts:
+        - mountPath: /tmp
+          name: temp
+        - mountPath: /var/run/apache2/
+          name: apache
+      volumes:
+      - emptyDir: {}
+        name: temp
+      - emptyDir: {}
+        name: apache
+
+kubectl -n cms apply -f kubernetes/datree/example/cms/
+```
 ## Datree CLI : Testing our YAML locally
 
 We can install the latest version of Datree with the command advertised:
 
 ```
-curl https://get.datree.io | /bin/bash
+apk add unzip
+curl https://get.datree.io | /bin/sh
 ```
 
 ### Policy check
@@ -158,7 +220,7 @@ curl https://get.datree.io | /bin/bash
 Let's test my example manifests under our datree folder `kubernetes\datree\example`
 
 ```
-datree test ./kubernetes/datree/example/cms/
+datree test ./kubernetes/datree/example/cms/*.yaml
 ```
 
 # CI/CD examples
@@ -168,5 +230,32 @@ Once we have sorted out our policy issues, we can add Datree to our CI/CD pipeli
 
 Checkout the [CI/CD integrations](https://hub.datree.io/cicd-examples) page. </br>
 
+# Enforcing Policies
 
+Configure Datree to enforce policies. </br>
+We can use `helm upgrade` with the `--set` flag and set enforce to true like:
 
+```
+--set datree.enforce=true 
+```
+
+Let's apply it to a new manifest and deploy it to our cluster:
+
+```
+helm template datree-webhook datree-webhook/datree-admission-webhook \
+--create-namespace \
+--set datree.enforce=true \
+--set datree.token=${DATREE_TOKEN} \
+--set datree.clusterName=$(kubectl config current-context) \
+--version ${CHART_VERSION} \
+--namespace datree \
+> ./kubernetes/datree/manifests/datree.${APP_VERSION}-enforce.yaml
+
+kubectl apply -n datree -f kubernetes/datree/manifests/datree.0.1.46-enforce.yaml
+```
+
+Try to apply our Wordpress MySQL which violates policies :
+
+```
+kubectl -n cms apply -f kubernetes/datree/example/cms/statefulset.yaml
+```

@@ -1,0 +1,718 @@
+---
+# Source: datree-admission-webhook/templates/cluster-scan-cronjob.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cluster-scan-job-service-account
+  namespace: datree
+---
+# Source: datree-admission-webhook/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datree-webhook-server
+  namespace: datree
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+---
+# Source: datree-admission-webhook/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datree-label-namespaces-hook-post-install
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+---
+# Source: datree-admission-webhook/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datree-cleanup-namespaces-hook-pre-delete
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+---
+# Source: datree-admission-webhook/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datree-wait-server-ready-hook-post-install
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+---
+# Source: datree-admission-webhook/templates/webhook-with-cert-secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: datree-ca-tls
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+  namespace: datree
+type: kubernetes.io/tls
+data:
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBd3EzU3JXOFMxY1VSUjIwTWozMHVZeVhvRmZaaElVNW1KWnpqZW1VWHZSUE9QbkV6CkExWGNuVGlXYjBTYk1qL1cxbWkyTXFaWmUxYUpRMDZIWURab0YvamcrYUlQdkU3dk05d1RGeTF2UjZhQTRDa2kKUlp5TUp4MW45V2RWdmZxc1F5aEd0VnVWL0w0K2JNb1VwU0VnRU5ZK29kQlY0S0owYkZHN3RDQzYrQ2VMeVlSQgpKY1U2UndQQmFsRzNXNFkweVRwWUZhRlRHNHRkOFNWRGtaSCt6M3pZTkczazZhc004NThtQmpiTGhYcHNEU0tUCkhZcW5yaDdXN25hYjdDdCsrK282YWNxMnFiSU1UNGt4Tm4yOEs5U05PUkY5RmRaNTZGeDNDVy8zUVdmSzVESE4KcHlGUTNxWGJxYWFpbDI4bGpUME5uZDgwcHJpcXFPNW5hcEdORXdJREFRQUJBb0lCQUdKZHBlZlFDYnBOdXE5VwpZRlJZTWdvUzZ6TzlxOUpDWk1aNGdWQWtxRnYzRit6aEVaK0wwTTczK3JyNTlWanNmTWNWWFlvMkYxeUVteEtSCktVSHArNnF4TEN1MlFURXF5UjV4QW94aGZxcTdiTDdXeWVSV2QxS0VQelQySTVLOGlESGV0ZXVJL1Q0WmVqMUoKMWlpaGxpd3J0TFhhS0tvNks0MVh0dm9LMTYzdW1zYW02WjhuTjBHRjBKSkpPSkdacEluQXZEUTJaa2hIR0s3RgpvZmdzamVEbGVod2Q1MzBIMzczMHN4bGRybVBkT2s3bUk2cVdyd1RXTTJhK1lsY3V3Q0xNdkJLWGJIVm43enJkCjFDTUxLSDhkcHhzZ3ZGZ2tXdnpJWDNYUjVmd2RMZ29Wa0F2WkYwMlBWeVpyV2FDU0Y2S2N1ZkVGS282MVZJQUQKTEZhRTI5RUNnWUVBeXQvWXRYZitwNk1BU3FESVFQanNYeDZ1QTlnZXJRMit3ZmhrZ2dzYnR5QzAxei9QTS90SApYUUtuOWFreTRFZUswTGJoL1N0cEx0MmxNSG1ITy9EeUo5cHdaenZBWEhEazY2SDZPdmRHMFhFclJFNXFYYkZzCjFHZTAwejMzbC8xK2IzT3YxWThhbFQ0MWZrZDdia2VCdXdhSXJBdGVEQ1VMMDlObWFLcCswUzhDZ1lFQTlhaVUKSG5UaXJkaitIUS9mdjI5K2p4NTBlTkMvY0x5UmJnVTZaemI0SEtCRWhsamJ0TW9YRlhiZ1ZBeHNOZEZDSStUZQpMczkyZTgxYm94d1g5QitrdGtFK05wSzNPTlZsREwzWTBKczNvYmQ1bVYrYlRHajM3cUMyUThhaXVTelpYbG9iClVWQUpEd21xb25QeUpuR1RCblBPdlRkSmc4TS96eU9sZmsvZm9WMENnWUFka0F6Mk5Ld3BKWG1QWm1xSC9UNEUKaG1YNUxXOGE3SnZWakNxcFFKRWpXR0xCMHd5UW1KZEhtSEY5UE5DckdnSENkRVB1TG5zL1Z4RVJSVVJObWNqUAp3ZWNMUkF1OTdMMlBFS1YwSGtCMW1MWWpXQUhyOFVUWWx0d2t4Q3ptT3d4SGxXWVVDcXhtL3crd2ZSNGhiYzRiCndOSDlzQkplVnErb2lHK3Q1TnBpQlFLQmdRRG14d0szQmZsNWRqTnJHK0dIbHZkZS9pNU8zVlFyVllxTnYrMlkKenlRUXlHTDNqdngvZjZabDdMSmJZdnc1SnFlcXpyUUhaN0NZSjFpaUI1OWRJR2o5S3BlR2J4Z2ZGU0dEOGNtQQpWNERRdEd0UXNXZFVSZnc4dWMvZ0pmZnlXL2FzVTV2OExHTUdOSCtQYzdzVmNIYTloZ2UrNi9SdEN2eWozSW40CitwSk1wUUtCZ1FDTUxhWFUyN2ppUE42Q1RUTkQ4bGZiSXp1YlJrRDJIazFSckF0NXpGMDUvVDljOHRyMG9uSXAKdnZPUTc0bGhUWWZIZWlYaUFIb2h4WjRNZGRTYnlEU2REdVI4OUtUYnNjV082RUpxZ0Vwb1FuTzE1cU5PazllbAp1OE1DdytYNDc0T0doVnk0U0RSL0FWSWhqeWl5czc0VzBIUHR0TzczVGhTQVlFYUxJckZHV1E9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURVakNDQWpxZ0F3SUJBZ0lSQUl0anNlN1l6N3ZuSHVSMHExb1JtWnd3RFFZSktvWklodmNOQVFFTEJRQXcKTXpFeE1DOEdBMVVFQXhNb0wwTk9QVUZrYldsemMybHZiaUJEYjI1MGNtOXNiR1Z5SUZkbFltaHZiMnNnUkdWdApieUJEUVRBZUZ3MHlNekF4TVRJd016RTVNRFZhRncweU9EQXhNVE13TXpFNU1EVmFNRE14TVRBdkJnTlZCQU1UCktDOURUajFCWkcxcGMzTnBiMjRnUTI5dWRISnZiR3hsY2lCWFpXSm9iMjlySUVSbGJXOGdRMEV3Z2dFaU1BMEcKQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURDcmRLdGJ4TFZ4UkZIYlF5UGZTNWpKZWdWOW1FaApUbVlsbk9ONlpSZTlFODQrY1RNRFZkeWRPSlp2UkpzeVA5YldhTFl5cGxsN1ZvbERUb2RnTm1nWCtPRDVvZys4ClR1OHozQk1YTFc5SHBvRGdLU0pGbkl3bkhXZjFaMVc5K3F4REtFYTFXNVg4dmo1c3loU2xJU0FRMWo2aDBGWGcKb25Sc1VidTBJTHI0SjR2SmhFRWx4VHBIQThGcVViZGJoalRKT2xnVm9WTWJpMTN4SlVPUmtmN1BmTmcwYmVUcApxd3p6bnlZR05zdUZlbXdOSXBNZGlxZXVIdGJ1ZHB2c0szNzc2anBweXJhcHNneFBpVEUyZmJ3cjFJMDVFWDBWCjFubm9YSGNKYi9kQlo4cmtNYzJuSVZEZXBkdXBwcUtYYnlXTlBRMmQzelNtdUtxbzdtZHFrWTBUQWdNQkFBR2oKWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDcERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSApBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVMFdOeTZkQTdFZERobUg1azBBVFZGOExXCitIQXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBRU1uRExjOXZoTkVMa1BzME5HdHMzTlp6RVQ4M2E4ODMvLzIKQm9iaXJTUThOWDhpc1A2WmYwcDRtWEtnU2dzN3FEai9qblowZFdiN2tlUDFxZnRmZktrMnNCRmUraEI2VUxQUgoycFZoQkVURXlIcktYNklnTFpUejBBcU1YWDVXemVUVTRCNlNzRXR0bTVGOWtWK1luWE85S2dNWnlzZEYxU1lQCitoOHY0QTJmUVVBSCtkcDd3ZHRzcnZxN0QzMUlaNlZkWlU3RXRzUjZJZExTYnluck15QXFHT0hyKzdxRTNqUmQKS2UxcXlTQkJRQWxSY3NWb29Ud2V3SjI0MTVENGF6WWhKa1NiQXhPK0gvaFkrb0w2UDhkeTdUbU1YQTRsNkdYVQp6T3pqMm9LRzVzRGlHVmNyM250TGpBelh0Q2ZuZHU0bUhPQTlDS0t4OGlzY1R3VVcydG89Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+---
+# Source: datree-admission-webhook/templates/webhook-with-cert-secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webhook-server-tls
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+  namespace: datree
+  annotations:
+    self-signed-cert: "true"
+type: kubernetes.io/tls
+data:
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBNkI4STdsckhCR1BDOUowSkFpZldGNDFLbGRBVlN1Z29uQUFjeDU4UzdqRUVabEZNClBpcWpsdDhUenFaOVlQVThYT25xSFc4NmZ0ZlJZQXI2czFWaERJT0NCMjVXM3h1MDVKelg4aFpMK2tjcTNMWGQKZWZPc2hUSVkwN2wwZHpNR3QzZ1V5SnptLzZkUlRQQzg0VjU4dWpxbGRjbEJTY1JWVnFRSTZPemwzVVFva3RLegpPcEYrQUMwci90cDBoWnlEd3gwMGUrYkZCS2ExbEtSYTNhTllHWVRuU2p6cm1EY0FDU21LcmZDM3BCLzh3V3lnClpuNHVEeU1GVjhnaHJNVFNiQUUzOFRud08xQU81c0RDUk92Qm5CQ3lpTUtUditHMmNLTFRtRm1wMUxkWlRSOVAKdy9BZzZocVVWOUdYQ0hpTGJoVkRJZ3pYS2lXVzgrNVMyb2tCendJREFRQUJBb0lCQUV4VmFHcDZEOWl4dGZzYgphVXI4THJ1d0MwY1pGdWQ3VVY5NzZmcjdwUTRQc0pLMVNZMW9HRVFWT0Q1TklnNHdsNWsyazNiNmpSSUpoeUUrCmV4TmVrSHU5QTVYT0EyTjdpUkZsUXQ2cDFuS0gxT0NnTGlWY3JPOWdlaW1tWTFhUHdUVzBsNkVoZUJXNndGRzkKR1dCRDRtQ2J5SzNqY1VVQSs4OXlRanZYTEFDSE9TODlyeWpBRGJHeFJWR1FLRy9BMXBKaWhGaFVqUlI2a3F5TApyMng5aUpuYmlKYm1tY1N6VklqOFgra3d1TEQwWjlWbTB6N1duZ1kvYktIS0U3OWRxQkRpaG1mMzFuNHB4ZzJOCktnTU5ka1JZVGllYVJDQmJIRlBDR1VQTWlWMzNLd0I5eGVLamVsK0k1OXFSL0JldFovQ0FjV1FNZTVTM0phY2cKYUhGOEhBRUNnWUVBN2NDdW03OUh3ZjBIbFUyWWpDYkFvWnZsYjlRVWUxNDE3emN2YkQ1dVFmMTdkd1ZFQWlqdApYcG9STzB4dGZwUTgvTERpT00rcWl4NWdlZGRLLzJ3WnRJZ09nRjFRY09Kd3gvdTZwODAveTNNdE5IclJ5aU40CnpVZk1jdDQ1REF6UXl0OG4xVG5ZU3I4by9jRHNRVDVQSXBqTDFWRlNqNnJBTGdlMVdBalpLMkVDZ1lFQStlKzEKSHRFemEvckwvYXE3Q3NWZ2R1ejBPRVN5M1dkQW0xUXA2TksvWWp1SlVJQjMyODZKd2lxcVdyZko1bDZhUzhkaQo5ZytWSllzY3lSQjM3OGJVRkdlMzU0bEtRSThJcUlTTU1MTnpCbnVVQlY5ZmN0STBIYUNXdnV3N2NvT3FaTGVhClJ3ZkwyZTdaTEgvSVhqb3QrYTEzWmlqdjROcjRBYjY2YVFiWTZ5OENnWUVBakpjZUtaZEk5WnVNdW1zeVE5NCsKbHRJN01JKzJ0T1VXKzZna2NOdlNFMCt6ak1RZVhUQ2FmUkNhRS9pejN1QUYyRjg0eHVOMk0rSDRwdFA2MDJPMwpKNXcxQnc4bkhEbXErM2NOLzJCTjB4Nytva1BtZnFQUE1ZUzlqMGQ5Y0hTN210dXZFRld1WXpUN0ptTEkwaVBvClk4cjY3ZCt5OUtYQ0V2WVg5RUQzT3NFQ2dZRUE2Q0pZQVpCaUJ5Yy9zWkdSK1ZZSzIwb0hKZi9BZE55Q2FBSUsKanNDMm1vRWJieFp5dkVlZk1TUzVabHFPL2hUZGtBWlhCcHpBZE1jNDdCSU1vem56SGlTYTdVUlpINDc1aHJMZApGaHFGZWY3ckl2Wkt5M1VxakYzcnhOWFovT2tIS0ZaU3h5Z1prSWREVkE0MnhqV1pIKzJhR050cXVGZ0h3bThuCjZZWS9rR2NDZ1lCWlo2dUFNd0ozcHNTd0lESFRhYk1JLzRnU2ZUYTdwSTh3VHBiQkROTnRvcE94eEw3V1RXVE8KbW5mOVk3YkYyMjkxMnBaL2lhMXM1MlVWMU8vdTB0R3Q1OVNvN1ExclBrSHc0THQ2UjhTK3NRaG1GbC9xcmc4ZApITlBPN2tHbmdVZUhQZjRPdXB2WHVNTXNzTVNoK2JWQVZSMTJwV05BUjEraER1cVNLQTBGZ3c9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURmRENDQW1TZ0F3SUJBZ0lSQUltM3hneEF2MVNwRm5BdlVrMk85UFl3RFFZSktvWklodmNOQVFFTEJRQXcKTXpFeE1DOEdBMVVFQXhNb0wwTk9QVUZrYldsemMybHZiaUJEYjI1MGNtOXNiR1Z5SUZkbFltaHZiMnNnUkdWdApieUJEUVRBZUZ3MHlNekF4TVRJd016RTVNRFZhRncweU9EQXhNVE13TXpFNU1EVmFNQzh4TFRBckJnTlZCQU1UCkpDOURUajFrWVhSeVpXVXRkMlZpYUc5dmF5MXpaWEoyWlhJdVpHRjBjbVZsTG5OMll6Q0NBU0l3RFFZSktvWkkKaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFPZ2ZDTzVheHdSand2U2RDUUluMWhlTlNwWFFGVXJvS0p3QQpITWVmRXU0eEJHWlJURDRxbzViZkU4Nm1mV0QxUEZ6cDZoMXZPbjdYMFdBSytyTlZZUXlEZ2dkdVZ0OGJ0T1NjCjEvSVdTL3BIS3R5MTNYbnpySVV5R05PNWRIY3pCcmQ0Rk1pYzV2K25VVXp3dk9GZWZMbzZwWFhKUVVuRVZWYWsKQ09qczVkMUVLSkxTc3pxUmZnQXRLLzdhZElXY2c4TWROSHZteFFTbXRaU2tXdDJqV0JtRTUwbzg2NWczQUFrcAppcTN3dDZRZi9NRnNvR1orTGc4akJWZklJYXpFMG13Qk4vRTU4RHRRRHViQXdrVHJ3WndRc29qQ2s3L2h0bkNpCjA1aFpxZFMzV1UwZlQ4UHdJT29hbEZmUmx3aDRpMjRWUXlJTTF5b2xsdlB1VXRxSkFjOENBd0VBQWFPQmpqQ0IKaXpBT0JnTlZIUThCQWY4RUJBTUNCYUF3SFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQwpNQXdHQTFVZEV3RUIvd1FDTUFBd0h3WURWUjBqQkJnd0ZvQVUwV055NmRBN0VkRGhtSDVrMEFUVkY4TFcrSEF3Ckt3WURWUjBSQkNRd0lvSWdaR0YwY21WbExYZGxZbWh2YjJzdGMyVnlkbVZ5TG1SaGRISmxaUzV6ZG1Nd0RRWUoKS29aSWh2Y05BUUVMQlFBRGdnRUJBQTZNVWhOVFFJYjN6cGhXdDR3aWNkK2g1emVGb0R5T2NDbkJ4eFFYeEhYcgpoVVBYYUhlakJHTkNnK1orR0REenJway9CMG1EdXppU3ordkc1SEhnSW5WbGNMK3JDeGMvcno3N3loamEwUXRMCnJQQ3JEYmo2UXY3THFuKzZHMUVheldYM3QxSUs3RU9QSjhpbDdncmM4UmV0WUNEdUt3RE9JT2dRTndmamJaUnEKb3lOMWNYNjU2OS82YXFTU3pDT3BCd3VqanJ6SFlpUU5UakRraTB1a0dyYkcyYlJxVGVwd2wrTkpjN2EzMkwxTQpiMGE3dWNHSFQ3K0hxcjFhd3BRM3d4S0FZd3RlTUFJeFAvZGVOQlY4UHNBRmtBNnpueklmMjNDTDRVRG9lbU9sClRXMU5nb0hSVHBUeTd2cGZQRjNmUjlxWEk5K0I1ZkhjSVlKeEc3Zmp4c289Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+---
+# Source: datree-admission-webhook/templates/cluster-scan-cronjob.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-scan-job-role
+rules:
+  - apiGroups:
+      - "*"
+    resources:
+      - "*"
+    verbs:
+      - "get"
+      - "list"
+---
+# Source: datree-admission-webhook/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: datree-webhook-server-read
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - "nodes"
+      - "namespaces"
+    verbs:
+      - "get"
+      - "list"
+---
+# Source: datree-admission-webhook/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: datree-namespaces-update
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - update
+      - patch
+    resourceNames:
+      - kube-system
+      - datree
+---
+# Source: datree-admission-webhook/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: datree-validationwebhook-delete
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+rules:
+  - apiGroups:
+      - "admissionregistration.k8s.io"
+    resources:
+      - validatingwebhookconfigurations
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    resourceNames:
+      - datree-webhook
+---
+# Source: datree-admission-webhook/templates/cluster-scan-cronjob.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-scan-job-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-scan-job-role
+subjects:
+  - kind: ServiceAccount
+    name: cluster-scan-job-service-account
+    namespace: datree
+---
+# Source: datree-admission-webhook/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datree-webhook-server-read 
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datree-webhook-server-read # datree-webhook-server-read
+subjects:
+  - kind: ServiceAccount
+    name: datree-webhook-server # datree-webhook-server
+    namespace: datree
+---
+# Source: datree-admission-webhook/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datree-namespaces-update
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datree-namespaces-update
+subjects:
+  - kind: ServiceAccount
+    name: "datree-label-namespaces-hook-post-install"
+    namespace: "datree"
+  - kind: ServiceAccount
+    name: "datree-cleanup-namespaces-hook-pre-delete"
+    namespace: "datree"
+---
+# Source: datree-admission-webhook/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datree-validationwebhook-delete
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datree-validationwebhook-delete
+subjects:
+  - kind: ServiceAccount
+    name: "datree-cleanup-namespaces-hook-pre-delete"
+    namespace: "datree"
+---
+# Source: datree-admission-webhook/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: datree-pods-reader
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - "pods"
+      - "jobs"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+---
+# Source: datree-admission-webhook/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: datree-pods-reader
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: datree-pods-reader
+subjects:
+  - kind: ServiceAccount
+    name: datree-wait-server-ready-hook-post-install
+    namespace: "datree"
+---
+# Source: datree-admission-webhook/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datree-webhook-server
+  namespace: datree
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+spec:
+  selector:
+    app: "datree-webhook-server"
+  ports:
+    - port: 443
+      targetPort: webhook-api
+---
+# Source: datree-admission-webhook/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datree-webhook-server
+  namespace: datree
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+    owner: datree
+    app: "datree-webhook-server"
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: "datree-webhook-server"
+  template:
+    metadata:
+      labels: 
+        app.kubernetes.io/name: datree-admission-webhook
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "datree-webhook"
+        app.kubernetes.io/version: 0.1.41
+        app.kubernetes.io/part-of: "datree"
+        meta.helm.sh/release-name: "datree-admission-webhook"
+        meta.helm.sh/release-namespace: "datree" 
+        helm.sh/chart: datree-admission-webhook-0.3.22
+        app: "datree-webhook-server"
+    spec:
+      serviceAccountName: datree-webhook-server
+      containers:
+        - name: server
+          # caution: don't change the order of the environment variables
+          # changing the order will harm resource patching
+          env:
+            - name: DATREE_TOKEN
+              value: "ef7088eb-3096-4533-97d8-f16fb3a5b0c1"
+            - name: DATREE_POLICY
+              value: Starter
+            - name: DATREE_VERBOSE
+              value: ""
+            - name: DATREE_OUTPUT
+              value: ""
+            - name: DATREE_NO_RECORD
+              value: ""
+            - name: DATREE_ENFORCE
+              value: ""
+          securityContext: 
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 25000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {}
+          image: "datree/admission-webhook:0.1.41"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8443
+              name: webhook-api
+          volumeMounts:
+            - name: webhook-tls-certs
+              mountPath: /run/secrets/tls
+              readOnly: true
+            - name: webhook-config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: webhook-tls-certs
+          secret:
+            secretName: webhook-server-tls
+        - name: webhook-config
+          configMap:
+            name: webhook-scanning-filters
+            optional: true
+---
+# Source: datree-admission-webhook/templates/cluster-scan-cronjob.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: scan-job
+  namespace: datree
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      serviceAccountName: cluster-scan-job-service-account
+      restartPolicy: Never
+      containers:
+        - name: scan-job
+          env:
+            - name: DATREE_TOKEN
+              value: ef7088eb-3096-4533-97d8-f16fb3a5b0c1
+            - name: DATREE_POLICY
+              value: Starter
+            - name: CLUSTER_NAME
+              value: kind-datree
+          securityContext:
+            
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 25000
+            seccompProfile:
+              type: RuntimeDefault
+          image: "datree/scan-job:0.0.13"
+          imagePullPolicy: Always
+          resources:
+            {}
+          volumeMounts:
+            - name: webhook-config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: webhook-config
+          configMap:
+            name: webhook-scanning-filters
+            optional: true
+---
+# Source: datree-admission-webhook/templates/cluster-scan-cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: scan-cronjob
+  namespace: datree
+spec:
+  # get the current time, subtract 5 minutes, extract the minutes and inject it into the cron expression
+  # if helm installation was done at 13:35, the cron expression will be 30 * * * *, which means the job will run at 14:30, 15:30, 16:30, etc.
+  schedule: "14 * * * *" # every hour, starting 55 minutes after helm installation
+  jobTemplate: 
+    spec:
+      backoffLimit: 4
+      template:
+        spec:
+          serviceAccountName: cluster-scan-job-service-account
+          restartPolicy: Never
+          containers:
+            - name: scan-job
+              env:
+                - name: DATREE_TOKEN
+                  value: ef7088eb-3096-4533-97d8-f16fb3a5b0c1
+                - name: DATREE_POLICY
+                  value: Starter
+                - name: CLUSTER_NAME
+                  value: kind-datree
+              securityContext:
+                
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 25000
+                seccompProfile:
+                  type: RuntimeDefault
+              image: "datree/scan-job:0.0.13"
+              imagePullPolicy: Always
+              resources:
+                {}
+              volumeMounts:
+                - name: webhook-config
+                  mountPath: /config
+                  readOnly: true
+          volumes:
+            - name: webhook-config
+              configMap:
+                name: webhook-scanning-filters
+                optional: true
+---
+# Source: datree-admission-webhook/templates/namespace-post-delete.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datree-cleanup-namespaces-hook-pre-delete
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+  namespace: datree
+  annotations: 
+    "helm.sh/hook": pre-delete, pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded, hook-failed
+spec:
+  template:
+    metadata:
+      labels: 
+        app.kubernetes.io/name: datree-admission-webhook
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "datree-webhook"
+        app.kubernetes.io/version: 0.1.41
+        app.kubernetes.io/part-of: "datree"
+        meta.helm.sh/release-name: "datree-admission-webhook"
+        meta.helm.sh/release-namespace: "datree" 
+        helm.sh/chart: datree-admission-webhook-0.3.22
+    spec:
+      restartPolicy: OnFailure
+      serviceAccount: datree-cleanup-namespaces-hook-pre-delete
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: kubectl-label
+          image: "clastix/kubectl:v1.25"
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - "-c"
+            - >-
+              kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io datree-webhook -n datree;
+              kubectl label ns kube-system datree datree.io/skip-;
+---
+# Source: datree-admission-webhook/templates/namespace-post-install.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datree-label-namespaces-hook-post-install
+  namespace: datree
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded, hook-failed
+spec:
+  template:
+    metadata:
+      labels: 
+        app.kubernetes.io/name: datree-admission-webhook
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "datree-webhook"
+        app.kubernetes.io/version: 0.1.41
+        app.kubernetes.io/part-of: "datree"
+        meta.helm.sh/release-name: "datree-admission-webhook"
+        meta.helm.sh/release-namespace: "datree" 
+        helm.sh/chart: datree-admission-webhook-0.3.22
+    spec:
+      serviceAccount: datree-label-namespaces-hook-post-install
+      restartPolicy: OnFailure
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: kubectl-label
+          image: "clastix/kubectl:v1.25"
+          imagePullPolicy: IfNotPresent
+          args:
+            - label
+            - ns
+            - kube-system
+            - datree
+            - admission.datree/validate=skip
+            - --overwrite
+---
+# Source: datree-admission-webhook/templates/wait-server-ready-post-install.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datree-wait-server-ready-hook-post-install
+  namespace: datree
+  labels: 
+    app.kubernetes.io/name: datree-admission-webhook
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datree-webhook"
+    app.kubernetes.io/version: 0.1.41
+    app.kubernetes.io/part-of: "datree"
+    meta.helm.sh/release-name: "datree-admission-webhook"
+    meta.helm.sh/release-namespace: "datree" 
+    helm.sh/chart: datree-admission-webhook-0.3.22
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded, hook-failed
+spec:
+  template:
+    metadata:
+      name: datree-wait-server-ready-hook-post-install
+      labels: 
+        app.kubernetes.io/name: datree-admission-webhook
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "datree-webhook"
+        app.kubernetes.io/version: 0.1.41
+        app.kubernetes.io/part-of: "datree"
+        meta.helm.sh/release-name: "datree-admission-webhook"
+        meta.helm.sh/release-namespace: "datree" 
+        helm.sh/chart: datree-admission-webhook-0.3.22
+    spec:
+      serviceAccountName: datree-wait-server-ready-hook-post-install
+      restartPolicy: Never
+      containers:
+      - name: kubectl-client
+        image: "clastix/kubectl:v1.25"
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - "-c"
+          - >-
+            kubectl wait --for=condition=ready pod -l app=datree-webhook-server --timeout="180s"
+---
+# Source: datree-admission-webhook/templates/webhook-with-cert-secrets.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: datree-webhook
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-5"
+webhooks:
+  - name: webhook-server.datree.svc
+    sideEffects: None
+    timeoutSeconds: 30
+    failurePolicy: Ignore
+    admissionReviewVersions:
+      - v1
+      - v1beta1
+    clientConfig:
+      service:
+        name: datree-webhook-server
+        namespace: datree
+        path: "/validate"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURVakNDQWpxZ0F3SUJBZ0lSQUl0anNlN1l6N3ZuSHVSMHExb1JtWnd3RFFZSktvWklodmNOQVFFTEJRQXcKTXpFeE1DOEdBMVVFQXhNb0wwTk9QVUZrYldsemMybHZiaUJEYjI1MGNtOXNiR1Z5SUZkbFltaHZiMnNnUkdWdApieUJEUVRBZUZ3MHlNekF4TVRJd016RTVNRFZhRncweU9EQXhNVE13TXpFNU1EVmFNRE14TVRBdkJnTlZCQU1UCktDOURUajFCWkcxcGMzTnBiMjRnUTI5dWRISnZiR3hsY2lCWFpXSm9iMjlySUVSbGJXOGdRMEV3Z2dFaU1BMEcKQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURDcmRLdGJ4TFZ4UkZIYlF5UGZTNWpKZWdWOW1FaApUbVlsbk9ONlpSZTlFODQrY1RNRFZkeWRPSlp2UkpzeVA5YldhTFl5cGxsN1ZvbERUb2RnTm1nWCtPRDVvZys4ClR1OHozQk1YTFc5SHBvRGdLU0pGbkl3bkhXZjFaMVc5K3F4REtFYTFXNVg4dmo1c3loU2xJU0FRMWo2aDBGWGcKb25Sc1VidTBJTHI0SjR2SmhFRWx4VHBIQThGcVViZGJoalRKT2xnVm9WTWJpMTN4SlVPUmtmN1BmTmcwYmVUcApxd3p6bnlZR05zdUZlbXdOSXBNZGlxZXVIdGJ1ZHB2c0szNzc2anBweXJhcHNneFBpVEUyZmJ3cjFJMDVFWDBWCjFubm9YSGNKYi9kQlo4cmtNYzJuSVZEZXBkdXBwcUtYYnlXTlBRMmQzelNtdUtxbzdtZHFrWTBUQWdNQkFBR2oKWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDcERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSApBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVMFdOeTZkQTdFZERobUg1azBBVFZGOExXCitIQXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBRU1uRExjOXZoTkVMa1BzME5HdHMzTlp6RVQ4M2E4ODMvLzIKQm9iaXJTUThOWDhpc1A2WmYwcDRtWEtnU2dzN3FEai9qblowZFdiN2tlUDFxZnRmZktrMnNCRmUraEI2VUxQUgoycFZoQkVURXlIcktYNklnTFpUejBBcU1YWDVXemVUVTRCNlNzRXR0bTVGOWtWK1luWE85S2dNWnlzZEYxU1lQCitoOHY0QTJmUVVBSCtkcDd3ZHRzcnZxN0QzMUlaNlZkWlU3RXRzUjZJZExTYnluck15QXFHT0hyKzdxRTNqUmQKS2UxcXlTQkJRQWxSY3NWb29Ud2V3SjI0MTVENGF6WWhKa1NiQXhPK0gvaFkrb0w2UDhkeTdUbU1YQTRsNkdYVQp6T3pqMm9LRzVzRGlHVmNyM250TGpBelh0Q2ZuZHU0bUhPQTlDS0t4OGlzY1R3VVcydG89Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    namespaceSelector:
+      matchExpressions:
+        - key: admission.datree/validate
+          operator: DoesNotExist
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["*"]
