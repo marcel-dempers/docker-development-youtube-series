@@ -51,7 +51,7 @@ data:
       <parse>
         @type kubernetes
         @type "#{ENV['FLUENT_CONTAINER_TAIL_PARSER_TYPE'] || 'json'}"
-        time_format %Y-%m-%dT%H:%M:%S.%NZ
+        time_format "%Y-%m-%dT%H:%M:%S.%NZ"
       </parse>
     </source>
 
@@ -78,4 +78,5 @@ data:
       port "#{ENV['FLUENT_ELASTICSEARCH_PORT'] || '9200'}"
       index_name fluentd-k8s
       type_name fluentd
+      include_timestamp true
     </match>
