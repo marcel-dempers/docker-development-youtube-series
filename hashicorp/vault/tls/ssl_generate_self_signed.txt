@@ -4,8 +4,8 @@ cd ./hashicorp/vault/tls/
 
 docker run -it --rm -v ${PWD}:/work -w /work debian:buster bash
 apt-get update && apt-get install -y curl &&
-curl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/local/bin/cfssl && \
-curl https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/local/bin/cfssljson && \
+curl -L https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/local/bin/cfssl && \
+curl -L https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/local/bin/cfssljson && \
 chmod +x /usr/local/bin/cfssl && \
 chmod +x /usr/local/bin/cfssljson
 
