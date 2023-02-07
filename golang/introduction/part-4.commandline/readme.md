@@ -1,5 +1,7 @@
 # Introduction to Go: Command Line
 
+<a href="https://youtu.be/CODqM_rzwtk" title="golang-part-4"><img src="https://i.ytimg.com/vi/CODqM_rzwtk/hqdefault.jpg" width="20%" alt="introduction to Go part 4" /></a>
+
 Command line apps are a fundamental part of software development <br/>
 
 Go has a built in Commandline parser package. The package can be found [here](https://golang.org/pkg/flag/) <br/>

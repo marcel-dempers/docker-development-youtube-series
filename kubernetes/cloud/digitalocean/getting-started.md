@@ -1,5 +1,7 @@
 # Getting Started with DGO
 
+<a href="https://youtu.be/PvfBCE-xgBY" title="k8s-do"><img src="https://i.ytimg.com/vi/PvfBCE-xgBY/hqdefault.jpg" width="20%" alt="k8s-do" /></a> 
+
 ## Trial Account
 
 Coupon Link to get $100 credit for 60 days: <br/>

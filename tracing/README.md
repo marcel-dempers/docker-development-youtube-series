@@ -1,5 +1,7 @@
 # Introduction to Distributed Tracing
 
+<a href="https://youtu.be/idDu_jXqf4E" title="tracing-intro"><img src="https://i.ytimg.com/vi/idDu_jXqf4E/hqdefault.jpg" width="20%" alt="tracing-intro" /></a> 
+
 In this episode we take a look at distributed tracing.
 We'll take a look at the concept, what distributed tracing is, what problems it solves, how to emit traces and the platform architecture to collect traces.
 

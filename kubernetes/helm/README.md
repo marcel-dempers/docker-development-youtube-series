@@ -1,5 +1,7 @@
 # Introduction to Helm
 
+<a href="https://youtu.be/5_J7RWLLVeQ" title="k8s-helm"><img src="https://i.ytimg.com/vi/5_J7RWLLVeQ/hqdefault.jpg" width="20%" alt="k8s-helm" /></a> 
+
 ## We need a Kubernetes cluster
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)

@@ -5,6 +5,8 @@ For running Jenkins on AMAZON, start [here](./amazon-eks/readme.md)
 
 # Jenkins on Local (Docker Windows \ Minikube \ etc)
 
+<a href="https://youtu.be/eRWIJGF3Y2g" title="jenkins"><img src="https://i.ytimg.com/vi/eRWIJGF3Y2g/hqdefault.jpg" width="20%" alt="jenkins" /></a> 
+
 For running Jenkins on Local Docker for Windows or Minikube <br/>
 Watch the [video](https://youtu.be/eRWIJGF3Y2g)
 

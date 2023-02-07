@@ -1,5 +1,7 @@
 # Introduction to KUBECTL
 
+<a href="https://youtu.be/1zcXudjSVUs" title="k8s-kubectl"><img src="https://i.ytimg.com/vi/1zcXudjSVUs/hqdefault.jpg" width="20%" alt="k8s-kubectl" /></a> 
+
 To start off this tutorial, we will be using [kind](https://kind.sigs.k8s.io/) to create our test cluster. </br>
 You can use `minikube` or any Kubernetes cluster. </br>
 

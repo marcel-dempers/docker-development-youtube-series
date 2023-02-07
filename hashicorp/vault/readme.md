@@ -1,5 +1,7 @@
 # Hashicorp Vault Guide - Deprecated
 
+<a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVtq-NRX3yd1ziA_wJSBu3Oj" title="vault"><img src="https://i.ytimg.com/vi/L_o_CG_AGKA/hqdefault.jpg" width="20%" alt="introduction to vault" /></a>
+
 # Vault
 
 For this tutorial, I use Kubernetes 1.17

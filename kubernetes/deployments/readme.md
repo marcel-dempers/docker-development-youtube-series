@@ -1,4 +1,6 @@
-# Deployments
+# Introduction to Kubernetes: Deployments
+
+<a href="https://youtu.be/DMpEZEakYVc" title="k8s-deployments"><img src="https://i.ytimg.com/vi/DMpEZEakYVc/hqdefault.jpg" width="20%" alt="k8s-deployments" /></a> 
 
 Build an example app:
 

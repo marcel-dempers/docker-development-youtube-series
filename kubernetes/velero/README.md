@@ -1,5 +1,7 @@
 # Introduction to Velero
 
+<a href="https://youtu.be/zybLTQER0yY" title="k8s-velero"><img src="https://i.ytimg.com/vi/zybLTQER0yY/hqdefault.jpg" width="20%" alt="k8s-velero" /></a> 
+
 ## We need a Kubernetes cluster
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)

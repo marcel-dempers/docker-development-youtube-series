@@ -1,5 +1,7 @@
 # Introduction to Go: JSON
 
+<a href="https://youtu.be/_ok29xwZ11k" title="golang-part-2"><img src="https://i.ytimg.com/vi/_ok29xwZ11k/hqdefault.jpg" width="20%" alt="introduction to Go part 2" /></a>
+
 In programming languages, you will very often deal with data structures internally. <br/>
 Sometimes, you need to pass data outside of your application or read data from another application, or even a file. <br/>
 

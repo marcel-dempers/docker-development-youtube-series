@@ -1,5 +1,7 @@
 # Jenkins on Amazon Kubernetes 
 
+<a href="https://youtu.be/eqOCdNO2Nmk" title="jenkins eks"><img src="https://i.ytimg.com/vi/eqOCdNO2Nmk/hqdefault.jpg" width="20%" alt="jenkins eks" /></a> 
+
 ## Create a cluster
 
 Follow my Introduction to Amazon EKS for beginners guide, to create a cluster <br/>
