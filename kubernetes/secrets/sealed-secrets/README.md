@@ -1,5 +1,7 @@
 # Introduction to Sealed Secrets 
 
+<a href="https://youtu.be/u0qtgUMLua0" title="k8s-sealedsecrets"><img src="https://i.ytimg.com/vi/u0qtgUMLua0/hqdefault.jpg" width="20%" alt="k8s-sealedsecrets" /></a> 
+
 Checkout the [Sealed Secrets GitHub Repo](https://github.com/bitnami-labs/sealed-secrets) </br>
 
 There are a number of use-cases where this is a really great concept. </br>

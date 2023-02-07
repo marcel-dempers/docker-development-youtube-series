@@ -1,5 +1,7 @@
 # Redis on Kubernetes
 
+<a href="https://youtu.be/JmCn7k0PlV4" title="redis-k8s"><img src="https://i.ytimg.com/vi/JmCn7k0PlV4/hqdefault.jpg" width="20%" alt="redis-k8s" /></a> 
+
 Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```

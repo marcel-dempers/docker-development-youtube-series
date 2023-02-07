@@ -1,5 +1,7 @@
 # Introduction to Fluentd
 
+<a href="https://youtu.be/Gp0-7oVOtPw" title="fluentd-intro"><img src="https://i.ytimg.com/vi/Gp0-7oVOtPw/hqdefault.jpg" width="20%" alt="fluentd-intro" /></a> 
+
 ## Collecting logs from files
 
 Reading logs from a file we need an application that writes logs to a file. <br/>

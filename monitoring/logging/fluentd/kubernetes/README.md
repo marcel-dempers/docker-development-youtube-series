@@ -1,5 +1,7 @@
 # Introduction to Fluentd on Kubernetes
 
+<a href="https://youtu.be/6kmHvXdAzIM" title="fluentd-k8s"><img src="https://i.ytimg.com/vi/6kmHvXdAzIM/hqdefault.jpg" width="20%" alt="fluentd-k8s" /></a> 
+
 ## Prerequisites 
 
 You will need a basic understanding of Fluentd before you attempt to run it on Kubernetes.<br/> 

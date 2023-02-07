@@ -1,5 +1,7 @@
 # Getting Started with GKE
 
+<a href="https://youtu.be/-fbH5Qs3QXU" title="k8s-gke"><img src="https://i.ytimg.com/vi/-fbH5Qs3QXU/hqdefault.jpg" width="20%" alt="k8s-gke" /></a> 
+
 ## Google Cloud CLI
 
 https://hub.docker.com/r/google/cloud-sdk/

@@ -1,5 +1,7 @@
 # Hashicorp Vault Guide
 
+<a href="https://youtu.be/2Owo4Ioo9tQ" title="hashicorp-vault"><img src="https://i.ytimg.com/vi/2Owo4Ioo9tQ/hqdefault.jpg" width="20%" alt="introduction hashicorp vault" /></a>
+
 Requirements:
 
 * Kubernetes 1.21

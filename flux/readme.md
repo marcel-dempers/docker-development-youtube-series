@@ -1,5 +1,7 @@
 # Flux Getting Started Guide
 
+<a href="https://youtu.be/OFgziggbCOg" title="flux cd"><img src="https://i.ytimg.com/vi/OFgziggbCOg/hqdefault.jpg" width="20%" alt="introduction to flux cd" /></a> 
+
 # 1 - Kubernetes
 
 Get a Kubernetes Cluster. In this video, I use Docker for Windows.

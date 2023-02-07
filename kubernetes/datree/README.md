@@ -1,6 +1,8 @@
 
 # Introduction to Datree
 
+<a href="https://youtu.be/aqiOyXPPadk" title="Kubernetes"><img src="https://i.ytimg.com/vi/aqiOyXPPadk/hqdefault.jpg" width="20%" alt="Kubernetes Guide" /></a> 
+
 ## Installation 
 
 Best place to start is the [documentation](https://hub.datree.io/)

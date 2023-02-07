@@ -1,5 +1,7 @@
 # RabbitMQ
 
+<a href="https://youtu.be/hfUIWe1tK8E" title="rabbitmq-intro"><img src="https://i.ytimg.com/vi/hfUIWe1tK8E/hqdefault.jpg" width="20%" alt="rabbitmq-intro" /></a> 
+
 Docker image over [here](https://hub.docker.com/_/rabbitmq)
 ```
 # run a standalone instance

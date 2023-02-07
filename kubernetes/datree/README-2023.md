@@ -1,6 +1,8 @@
 
 # Whats new 👉🏽 Datree in 2023
 
+<a href="https://youtu.be/iwoIjzS33qE" title="Kubernetes"><img src="https://i.ytimg.com/vi/iwoIjzS33qE/hqdefault.jpg" width="20%" alt="Kubernetes Guide" /></a> 
+
 ## Create a Kubernetes cluster
 
 Let's start by creating a local `kind` [cluster](https://kind.sigs.k8s.io/)

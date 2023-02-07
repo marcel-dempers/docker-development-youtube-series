@@ -1,5 +1,7 @@
 # Redis 
 
+<a href="https://youtu.be/L3zp347cWNw" title="redis-intro"><img src="https://i.ytimg.com/vi/L3zp347cWNw/hqdefault.jpg" width="20%" alt="redis-intro" /></a> 
+
 ## Docker 
 
 Docker image over [here](https://hub.docker.com/_/redis)
