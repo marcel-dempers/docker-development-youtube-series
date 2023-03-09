@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  db:
+    container_name: postgres
+    image: postgres:15.0
+    command: "postgres -c config_file=/config/postgresql.conf"
+    environment:
+      POSTGRES_USER: "postgresadmin"
+      POSTGRES_PASSWORD: "admin123"
+      POSTGRES_DB: "postgresdb"
+      PGDATA: "/data"
+    volumes:
+    - ./pgdata:/data
+    - ./config:/config/
+    ports:
+    - 5000:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
