@@ -98,10 +98,47 @@ flux bootstrap github \
   --path=kubernetes/fluxcd/clusters/dev-cluster \
   --personal \
   --branch fluxcd-2022
+
+flux check
+
+# flux manages itself using GitOps objects:
+kubectl -n flux-system get GitRepository
+kubectl -n flux-system get Kustomization
 ```
 
 Check the source code that `flux bootstrap` created 
 
 ```
 git pull origin <branch-name>
+```
+
+# Repository structure 
+
+https://fluxcd.io/flux/guides/repository-structure/
+
+* Mono Repo
+* Repo per team
+* Repo per app
+
+```
+- apps
+  - example-app-1
+  - example-app-2
+- infrastructure
+  - ingress-nginx
+  - monitoring
+- clusters
+  -dev-cluster
+  -prod-cluster
+```
+
+## build our app
+
+```
+cd kubernetes\fluxcd\apps\example-app-1\src
+
+docker build . -t example-app-1:0.0.1
+
+#load the image to our test cluster so we dont need to push to a registry
+kind load docker-image example-app-1:0.0.1 --name fluxcd 
 ```
