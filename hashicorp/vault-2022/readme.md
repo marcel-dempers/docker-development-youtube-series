@@ -160,7 +160,7 @@ Let's checkout the web UI:
 kubectl -n vault get svc
 kubectl -n vault port-forward svc/vault-ui 443:8200
 ```
-Now we can access the web UI [here]("https://localhost/")
+Now we can access the web UI [here](https://localhost/)
 
 ## Enable Kubernetes Authentication
 
