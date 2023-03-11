@@ -175,17 +175,18 @@ kind load docker-image example-app-1:0.0.2 --name fluxcd
 # git commit & git push to branch!
 ```
 
+If we wait a minute or so we can ` kubectl port-forward svc/example-app-1 80:80` again and see the changes
+
 ## deploy by updating manifest 
 
-To update our app, we simply have to update the image tag in our kubernetes YAML
-file and `flux` will sync it. </br>
+So all we did to update our app is to build a new image, push it to our registry and update the image tag in our kubernetes deployment YAML file and `flux` will sync it. </br>
 This is generally the role of CI, where `flux` concern is mainly CD. </br>
 
 Here is an example on [how to automate that](https://fluxcd.io/flux/use-cases/gh-actions-manifest-generation/) 
 
 ## deploy by image scanning
 
-An alternative method is to use your CI to build and push a newly tagged image to your registry (same as first option) and use Flux image scanner to trigger the rollout instead of automating a commit to your config repo. </br>
+An alternative method is to use your CI to build and push a newly tagged image to your registry (same as first option) and use [Flux image scanner](https://fluxcd.io/flux/guides/image-update/#configure-image-updates) to trigger the rollout instead of automating a commit to your config repo. </br>
 
 We firstly need to enable image scanning as its not enabled by default. </br>
 To do this we just need to re-bootstrap `flux` with an addition flag
@@ -202,28 +203,43 @@ flux bootstrap github \
 We need to create a image reigsitry credential where we will push our image:
 
 ```
-kubectl -n default create secret docker-registry dockerhub-credential --docker-username "" --docker-password "" --docker-email test@test.com
+kubectl -n default create secret docker-registry dockerhub-credential --docker-username '' --docker-password '' --docker-email 'test@test.com'
 
 ```
 
-We will need to tell Flux how to manage our image deployment
+# build and push example-app-2
+
+```
+cd kubernetes\fluxcd\repositories\example-app-2\
+ls
+cd src
+ls
+docker build . -t aimvector/example-app-2:0.0.1
+docker push aimvector/example-app-2:0.0.1
+
+```
+We will need to tell Flux how to manage our image deployment </br>
+Note that this time our Kubernetes YAML is in the `configs` repo. </br>
+This is because our application repo triggers it's CI which will build and push a new image to our cluster </br>
+Flux will then detech the new image tag and update our Kubernetes YAML in our configs repo. </br>
+If Flux pushed the update to our application repo, it will cause a CI/CD loop.
 
 ## add image policy and repository
 
 ```
-kubectl -n default apply -f repositories/config/apps/example-app-1/imagerepository.yaml
-kubectl -n default apply -f repositories/config/apps/example-app-1/imagepolicy.yaml
+
+kubectl -n default apply -f repositories/config/apps/example-app-2/gitrepository.yaml
+kubectl -n default apply -f repositories/config/apps/example-app-2/kustomization.yaml
+
+# tell flux about our image update policy
+kubectl -n default apply -f repositories/config/apps/example-app-2/imagerepository.yaml
+kubectl -n default apply -f repositories/config/apps/example-app-2/imagepolicy.yaml
 
 ```
 
-https://fluxcd.io/flux/guides/image-update/#configure-image-updates
-
-## Build and push our app
+## Build and push our example-app-2
 
 ```
-docker build . -t aimvector/example-app-1:0.0.2
-docker push aimvector/example-app-1:0.0.2
-
 #see changes
 kubectl describe imagerepository
 
