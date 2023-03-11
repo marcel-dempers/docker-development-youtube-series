@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: example-app-2
+  namespace: default
+spec:
+  interval: 15m
+  path: "./kubernetes/fluxcd/repositories/config/apps/example-app-2/deploy"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: example-app-2
