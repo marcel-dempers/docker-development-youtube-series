@@ -142,3 +142,16 @@ docker build . -t example-app-1:0.0.1
 #load the image to our test cluster so we dont need to push to a registry
 kind load docker-image example-app-1:0.0.1 --name fluxcd 
 ```
+
+## deploy our app 
+
+```
+kubectl -n default apply -f kubernetes/fluxcd/repositories/config/apps/example-app-1/
+
+# check our flux resources 
+kubectl -n default describe gitrepository example-app-1
+kubectl -n default describe kustomization example-app-1
+
+# check deployed resources
+kubectl get all
+```
