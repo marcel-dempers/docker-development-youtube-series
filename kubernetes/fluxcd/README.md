@@ -240,6 +240,13 @@ kubectl -n default apply -f repositories/config/apps/example-app-2/imagereposito
 kubectl -n default apply -f repositories/config/apps/example-app-2/imagepolicy.yaml
 kubectl -n default apply -f repositories/config/apps/example-app-2/imageupdateautomation.yaml
 
+# we will also need to provide authentication for our git repo
+flux create secret git example-app-2-github --url https://github.com/marcel-dempers/docker-development-youtube-series --username '' --password '' --namespace default
+```
+
+There are a number of ways to authenticate with [GitRepositories](https://fluxcd.io/flux/components/source/gitrepositories/#secret-reference)
+
+```
 kubectl describe imagepolicy example-app-2
 kubectl describe  imagerepository example-app-2
 kubectl describe imageupdateautomation example-app-2
