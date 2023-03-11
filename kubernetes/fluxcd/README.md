@@ -8,14 +8,6 @@ In this guide we we''ll need a Kubernetes cluster for testing. Let's create one 
 kind create cluster --name fluxcd --image kindest/node:v1.23.5
 ```
 
-See cluster up and running:
-
-```
-kubectl get nodes
-NAME                  STATUS   ROLES                  AGE     VERSION
-fluxcd-control-plane   Ready    control-plane,master   2m12s   v1.23.5
-```
-
 ## Run a container to work in
 
 ### run Alpine Linux: 
@@ -33,13 +25,6 @@ apk add --no-cache curl
 curl -sLO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
-
-# install helm 
-
-curl -o /tmp/helm.tar.gz -LO https://get.helm.sh/helm-v3.10.1-linux-amd64.tar.gz
-tar -C /tmp/ -zxvf /tmp/helm.tar.gz
-mv /tmp/linux-amd64/helm /usr/local/bin/helm
-chmod +x /usr/local/bin/helm
 
 ```
 
@@ -134,18 +119,32 @@ https://fluxcd.io/flux/guides/repository-structure/
 
 ## build our app
 
-```
-cd kubernetes/fluxcd/repositories/example-app-1/src
+Let's say we have a microservice called `example-app-1` and it has its own GitHub repo somewhere. </br>
+For demo, it's code is under `kubernetes/fluxcd/repositories/example-app-1/`
 
+```
+# go to our "git repo"
+cd kubernetes/fluxcd/repositories/example-app-1
+# check the files
+ls
+
+cd src
 docker build . -t example-app-1:0.0.1
 
 #load the image to our test cluster so we dont need to push to a registry
 kind load docker-image example-app-1:0.0.1 --name fluxcd 
 ```
 
-## deploy our app 
+## setup our gitops pipeline
+
+Now we will also have a "config" GitHub repo where configuration files for GitOps live.
 
 ```
+cd kubernetes/fluxcd
+
+# tell flux where our Git repo is and where the YAML is
+# this is once off
+# flux will monitor the example-app-1 Git repo for when any infrastructure changes, it will sync
 kubectl -n default apply -f repositories/config/apps/example-app-1/gitrepository.yaml
 kubectl -n default apply -f repositories/config/apps/example-app-1/kustomization.yaml
 
@@ -160,18 +159,19 @@ kubectl port-forward svc/example-app-1 80:80
 
 ```
 
+Now we have setup CD, let's take a look at CI </br>
+
 ## changes to our app
 
 Once we make changes to our `app.py` we can build a new image with a new tag </br>
 
 ```
-cd kubernetes/fluxcd/repositories/example-app-1/src
-
 docker build . -t example-app-1:0.0.2
 
 #load the image to our test cluster so we dont need to push to a registry
 kind load docker-image example-app-1:0.0.2 --name fluxcd 
 
+# update our kubernetes deployment YAML image tag
 # git commit & git push to branch!
 ```
 
