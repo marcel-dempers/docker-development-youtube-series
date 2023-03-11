@@ -30,7 +30,7 @@ docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/work -w /work --net host alpine
 apk add --no-cache curl
 
 # install kubectl 
-curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+curl -sLO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 
@@ -95,7 +95,7 @@ Then we can bootstrap it using the GitHub bootstrap method
 flux bootstrap github \
   --owner=marcel-dempers \
   --repository=docker-development-youtube-series \
-  --path=kubernetes/fluxcd/clusters/dev-cluster \
+  --path=kubernetes/fluxcd/repositories/config/clusters/dev-cluster \
   --personal \
   --branch fluxcd-2022
 
@@ -135,7 +135,7 @@ https://fluxcd.io/flux/guides/repository-structure/
 ## build our app
 
 ```
-cd kubernetes\fluxcd\apps\example-app-1\src
+cd kubernetes/fluxcd/repositories/example-app-1/src
 
 docker build . -t example-app-1:0.0.1
 
@@ -146,7 +146,8 @@ kind load docker-image example-app-1:0.0.1 --name fluxcd
 ## deploy our app 
 
 ```
-kubectl -n default apply -f kubernetes/fluxcd/repositories/config/apps/example-app-1/
+kubectl -n default apply -f repositories/config/apps/example-app-1/gitrepository.yaml
+kubectl -n default apply -f repositories/config/apps/example-app-1/kustomization.yaml
 
 # check our flux resources 
 kubectl -n default describe gitrepository example-app-1
@@ -154,6 +155,66 @@ kubectl -n default describe kustomization example-app-1
 
 # check deployed resources
 kubectl get all
+
+kubectl port-forward svc/example-app-1 80:80
+
 ```
 
-https://fluxcd.io/flux/faq/#can-i-use-repositories-with-plain-yamls
+## changes to our app
+
+Once we make changes to our `app.py` we can build a new image with a new tag </br>
+
+```
+cd kubernetes/fluxcd/repositories/example-app-1/src
+
+docker build . -t example-app-1:0.0.2
+
+#load the image to our test cluster so we dont need to push to a registry
+kind load docker-image example-app-1:0.0.2 --name fluxcd 
+
+# git commit & git push to branch!
+```
+
+## deploy by updating manifest 
+
+To update our app, we simply have to update the image tag in our kubernetes YAML
+file and `flux` will sync it. </br>
+This is generally the role of CI, where `flux` concern is mainly CD. </br>
+
+Here is an example on [how to automate that](https://fluxcd.io/flux/use-cases/gh-actions-manifest-generation/) 
+
+## deploy by image scanning
+
+An alternative method is to use your CI to build and push a newly tagged image to your registry (same as first option) and use Flux image scanner to trigger the rollout instead of automating a commit to your config repo. </br>
+
+We firstly need to enable image scanning as its not enabled by default. </br>
+To do this we just need to re-bootstrap `flux` with an addition flag
+
+```
+flux bootstrap github \
+  --owner=marcel-dempers \
+  --repository=docker-development-youtube-series \
+  --path=kubernetes/fluxcd/repositories/config/clusters/dev-cluster \
+  --components-extra=image-reflector-controller,image-automation-controller \
+  --personal \
+  --branch fluxcd-2022
+```
+We need to create a image reigsitry credential where we will push our image:
+
+```
+kubectl -n default create secret docker-registry dockerhub-credential --docker-username "" --docker-password "" --docker-email test@test.com
+
+kubectl -n default apply -f repositories/config/apps/example-app-1/imagerepository.yaml
+
+```
+
+## Build and push our app
+
+```
+docker build . -t aimvector/example-app-1:0.0.2
+docker push aimvector/example-app-1:0.0.2
+
+#see changes
+kubectl describe imagerepository
+
+```
