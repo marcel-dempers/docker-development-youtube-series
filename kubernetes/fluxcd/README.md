@@ -267,4 +267,7 @@ kubectl describe imagerepository
 #see image being updated
 kubectl describe imagepolicy example-app-2
 
+# see flux commiting back to the repo
+kubectl describe imageupdateautomation example-app-2
+
 ```
