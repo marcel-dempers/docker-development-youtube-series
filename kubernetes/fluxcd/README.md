@@ -204,9 +204,19 @@ We need to create a image reigsitry credential where we will push our image:
 ```
 kubectl -n default create secret docker-registry dockerhub-credential --docker-username "" --docker-password "" --docker-email test@test.com
 
-kubectl -n default apply -f repositories/config/apps/example-app-1/imagerepository.yaml
+```
+
+We will need to tell Flux how to manage our image deployment
+
+## add image policy and repository
 
 ```
+kubectl -n default apply -f repositories/config/apps/example-app-1/imagerepository.yaml
+kubectl -n default apply -f repositories/config/apps/example-app-1/imagepolicy.yaml
+
+```
+
+https://fluxcd.io/flux/guides/image-update/#configure-image-updates
 
 ## Build and push our app
 
