@@ -231,16 +231,33 @@ If Flux pushed the update to our application repo, it will cause a CI/CD loop.
 kubectl -n default apply -f repositories/config/apps/example-app-2/gitrepository.yaml
 kubectl -n default apply -f repositories/config/apps/example-app-2/kustomization.yaml
 
+# see our application 
+kubectl get deploy
+kubectl get pods
+
 # tell flux about our image update policy
 kubectl -n default apply -f repositories/config/apps/example-app-2/imagerepository.yaml
 kubectl -n default apply -f repositories/config/apps/example-app-2/imagepolicy.yaml
+kubectl -n default apply -f repositories/config/apps/example-app-2/imageupdateautomation.yaml
 
+kubectl describe imagepolicy example-app-2
+kubectl describe  imagerepository example-app-2
+kubectl describe imageupdateautomation example-app-2
 ```
 
 ## Build and push our example-app-2
 
 ```
-#see changes
+#make application changes and rebuild + push
+
+docker build . -t aimvector/example-app-2:0.0.2
+docker push aimvector/example-app-2:0.0.2
+
+
+#see changes new tags
 kubectl describe imagerepository
+
+#see image being updated
+kubectl describe imagepolicy example-app-2
 
 ```

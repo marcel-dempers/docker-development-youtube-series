@@ -1,13 +1,13 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageUpdateAutomation
 metadata:
-  name: example-app-1
+  name: example-app-2
   namespace: default
 spec:
   interval: 1m0s
   sourceRef:
     kind: GitRepository
-    name: example-app-1
+    name: example-app-2
   git:
     checkout:
       ref:
