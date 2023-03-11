@@ -155,3 +155,5 @@ kubectl -n default describe kustomization example-app-1
 # check deployed resources
 kubectl get all
 ```
+
+https://fluxcd.io/flux/faq/#can-i-use-repositories-with-plain-yamls
