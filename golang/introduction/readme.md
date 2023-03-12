@@ -1,5 +1,7 @@
 # Introduction to Learning Go
 
+<a href="https://youtu.be/jpKysZwllVw" title="golang-part-1"><img src="https://i.ytimg.com/vi/jpKysZwllVw/hqdefault.jpg" width="20%" alt="introduction to Go part 1" /></a>
+
 Go can be downloaded from [golang.org](https://golang.org/doc/install) <br/>
 
 Test your `go` installation:

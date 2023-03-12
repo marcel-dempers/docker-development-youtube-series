@@ -1,5 +1,7 @@
 # Introduction to Shipa
 
+<a href="https://youtu.be/PW44JaAlI_8" title="shipa"><img src="https://i.ytimg.com/vi/PW44JaAlI_8/hqdefault.jpg" width="20%" alt="shipa" /></a> 
+
 ## We need a Kubernetes cluster
 
 To get the most out of Shipa, I'll be using real Cloud Provider Kubernetes as well as a local <br/>

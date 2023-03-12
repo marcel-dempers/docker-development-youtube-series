@@ -1,6 +1,8 @@
 
 ## Replication
 
+<a href="https://youtu.be/GEg7s3i6Jak" title="redis-cluster"><img src="https://i.ytimg.com/vi/GEg7s3i6Jak/hqdefault.jpg" width="20%" alt="redis-cluster" /></a> 
+
 Documentation [here](https://redis.io/topics/replication)
 
 ### Configuration

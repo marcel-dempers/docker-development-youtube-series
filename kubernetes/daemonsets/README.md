@@ -1,5 +1,7 @@
 # Kubernetes Daemonsets
 
+<a href="https://youtu.be/RGSeeN-o-kQ" title="k8s-daemonset"><img src="https://i.ytimg.com/vi/RGSeeN-o-kQ/hqdefault.jpg" width="20%" alt="k8s-daemonset" /></a> 
+
 ## We need a Kubernetes cluster
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) </br>

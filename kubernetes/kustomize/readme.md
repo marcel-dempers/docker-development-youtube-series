@@ -1,5 +1,8 @@
-
 # The Basics
+
+<a href="https://youtu.be/5gsHYdiD6v8" title="k8s-kustomize"><img src="https://i.ytimg.com/vi/5gsHYdiD6v8/hqdefault.jpg" width="20%" alt="k8s-kustomize" /></a> 
+
+
 ```
 
 kubectl apply -f kubernetes/kustomize/application/namespace.yaml

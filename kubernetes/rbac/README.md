@@ -1,7 +1,8 @@
 # Introduction to Kubernetes: RBAC
 
-## Create Kubernetes cluster
+<a href="https://youtu.be/jvhKOAyD8S8" title="k8s-rbac"><img src="https://i.ytimg.com/vi/jvhKOAyD8S8/hqdefault.jpg" width="20%" alt="k8s-rbac" /></a> 
 
+## Create Kubernetes cluster
 
 ```
 kind create cluster --name rbac --image kindest/node:v1.20.2

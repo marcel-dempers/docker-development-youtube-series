@@ -1,5 +1,7 @@
 # Introduction to Kafka
 
+<a href="https://youtu.be/heR3I3Wxgro" title="kafka-intro"><img src="https://i.ytimg.com/vi/heR3I3Wxgro/hqdefault.jpg" width="20%" alt="kafka-intro" /></a> 
+
 Official [Docs](https://kafka.apache.org/)
 
 ## Building a Docker file

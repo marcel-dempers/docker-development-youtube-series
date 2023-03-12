@@ -1,5 +1,7 @@
 # RabbitMQ on Kubernetes
 
+<a href="https://youtu.be/_lpDfMkxccc" title="rabbitmq-k8s"><img src="https://i.ytimg.com/vi/_lpDfMkxccc/hqdefault.jpg" width="20%" alt="rabbitmq-k8s" /></a> 
+
 Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```

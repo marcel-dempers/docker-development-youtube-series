@@ -1,5 +1,7 @@
 # Getting Started with Linode
 
+<a href="https://youtu.be/VSPUWEtqtnY" title="k8s-linode"><img src="https://i.ytimg.com/vi/VSPUWEtqtnY/hqdefault.jpg" width="20%" alt="k8s-linode" /></a> 
+
 ## Trial Account
 
 Promo Link to get $20 credit to try out Linode: <br/>

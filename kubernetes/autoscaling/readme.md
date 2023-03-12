@@ -6,9 +6,13 @@ Cluster autoscaler allows us to scale cluster nodes when they become full <br/>
 I would recommend to learn about scaling your cluster nodes before scaling pods. <br/>
 Video [here](https://youtu.be/jM36M39MA3I)
 
+<a href="https://youtu.be/jM36M39MA3I" title="Kubernetes"><img src="https://i.ytimg.com/vi/jM36M39MA3I/hqdefault.jpg" width="20%" alt="Kubernetes cluster auto scaling" /></a> 
+
 ## Horizontal Pod Autoscaling
 
 HPA allows us to scale pods when their resource utilisation goes over a threshold <br/>
+
+<a href="https://youtu.be/FfDI08sgrYY" title="Kubernetes"><img src="https://i.ytimg.com/vi/FfDI08sgrYY/hqdefault.jpg" width="20%" alt="Pod auto scaling" /></a> 
 
 ## Requirements
 

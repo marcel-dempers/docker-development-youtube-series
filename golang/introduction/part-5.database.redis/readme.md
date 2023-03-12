@@ -1,5 +1,7 @@
 # Introduction to Go: Storing data in Redis Database
 
+<a href="https://youtu.be/6lJCyKwoQaQ" title="golang-part-5"><img src="https://i.ytimg.com/vi/6lJCyKwoQaQ/hqdefault.jpg" width="20%" alt="introduction to Go part 5" /></a>
+
 Up until now, we've learned the fundamentals of Go and built a small web microservice that handles our video data.
 Our service has a `/` `GET` endpoint for returning all videos, as well as a simple `/update` endpoint for updating our list of videos.
 

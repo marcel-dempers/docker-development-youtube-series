@@ -1,5 +1,7 @@
 # Getting Started with EKS
 
+<a href="https://youtu.be/QThadS3Soig" title="k8s-eks"><img src="https://i.ytimg.com/vi/QThadS3Soig/hqdefault.jpg" width="20%" alt="k8s-eks" /></a> 
+
 ## Amazon CLI
 
 ```
