@@ -35,9 +35,7 @@ NAME                    STATUS   ROLES    AGE   VERSION
 fluxcd-control-plane   Ready    control-plane,master   3m26s   v1.23.5
 ```
 
-## Flux CD 
-
-### get flux command-line tool
+## Get the Flux CLI
 
 Let's download the `flux` command-line utility. </br>
 We can get this utility from the GitHub [Releases page](https://github.com/fluxcd/flux2/releases) </br>
