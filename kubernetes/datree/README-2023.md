@@ -141,7 +141,7 @@ kubectl -n cms get all
 Rerun our scan:
 
 ```
-kubectl get job "scan-job" -n datree -o json | jq 'del(.spec.selector)' | jq 'del(.spec.template.metadata.labels)' | kubectl replace --force -f -
+kubectl delete jobs/scan-job -n datree; kubectl create job --from=cronjob/scan-cronjob scan-job -n datree
 ```
 
 Now we can follow the dashboard, to check our `namespace` for policy issues and start fixing them. </br>
