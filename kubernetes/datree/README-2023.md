@@ -55,29 +55,22 @@ helm repo add datree-webhook https://datreeio.github.io/admission-webhook-datree
 helm search repo datree-webhook --versions
 ```
 
-Grab the manifest:
+Install the Helm chart:
+
 ```
 CHART_VERSION="0.3.22"
-APP_VERSION="0.1.46"
 DATREE_TOKEN=""
 
-mkdir ./kubernetes/datree/manifests/
-
-helm template datree-webhook datree-webhook/datree-admission-webhook \
+helm install datree-webhook datree-webhook/datree-admission-webhook \
 --create-namespace \
 --set datree.token=${DATREE_TOKEN} \
+--set datree.policy="Default" \
 --set datree.clusterName=$(kubectl config current-context) \
 --version ${CHART_VERSION} \
---namespace datree \
-> ./kubernetes/datree/manifests/datree.${APP_VERSION}.yaml
+--namespace datree 
 
 ```
 
-Apply the manifests:
-```
-kubectl create namespace datree
-kubectl apply -n datree -f kubernetes/datree/manifests/
-```
 Check the install
 
 ```
@@ -244,16 +237,14 @@ We can use `helm upgrade` with the `--set` flag and set enforce to true like:
 Let's apply it to a new manifest and deploy it to our cluster:
 
 ```
-helm template datree-webhook datree-webhook/datree-admission-webhook \
+helm upgrade datree-webhook datree-webhook/datree-admission-webhook \
 --create-namespace \
 --set datree.enforce=true \
+--set datree.policy="Default" \
 --set datree.token=${DATREE_TOKEN} \
 --set datree.clusterName=$(kubectl config current-context) \
 --version ${CHART_VERSION} \
---namespace datree \
-> ./kubernetes/datree/manifests/datree.${APP_VERSION}-enforce.yaml
-
-kubectl apply -n datree -f kubernetes/datree/manifests/datree.0.1.46-enforce.yaml
+--namespace datree 
 ```
 
 Try to apply our Wordpress MySQL which violates policies :
