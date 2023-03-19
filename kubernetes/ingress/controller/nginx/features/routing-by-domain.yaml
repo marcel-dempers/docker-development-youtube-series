@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: service-a
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: public.service-a.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-a
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: service-b
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: public.service-b.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-b
+            port:
+              number: 80
+---
