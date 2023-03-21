@@ -1,0 +1,40 @@
+
+###### Terminal 1
+k get ns
+
+#GET: $ k -n default get deployment,svc,pod,statefulset,servicemonitor,prometheus
+#DELETE: $ k -n default delete deployment.apps/demo service/demo
+
+#GET: $ k -n default get deployment,svc,pod,statefulset,servicemonitor,prometheus
+#DELETE: $ k -n default delete deployment,svc,pod,statefulset,servicemonitor,prometheus
+
+#GET: $ k -n xlam get deployment,svc,pod,statefulset,servicemonitor,prometheus
+#DELETE: $ k -n xlam delete deployment,svc,pod,statefulset,servicemonitor,prometheus
+
+
+#DELETE: $ k delete ns apps
+#DELETE: $ k delete ns monitoring
+
+=======================================================================================
+k get ns
+k create ns apps
+k create ns monitoring
+
+======================================================================================
+cd /Users/xuanlam/Workspace/Repos/docker-development-youtube-series/kubernetes
+k -n apps apply -f ./deployments
+k -n apps apply -f ./services
+
+==========================================================================================
+cd /Users/xuanlam/Workspace/Repos/docker-development-youtube-series/monitoring/prometheus/kubernetes/1.14.8
+k -n monitoring apply -f ./prometheus-operator 
+
+==========================================================================================
+cd /Users/xuanlam/Workspace/Repos/docker-development-youtube-series/monitoring/prometheus/kubernetes/1.14.8
+k -n apps apply -f ./prometheus-standalone
+
+==========================================================================================
+k -n apps get deployment,svc,pod,statefulset,servicemonitor,prometheus
+k -n monitoring get deployment,svc,pod,statefulset,servicemonitor,prometheus
+
+
