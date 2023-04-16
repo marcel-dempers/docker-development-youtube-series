@@ -7,7 +7,7 @@
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name helm --image kindest/node:v1.19.1
+kind create cluster --name helm --image kindest/node:v1.26.0
 ```
 
 # Getting Started with Helm
@@ -32,7 +32,7 @@ export KUBE_EDITOR="nano"
 # test cluster access:
 /work # kubectl get nodes
 NAME                    STATUS   ROLES    AGE   VERSION
-helm-control-plane   Ready    master   26m   v1.19.1
+helm-control-plane   Ready    master   26m   v1.26.0
 
 ```
 
