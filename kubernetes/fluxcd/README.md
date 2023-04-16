@@ -185,7 +185,7 @@ docker build . -t example-app-1:0.0.2
 kind load docker-image example-app-1:0.0.2 --name fluxcd 
 
 # update our kubernetes deployment YAML image tag
-# git commit & git push to branch!
+# git commit with [skip ci] as the prefix of commit message & git push to branch!
 ```
 
 If we wait a minute or so we can ` kubectl port-forward svc/example-app-1 80:80` again and see the changes
