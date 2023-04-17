@@ -15,14 +15,15 @@ spec:
     spec:
       initContainers:
       - name: config
-        image: redis:6.2.3-alpine
+        image: redis:7.0.10-alpine
         command: [ "sh", "-c" ]
         args:
           - |
             REDIS_PASSWORD=a-very-complex-password-here
             nodes=redis-0.redis,redis-1.redis,redis-2.redis
+            loop=$(echo $nodes | sed -e "s/,/\n/g")
 
-            for i in ${nodes//,/ }
+            for i in $loop
             do
                 echo "finding master at $i"
                 MASTER=$(redis-cli --no-auth-warning --raw -h $i -a $REDIS_PASSWORD info replication | awk '{print $1}' | grep master_host: | cut -d ":" -f2)
@@ -50,7 +51,7 @@ spec:
           mountPath: /etc/redis/
       containers:
       - name: sentinel
-        image: redis:6.2.3-alpine
+        image: redis:7.0.10-alpine
         command: ["redis-sentinel"]
         args: ["/etc/redis/sentinel.conf"]
         ports:
@@ -72,7 +73,7 @@ spec:
       storageClassName: "standard"
       resources:
         requests:
-          storage: 50Mi
+          storage: 64Mi
 ---
 apiVersion: v1
 kind: Service
