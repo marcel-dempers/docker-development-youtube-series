@@ -1,0 +1,33 @@
+
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  #add an additional local user with apikey and login capabilities
+  # apikey - allows generating API Keys
+  # login - allows to login using UI
+  accounts.user1: apiKey, login
+
+  # Disable user. Useris enabled by default
+  # accounts.marcel.enabled: "true"
+
+---
+# Disable admin login
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  admin.enabled: "false"

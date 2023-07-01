@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+  labels
+data:
+  policy.default: role:readonly
+  policy.csv: |
+
+  #give user1 complete access of applications
+    p, role:user1, applications, *, */*, allow
+  #give permission of get the cluster list and do all other things
+    p, role:user1, clusters, get, *, allow
+  #give user1 permission to list, create, update and delete repo
+    p, role:user1, repositories, get, *, allow
+    p, role:user1, repositories, create, *, allow
+    p, role:user1, repositories, update, *, allow
+    p, role:user1, repositories, delete, *, allow
+
+    g, username/group/role, role:user1
+
+
+    # Go to the server where argocd is: $ vi rbac.yaml and paste new config,
+    # then run $ kubectl apply -f rbac.yaml -n argocd
