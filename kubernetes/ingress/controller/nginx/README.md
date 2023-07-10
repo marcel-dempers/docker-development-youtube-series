@@ -125,6 +125,18 @@ If you are running in the cloud, you will get a real IP address. </br>
 kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 443
 ```
 
+Depending on how you installed kind/kubectl, you may need to set some configuration to `port-forward` </br>
+In my case, I used Go to install `kind` under my user - `~/go/bin/kind` </br>
+And as my user, spun up the `kind` cluster </br>
+So, `kind` set up my `kubectl` config under my user, which I could see with `kubectl config view` </br>
+But, my user/`kubectl` did not have permission to port-forward to localhost low ports and `root` did not have the `kubectl` config </br>
+Anyway, I needed to allow `kubectl` binary to port-forward K8s to localhost low ports:
+
+```
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/kubectl
+```
+
+
 We can reach our controller on [https://localhost/](https://localhost/) </br>
 
 It's important to understand that Ingress runs on two ports `80` and `443` </br>
