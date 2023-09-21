@@ -5,7 +5,7 @@
 In this guide we we''ll need a Kubernetes cluster for testing. Let's create one using [kind](https://kind.sigs.k8s.io/) </br>
 
 ```
-kind create cluster --name fluxcd --image kindest/node:v1.23.5
+kind create cluster --name fluxcd --image kindest/node:v1.26.3
 ```
 
 ## Run a container to work in
@@ -32,7 +32,7 @@ mv ./kubectl /usr/local/bin/kubectl
 ```
 /work # kubectl get nodes
 NAME                    STATUS   ROLES    AGE   VERSION
-fluxcd-control-plane   Ready    control-plane,master   3m26s   v1.23.5
+fluxcd-control-plane   Ready    control-plane   54s   v1.26.3
 ```
 
 ## Get the Flux CLI
@@ -43,7 +43,7 @@ We can get this utility from the GitHub [Releases page](https://github.com/fluxc
 It's also worth noting that you want to ensure you get a compatible version of flux which supports your version of Kubernetes. Checkout the [prerequisites](https://fluxcd.io/flux/installation/#prerequisites) page. </br>
 
 ```
-curl -o /tmp/flux.tar.gz -sLO https://github.com/fluxcd/flux2/releases/download/v0.41.1/flux_0.41.1_linux_amd64.tar.gz
+curl -o /tmp/flux.tar.gz -sLO https://github.com/fluxcd/flux2/releases/download/v2.1.1/flux_2.1.1_linux_amd64.tar.gz
 tar -C /tmp/ -zxvf /tmp/flux.tar.gz
 mv /tmp/flux /usr/local/bin/flux
 chmod +x /usr/local/bin/flux
@@ -76,6 +76,7 @@ Then we can bootstrap it using the GitHub bootstrap method
 
 ```
 flux bootstrap github \
+  --token-auth \
   --owner=marcel-dempers \
   --repository=docker-development-youtube-series \
   --path=kubernetes/fluxcd/repositories/infra-repo/clusters/dev-cluster \
