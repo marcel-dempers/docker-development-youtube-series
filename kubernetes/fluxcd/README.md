@@ -224,14 +224,15 @@ To do this we just need to re-bootstrap `flux` with an addition flag
 
 ```
 flux bootstrap github \
+  --token-auth \
   --owner=marcel-dempers \
   --repository=docker-development-youtube-series \
-  --path=kubernetes/fluxcd/repositories/config/clusters/dev-cluster \
+  --path=kubernetes/fluxcd/repositories/infra-repo/clusters/dev-cluster \
   --components-extra=image-reflector-controller,image-automation-controller \
   --personal \
   --branch fluxcd-2022
 ```
-We need to create a image reigsitry credential where we will push our image:
+We need to create a image registry credential where we will push our image:
 
 ```
 kubectl -n default create secret docker-registry dockerhub-credential --docker-username '' --docker-password '' --docker-email 'test@test.com'
