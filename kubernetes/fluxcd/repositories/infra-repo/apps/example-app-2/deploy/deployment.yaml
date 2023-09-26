@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: example-app-2
-        image: docker.io/aimvector/example-app-2:0.0.3 # {"$imagepolicy": "default:example-app-2"}
+        image: docker.io/aimvector/example-app-2:0.0.1 # {"$imagepolicy": "default:example-app-2"}
         ports:
         - containerPort: 5000
         volumeMounts:
