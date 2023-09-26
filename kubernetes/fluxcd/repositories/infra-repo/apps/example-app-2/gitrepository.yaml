@@ -8,3 +8,5 @@ spec:
   ref:
     branch: fluxcd-2022
   url: https://github.com/marcel-dempers/docker-development-youtube-series
+  secretRef:
+    name: example-app-2-github
