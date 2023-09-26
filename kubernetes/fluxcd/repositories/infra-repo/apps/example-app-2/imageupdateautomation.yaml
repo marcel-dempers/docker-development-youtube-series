@@ -20,5 +20,5 @@ spec:
     push:
       branch: fluxcd-2022
   update:
-    path: ./kubernetes/fluxcd/repositories/config/apps/example-app-2/deploy/deployment.yaml
+    path: .kubernetes/fluxcd/repositories/infra-repo/apps/example-app-2/deploy/deployment.yaml
     strategy: Setters

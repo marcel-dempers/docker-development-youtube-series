@@ -253,24 +253,24 @@ docker push aimvector/example-app-2:0.0.1
 We will need to tell Flux how to manage our image deployment </br>
 Note that this time our Kubernetes YAML is in the `configs` repo. </br>
 This is because our application repo triggers it's CI which will build and push a new image to our cluster </br>
-Flux will then detech the new image tag and update our Kubernetes YAML in our configs repo. </br>
+Flux will then detect the new image tag and update our Kubernetes YAML in our configs repo. </br>
 If Flux pushed the update to our application repo, it will cause a CI/CD loop.
 
 ## add image policy and repository
 
 ```
 
-kubectl -n default apply -f repositories/config/apps/example-app-2/gitrepository.yaml
-kubectl -n default apply -f repositories/config/apps/example-app-2/kustomization.yaml
+kubectl -n default apply -f kubernetes/fluxcd/repositories/infra-repo/apps/example-app-2/gitrepository.yaml
+kubectl -n default apply -f kubernetes/fluxcd/repositories/infra-repo/apps/example-app-2/kustomization.yaml
 
 # see our application 
 kubectl get deploy
 kubectl get pods
 
 # tell flux about our image update policy
-kubectl -n default apply -f repositories/config/apps/example-app-2/imagerepository.yaml
-kubectl -n default apply -f repositories/config/apps/example-app-2/imagepolicy.yaml
-kubectl -n default apply -f repositories/config/apps/example-app-2/imageupdateautomation.yaml
+kubectl -n default apply -f kubernetes/fluxcd/repositories/infra-repo/apps/example-app-2/imagerepository.yaml
+kubectl -n default apply -f kubernetes/fluxcd/repositories/infra-repo/apps/example-app-2/imagepolicy.yaml
+kubectl -n default apply -f kubernetes/fluxcd/repositories/infra-repo/apps/example-app-2/imageupdateautomation.yaml
 
 # we will also need to provide authentication for our git repo
 flux create secret git example-app-2-github --url https://github.com/marcel-dempers/docker-development-youtube-series --username '' --password '' --namespace default
