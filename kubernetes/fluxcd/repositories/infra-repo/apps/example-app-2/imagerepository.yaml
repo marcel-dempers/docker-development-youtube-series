@@ -1,0 +1,10 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: example-app-2
+  namespace: default
+spec:
+  image: docker.io/aimvector/example-app-2
+  interval: 1m0s
+  secretRef:
+    name: dockerhub-credential
