@@ -14,16 +14,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
- 
-    - name: docker build csharp
-      run: |
-        docker build ./c# -t aimvector/csharp:1.0.0
-    - name: docker build nodejs
-      run: |
-        docker build ./nodejs -t aimvector/nodejs:1.0.0
+
     - name: docker build python
       run: |
-        docker build ./python -t aimvector/python:1.0.0
-    - name: docker build golang
-      run: |
-        docker build ./golang -t aimvector/golang:1.0.0
+        docker build ./python/introduction/ -t python:1.0.0
