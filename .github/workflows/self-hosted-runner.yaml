@@ -1,0 +1,29 @@
+###########################################################
+# Rename the file extension to ".yaml" (remove "_") to enable
+###########################################################
+
+name: Self-Hosted Runner Test
+
+on: 
+  push:
+    branches:
+    - githubactions
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v2
+ 
+    - name: docker build csharp
+      run: |
+        docker build ./c# -t aimvector/csharp:1.0.0
+    - name: docker build nodejs
+      run: |
+        docker build ./nodejs -t aimvector/nodejs:1.0.0
+    - name: docker build python
+      run: |
+        docker build ./python -t aimvector/python:1.0.0
+    - name: docker build golang
+      run: |
+        docker build ./golang -t aimvector/golang:1.0.0
