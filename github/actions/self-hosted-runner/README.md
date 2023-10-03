@@ -47,7 +47,7 @@ docker run -it github-runner bash
 
 Next steps:
 
-* Now we can see `docker is installed 
+* Now we can see `docker` is installed 
 * To see how a runner is installed, lets go to our repo | runner and click "New self-hosted runner"
 * Try these steps in the container
 * We will needfew dependencies
