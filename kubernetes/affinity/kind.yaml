@@ -1,0 +1,18 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+  labels:
+    zone: us-east
+    type: ssd
+- role: worker
+  labels:
+    zone: us-west
+    type: ssd
+- role: worker
+  labels:
+    zone: us-east
+- role: worker
+  labels:
+    zone: us-west

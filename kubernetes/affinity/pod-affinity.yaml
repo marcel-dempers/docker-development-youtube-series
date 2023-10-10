@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-disk2
+  labels:
+    app: app-disk2
+spec:
+  selector:
+    matchLabels:
+      app: app-disk2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app-disk2
+    spec:
+      containers:
+      - name: app-disk2
+        image: nginx:latest
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: zone
+                operator: In
+                values:
+                - us-east
+            topologyKey: zone
