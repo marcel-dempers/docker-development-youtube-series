@@ -22,7 +22,7 @@ demo-worker3         Ready    <none>          35s   v1.28.0
 
 ## Node Affinity 
 
-[Node Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity) is similar to `nodeSelector` however you can define more complex expressions
+[Node Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity) is similar to `nodeSelector` however you can define more complex expressions. "Like my pods must run on SSD nodes or preffer SSD nodes"
 
 For example: 
 * Node selector is a hard and fast rule meaning a pod will not be scheduled if the selection is not satisfied
@@ -59,5 +59,34 @@ kubectl taint nodes demo-worker type=ssd:NoSchedule-
 kubectl taint nodes demo-worker3 type=ssd:NoSchedule-
 ```
 
+## Pod Affinity 
 
+
+```
+kubectl apply -f app-disk --replicas 3
+kubectl apply -f web-disk --replicas 3
+```
+
+## Pod Anti-Affinity
+
+Let's say we observe our `app-disk` application disk usage is quite intense, and we would like to prevent `app-disk` pods from running together. </br>
+This is where anti-affinity comes in:
+
+```
+podAntiAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+  - labelSelector:
+      matchExpressions:
+      - key: app
+        operator: In
+        values:
+        - app-disk
+    topologyKey: "kubernetes.io/hostname"
+```
+
+After applying the above, we can roll it out:
+
+```
+kubectl apply -f node-affinity.yaml
+```
 

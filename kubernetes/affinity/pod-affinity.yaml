@@ -2,29 +2,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-disk2
+  name: web-disk
   labels:
-    app: app-disk2
+    app: web-disk
 spec:
   selector:
     matchLabels:
-      app: app-disk2
+      app: web-disk
   replicas: 1
   template:
     metadata:
       labels:
-        app: app-disk2
+        app: web-disk
     spec:
       containers:
-      - name: app-disk2
+      - name: web-disk
         image: nginx:latest
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: zone
+              - key: app
                 operator: In
                 values:
-                - us-east
-            topologyKey: zone
+                - app-disk
+            topologyKey: "kubernetes.io/hostname"
