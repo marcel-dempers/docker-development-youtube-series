@@ -58,13 +58,27 @@ Fix our nodes.
 kubectl taint nodes demo-worker type=ssd:NoSchedule-
 kubectl taint nodes demo-worker3 type=ssd:NoSchedule-
 ```
+Scale back down to 0
+```
+kubectl scale deploy app-disk --replicas 0
+kubectl scale deploy app-disk --replicas 1
+
+# pod should go back to demo-worker , node 1
+kubectl get pods -owide
+```
 
 ## Pod Affinity 
 
+Now [Pod Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity) is an expression to allow us to state that pods should gravitate towards other pods
 
 ```
-kubectl apply -f app-disk --replicas 3
-kubectl apply -f web-disk --replicas 3
+kubectl apply -f pod-affinity.yaml
+
+# observe where pods get deployed
+kubectl get pods -owide
+
+kubectl scale deploy app-disk --replicas 3
+kubectl scale deploy web-disk --replicas 3
 ```
 
 ## Pod Anti-Affinity
@@ -84,9 +98,18 @@ podAntiAffinity:
     topologyKey: "kubernetes.io/hostname"
 ```
 
-After applying the above, we can roll it out:
+After applying the above, we can roll it out and observe scheduling:
 
 ```
+kubectl scale deploy app-disk --replicas 0
+kubectl scale deploy web-disk --replicas 0
 kubectl apply -f node-affinity.yaml
+kubectl get pods -owide
+
+kubectl scale deploy app-disk --replicas 2 #notice pending pods when scaling to 3
+kubectl get pods -owide
+kubectl scale deploy web-disk --replicas 2
+kubectl get pods -owide
+
 ```
 
