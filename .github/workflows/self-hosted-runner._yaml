@@ -1,5 +1,5 @@
 ###########################################################
-# Rename the file extension to ".yaml" (remove "_") to enable
+# IMPORTANT -> Rename the file extension to ".yaml" (remove "_") to enable this 
 ###########################################################
 
 name: Self-Hosted Runner Test
@@ -7,7 +7,7 @@ name: Self-Hosted Runner Test
 on: 
   push:
     branches:
-    - githubactions
+    - <branch-name>
 
 jobs:
   build:
