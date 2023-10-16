@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: server
-        version: "2"
+        version: "1"
     spec:
       containers:
       - name: server
@@ -28,6 +28,20 @@ spec:
         volumeMounts:
         - name: app
           mountPath: "/app"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 4
+          failureThreshold: 8
       volumes:
       - name: app
         configMap:
