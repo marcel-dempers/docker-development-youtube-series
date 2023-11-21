@@ -7,4 +7,4 @@ spec:
   interval: 1m0s
   ref:
     branch: fluxcd-2022
-  url: https://github.com/marcel-dempers/docker-development-youtube-series
+  url: https://github.com/eliedebons/docker-development-youtube-series

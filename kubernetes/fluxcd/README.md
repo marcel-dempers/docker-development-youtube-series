@@ -191,7 +191,7 @@ Once we make changes to our `app.py` we can build a new image with a new tag </b
 docker build . -t example-app-1:0.0.2
 
 #load the image to our test cluster so we dont need to push to a registry
-kind load docker-image example-app-1:0.0.2 --name fluxcd 
+kind load docker-image example-app-1:0.0.1 --name fluxcd 
 
 # update our kubernetes deployment YAML image tag
 # git commit with [skip ci] as the prefix of commit message & git push to branch!
