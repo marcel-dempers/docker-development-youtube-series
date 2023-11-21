@@ -8,10 +8,10 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: fluxcd-2022
+    branch: master
   secretRef:
     name: flux-system
-  url: https://github.com/marcel-dempers/docker-development-youtube-series.git
+  url: https://github.com/eliedebons/docker-development-youtube-series.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
