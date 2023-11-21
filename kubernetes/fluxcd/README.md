@@ -83,6 +83,14 @@ flux bootstrap github \
   --personal \
   --branch fluxcd-2022
 
+  flux bootstrap github \
+  --token-auth \
+  --owner=eliedebons \
+  --repository=docker-development-youtube-series \
+  --path=kubernetes/fluxcd/repositories/infra-repo/clusters/dev-cluster \
+  --personal \
+  --branch master
+
 flux check
 
 # flux manages itself using GitOps objects:
