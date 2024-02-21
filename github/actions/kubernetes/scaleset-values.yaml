@@ -4,6 +4,6 @@ template:
   spec:
     containers:
       - name: runner
-        image: "custom-registry.io/actions-runner:latest"
+        image: "ghcr.io/actions/actions-runner:latest"
         imagePullPolicy: Always
         command: ["/home/runner/run.sh"]

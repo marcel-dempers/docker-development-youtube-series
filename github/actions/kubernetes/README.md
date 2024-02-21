@@ -82,16 +82,13 @@ Create a new [Github App](https://docs.github.com/en/apps/using-github-apps/inst
 
 
 Once we have created our Github App, we need to configure its authentication by creating a kubernetes secret with the authentication details of the app. </br>
-When we have a `.pem` file , we can convert it to a single line: 
-
-`awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' yourfile.pem`
 
 ```
 kubectl create secret generic github-app-secret \
    --namespace=github \
    --from-literal=github_app_id=xxxxx \
    --from-literal=github_app_installation_id=xxxxx \
-   --from-literal=github_app_private_key='-----BEGIN RSA PRIVATE KEY-----xxxxxx-----END RSA PRIVATE KEY-----'
+   --from-file=github_app_private_key='github.pem'
 
 ```
 Now we can upgrade our chart to apply the authentication changes
@@ -130,4 +127,20 @@ We can also set our runner name using the values file using the [advanced config
 
 ```
 runnerScaleSetName: "marcels-runner"
+```
+
+Deploy the Github actions runner scaleset 
+
+```
+INSTALLATION_NAME="arc-runner-set"
+NAMESPACE="github"
+GITHUB_CONFIG_URL="https://github.com/marcel-dempers/docker-development-youtube-series"
+
+helm install "${INSTALLATION_NAME}" \
+    --namespace "${NAMESPACE}" \
+    --create-namespace \
+    --values scaleset-values.yaml \
+    --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+
 ```
