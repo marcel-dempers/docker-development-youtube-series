@@ -17,4 +17,5 @@ jobs:
 
     - name: docker build python
       run: |
+        sleep 600s
         docker build ./python/introduction/ -t python:1.0.0
