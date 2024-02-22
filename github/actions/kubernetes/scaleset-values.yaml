@@ -4,6 +4,25 @@ template:
   spec:
     containers:
       - name: runner
-        image: "ghcr.io/actions/actions-runner:latest"
+        image: ghcr.io/actions/actions-runner:latest
         imagePullPolicy: Always
         command: ["/home/runner/run.sh"]
+        env:
+          - name: DOCKER_HOST
+            value: tcp://localhost:2375
+        volumeMounts:
+          - name: work
+            mountPath: /home/runner/_work
+      - name: dind
+        image: docker:24.0.7-dind
+        env:
+          - name: DOCKER_TLS_CERTDIR
+            value: ""
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: work
+            mountPath: /home/runner/_work
+    volumes:
+      - name: work
+        emptyDir: {}
