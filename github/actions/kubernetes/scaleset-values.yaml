@@ -1,5 +1,6 @@
 githubConfigSecret: github-app-secret
 runnerScaleSetName: "marcels-runner"
+minRunners: 4
 template:
   spec:
     containers:
@@ -14,7 +15,7 @@ template:
           - name: work
             mountPath: /home/runner/_work
       - name: dind
-        image: docker:24.0.7-dind
+        image: docker:24.0.7-dind-alpine3.18
         env:
           - name: DOCKER_TLS_CERTDIR
             value: ""
