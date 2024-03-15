@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.name }}"
+  labels:
+    app: "{{ .Values.name }}"
+    test: test
+  annotations:
+    # fluxcd.io/tag."{{ .Values.name }}": semver:~1.0
+    # fluxcd.io/automated: 'true'
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Values.name }}"
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.name }}"
+    spec:
+      containers:
+      - name: "{{ .Values.name }}"
+        image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        # livenessProbe:
+        #   httpGet:
+        #     path: /status
+        #     port: 5000
+        #   initialDelaySeconds: 3
+        #   periodSeconds: 3
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+      tolerations:
+      - key: "cattle.io/os"
+        value: "linux"
+        effect: "NoSchedule"      
+#NOTE: comment out `volumeMounts` section for configmap and\or secret guide
+        # volumeMounts:
+        # - name: secret-volume
+        #   mountPath: /secrets/
+        # - name: config-volume
+        #   mountPath: /configs/
+#NOTE: comment out `volumes` section for configmap and\or secret guide
+      # volumes:
+      # - name: secret-volume
+      #   secret:
+      #     secretName: mysecret
+      # - name: config-volume
+      #   configMap:
+      #     name: example-config #name of our configmap object
