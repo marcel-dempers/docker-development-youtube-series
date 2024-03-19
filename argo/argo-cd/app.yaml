@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/marcel-dempers/docker-development-youtube-series.git
+    repoURL: https://github.com/andron1x/docker-development-youtube-series.git
     targetRevision: HEAD
     path: argo/example-app
     directory:
