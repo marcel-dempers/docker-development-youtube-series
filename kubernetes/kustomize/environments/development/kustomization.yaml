@@ -1,4 +1,7 @@
-bases:
-  - ../../application
+#patches:
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../application
 patches:
-  - replica_count.yaml
+- path: replica_count.yaml
