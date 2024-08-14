@@ -11,7 +11,7 @@ spec:
     branch: fluxcd-2022
   secretRef:
     name: flux-system
-  url: https://github.com/marcel-dempers/docker-development-youtube-series.git
+  url: https://github.com/tiakavousi/docker-development-youtube-series.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
