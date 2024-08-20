@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  labels:
+    app: server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: server
+        version: "1"
+    spec:
+      containers:
+      - name: server
+        image: python:alpine
+        workingDir: /app
+        command: ["/bin/sh"]
+        args:
+        - -c
+        - "pip3 install --disable-pip-version-check --root-user-action=ignore flask && echo 'ok' > /data.txt && flask run -h 0.0.0.0 -p 5000"
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: app
+          mountPath: "/app"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 4
+          failureThreshold: 8
+      volumes:
+      - name: app
+        configMap:
+          name: server-code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  labels:
+    app: server
+spec:
+  type: ClusterIP
+  selector:
+    app: server
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 5000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-code
+data:
+  app.py: |
+    import time
+    import logging
+    import os.path
+
+    logging.basicConfig(level=logging.DEBUG)
+    
+    from flask import Flask
+    app = Flask(__name__)
+    @app.route("/")
+    def hello():
+      with open('/data.txt') as data:
+        return data.read()

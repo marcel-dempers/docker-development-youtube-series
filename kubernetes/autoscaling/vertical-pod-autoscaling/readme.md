@@ -1,5 +1,7 @@
 # Vertical Pod Autoscaling
 
+<a href="https://youtu.be/jcHQ5SKKTLM" title="Kubernetes"><img src="https://i.ytimg.com/vi/jcHQ5SKKTLM/hqdefault.jpg" width="20%" alt="vertical auto scaling" /></a> 
+
 ## We need a Kubernetes cluster
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)

@@ -1,5 +1,7 @@
 # Introduction to Rancher: On-prem Kubernetes
 
+<a href="https://youtu.be/1j5lhDzlFUM" title="k8s-rancher"><img src="https://i.ytimg.com/vi/1j5lhDzlFUM/hqdefault.jpg" width="20%" alt="k8s-rancher" /></a> 
+
 This guide follows the general instructions of running a [manual rancher install](https://rancher.com/docs/rancher/v2.5/en/quick-start-guide/deployment/quickstart-manual-setup/) and running our own infrastructure on Hyper-v
 
 # Hyper-V : Prepare our infrastructure

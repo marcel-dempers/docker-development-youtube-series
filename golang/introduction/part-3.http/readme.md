@@ -1,5 +1,7 @@
 # Introduction to Go: HTTP
 
+<a href="https://youtu.be/MKkokYpGyTU" title="golang-part-3"><img src="https://i.ytimg.com/vi/MKkokYpGyTU/hqdefault.jpg" width="20%" alt="introduction to Go part 3" /></a>
+
 HTTP is a fundamental part of Microservices and Web distributed systems <br/>
 
 Go has a built in HTTP web server package. The package can be found [here](https://golang.org/pkg/net/http/) <br/>

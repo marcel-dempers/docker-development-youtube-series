@@ -1,4 +1,6 @@
 
+<a href="https://youtu.be/zj6r_EEhv6s" title="k8s-sts"><img src="https://i.ytimg.com/vi/zj6r_EEhv6s/hqdefault.jpg" width="20%" alt="k8s-sts" /></a> 
+
 # Create a namespace
 
 ```

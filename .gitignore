@@ -15,9 +15,9 @@ kubernetes/portainer/volume*
 kubernetes/rancher/volume/*
 kubernetes/portainer/business/volume*
 
-#ignore postgres data for sample and database tutorials
 pgdata
 storage/databases/postgresql/docker/backup/
 storage/databases/postgresql/docker/archive/
 storage/databases/postgresql/3-replication/postgres-1/archive/*
 storage/databases/postgresql/3-replication/postgres-2/archive/*
+

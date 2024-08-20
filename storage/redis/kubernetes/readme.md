@@ -1,9 +1,11 @@
 # Redis on Kubernetes
 
+<a href="https://youtu.be/JmCn7k0PlV4" title="redis-k8s"><img src="https://i.ytimg.com/vi/JmCn7k0PlV4/hqdefault.jpg" width="20%" alt="redis-k8s" /></a> 
+
 Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name redis --image kindest/node:v1.18.4
+kind create cluster --name redis --image kindest/node:v1.23.5
 ```
 
 ## Namespace
@@ -38,7 +40,7 @@ kubectl -n redis logs redis-2
 ## Test replication status
 
 ```
-kubectl -n redis exec -it redis-0 sh
+kubectl -n redis exec -it redis-0 -- sh
 redis-cli 
 auth a-very-complex-password-here
 info replication

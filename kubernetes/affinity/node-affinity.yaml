@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-disk
+  labels:
+    app: app-disk
+spec:
+  selector:
+    matchLabels:
+      app: app-disk
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app-disk
+    spec:
+      containers:
+      - name: app-disk
+        image: nginx:latest
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - app-disk
+            topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: zone
+                operator: In
+                values:
+                - us-east
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - ssd

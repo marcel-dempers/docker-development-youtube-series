@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-disk
+  labels:
+    app: web-disk
+spec:
+  selector:
+    matchLabels:
+      app: web-disk
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-disk
+    spec:
+      containers:
+      - name: web-disk
+        image: nginx:latest
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - app-disk
+            topologyKey: "kubernetes.io/hostname"

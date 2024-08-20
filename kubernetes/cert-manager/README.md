@@ -1,5 +1,7 @@
 # Introduction to cert-manager for Kubernetes
 
+<a href="https://youtu.be/hoLUigg4V18" title="certmanager"><img src="https://i.ytimg.com/vi/hoLUigg4V18/hqdefault.jpg" width="20%" alt="introduction to certmanager" /></a>
+
 ## We need a Kubernetes cluster
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)

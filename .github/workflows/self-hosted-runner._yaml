@@ -1,0 +1,20 @@
+###########################################################
+# IMPORTANT -> Rename the file extension to ".yaml" (remove "_") to enable this 
+###########################################################
+
+name: Self-Hosted Runner Test
+
+on: 
+  push:
+    branches:
+    - <branch-name>
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: docker build python
+      run: |
+        docker build ./python/introduction/ -t python:1.0.0

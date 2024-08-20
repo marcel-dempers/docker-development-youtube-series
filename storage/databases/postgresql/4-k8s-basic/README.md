@@ -31,11 +31,11 @@ And finally - The work in this guide has not been tested for Production workload
 In this chapter, we will start by creating a test Kubernetes cluster using [kind](https://kind.sigs.k8s.io/) </br>
 
 ```
-kind create cluster --name postgresql --image kindest/node:v1.23.5
+kind create cluster --name postgresql --image kindest/node:v1.28.0
 
 kubectl get nodes
 NAME                       STATUS   ROLES                  AGE   VERSION
-postgresql-control-plane   Ready    control-plane,master   31s   v1.23.5
+postgresql-control-plane   Ready    control-plane,master   31s   v1.28.0
 ```
 
 ## Setting up our PostgreSQL environment

@@ -1,5 +1,7 @@
 # Persistent Volumes Demo
 
+<a href="https://youtu.be/ZxC6FwEc9WQ" title="k8s-pv"><img src="https://i.ytimg.com/vi/ZxC6FwEc9WQ/hqdefault.jpg" width="20%" alt="k8s-pv" /></a> 
+
 ## Container Storage
 
 By default containers store their data on the file system like any other process.

@@ -5,7 +5,7 @@ Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 ```
 cd monitoring\prometheus\kubernetes\1.23
 
-kind create cluster --name monitoring --image kindest/node:v1.23.1 --config kind.yaml
+kind create cluster --name monitoring --image kindest/node:v1.23.6 --config kind.yaml
 ```
 
 Test our cluster to see all nodes are healthy and ready:

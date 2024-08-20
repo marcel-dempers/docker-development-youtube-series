@@ -1,8 +1,10 @@
 # Hashicorp Vault Guide - Deprecated
 
+<a href="https://www.youtube.com/playlist?list=PLHq1uqvAteVtq-NRX3yd1ziA_wJSBu3Oj" title="vault"><img src="https://i.ytimg.com/vi/L_o_CG_AGKA/hqdefault.jpg" width="20%" alt="introduction to vault" /></a>
+
 # Vault
 
-For this tutorial, I use Kuberentes 1.17
+For this tutorial, I use Kubernetes 1.17
 It's critical because we'll need certain [admission controllers](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/) enabled.
 
 To get 1.17 for Linux\Windows, just use `kind` since you can create a 1.17 with admissions all setup.

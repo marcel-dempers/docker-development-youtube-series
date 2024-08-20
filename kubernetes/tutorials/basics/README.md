@@ -1,5 +1,7 @@
 # Kubernetes Tutorial: The Basics 
 
+<a href="https://youtu.be/JeAHlTYB1Qk" title="How to learn Kubernetes in 2022"><img src="https://i.ytimg.com/vi/JeAHlTYB1Qk/hqdefault.jpg" width="40%" alt="How to learn Kubernetes in 2022" /></a>
+
 This guide is aimed to fast-track your Kubernetes learning by focusing on a practical hands-on overview guide. </br>
 
 When learning Kubernetes, you usually have an idea of some existing system you own and manage, or a website that you are building. </br>

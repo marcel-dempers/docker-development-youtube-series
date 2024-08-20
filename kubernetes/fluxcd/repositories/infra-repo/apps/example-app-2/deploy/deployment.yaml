@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app-2
+  labels:
+    app: example-app-2
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: example-app-2
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: example-app-2
+    spec:
+      containers:
+      - name: example-app-2
+        image: docker.io/aimvector/example-app-2:0.0.2 # {"$imagepolicy": "default:example-app-2"}
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: config-volume
+          mountPath: /configs/
+      volumes:
+      - name: config-volume
+        configMap:
+          name: example-app-2

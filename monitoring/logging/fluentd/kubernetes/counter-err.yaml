@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter-err
+  labels:
+    app: counter-err
+    version: v1.2
+spec:
+  containers:
+  - name: count
+    image: busybox
+    args: [/bin/sh, -c,
+            'i=0; RANDOM=$$; while true; do R=$(($RANDOM%100)); echo "loop:$i  value:$R"; if [ $R -gt 80 ]; then echo "Warning:$R too high" 1>&2; fi; i=$((i+1)); sleep 1; done']

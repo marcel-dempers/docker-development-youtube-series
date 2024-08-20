@@ -1,5 +1,7 @@
 # Getting Started with AKS
 
+<a href="https://youtu.be/eyvLwK5C2dw" title="k8s-aks"><img src="https://i.ytimg.com/vi/eyvLwK5C2dw/hqdefault.jpg" width="20%" alt="k8s-aks" /></a> 
+
 ## Azure CLI
 
 ```

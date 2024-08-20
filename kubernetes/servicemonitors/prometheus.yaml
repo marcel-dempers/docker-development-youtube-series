@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.32.1
+  name: applications
+  namespace: monitoring
+spec:
+  image: quay.io/prometheus/prometheus:v2.32.1
+  nodeSelector:
+    kubernetes.io/os: linux
+  replicas: 1
+  resources:
+    requests:
+      memory: 400Mi
+  ruleSelector: {}
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: prometheus-k8s
+  #serviceMonitorNamespaceSelector: {} #match all namespaces
+  serviceMonitorNamespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: default
+  serviceMonitorSelector: {} #match all servicemonitors
+  version: 2.32.1
