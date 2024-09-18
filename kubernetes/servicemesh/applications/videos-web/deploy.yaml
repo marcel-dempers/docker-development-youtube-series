@@ -42,11 +42,11 @@ spec:
       port: 80
       targetPort: 80
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/spec.ingressClassName: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
   name: videos-web
@@ -56,7 +56,10 @@ spec:
     http:
       paths:
       - path: /home(/|$)(.*)
+        pathType: ImplementationSpecific
         backend:
-          serviceName: videos-web
-          servicePort: 80
+          service:
+            name: videos-web
+            port: 
+              number: 80
 
