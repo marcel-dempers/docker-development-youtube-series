@@ -1,4 +1,4 @@
-module github.com/marcel-dempers/docker-development-youtube-series/new/master/monitoring/prometheus/go-application
+module github.com/arvinthc3000/monitoring/prometheus/go-application
 
 go 1.22.5
 
