@@ -15,11 +15,11 @@ services:
     image: aimvector/golang:1.0.0
     build: 
       context: ./golang
-      target: prod
+      target: debug
     volumes:
     - ./golang/configs:/configs/
     - ./golang/secrets:/secrets/
-    - ./golang/src/:/go/src/work/
+    - ./golang/src/:/work/
     ports:
       - 5001:5000
       - 2345:2345
