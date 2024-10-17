@@ -124,7 +124,7 @@ To add a file to our repository, we can simply create a new file. </br>
 Let's create a home page for our new website called `home.html`:
 
 ```
-touch home.html
+echo "" > home.html
 ```
 
 Now GIT automatically detects changes and this file is actually not part of the repository yet. </br>

@@ -31,12 +31,10 @@ In my many years working in the field, I have noticed a range of challenges and 
 
 ## 🎯 The solution
 
-This course provides a practical hands-on roadmap into the world of DevOps and sets you up with all the fundamentals required for success. </br>
-
-You will create your own personal website during this course which you can use as a marketing tool for your career to demonstrate all your newly learnt skills</br>
-
-During this course you will apply a wide range of DevOps principals and use modern technologies in a real world hands-on manner to create yourself a personal website. </br>
-
+This course provides a practical hands-on roadmap into the world of DevOps, SRE and platform engineering. </br> 
+It will set you up with all the fundamentals required for successful future learning. </br>
+During this course you will apply a wide range of DevOps principles and use modern technologies in a real world hands-on manner to create yourself a personal website. </br>
+The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained skills and abilities.</br>
 You will build the ultimate foundation and be equiped to make more informed discisions on what you want to focus on next in your career. </br>
 
 ## 🛠 System Requirements
