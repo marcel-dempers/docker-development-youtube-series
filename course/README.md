@@ -1,12 +1,12 @@
 # 🎓 The Ultimate DevOps Course (early access 🚧)
 
-This course is my ultimate guide to DevOps engineering for beginners </br>
+This course is my ultimate guide to DevOps,SRE & platform engineering for beginners </br>
 
 <i>🚧 This course is currently under early access and undergoing constant review and updates</i>
 
 ## 🚀 Introduction
 
-In my many years working in the field, I have noticed a range of challenges and problems that people face when trying to join the DevOps space </br>
+In my many years working in the field, I have noticed a range of challenges and problems that people face when trying to start a DevOps, SRE, platform or cloud engineering career. </br>
 
 ## 🔴The challenges - <i>where to start ?</i>
 
@@ -29,18 +29,35 @@ In my many years working in the field, I have noticed a range of challenges and 
 * Miss out on powerful open source skils
 * Vendor locking 
 
-## 🎯 The solution
+## 🎯 The solution: Goals & Expectations
 
 This course provides a practical hands-on roadmap into the world of DevOps, SRE and platform engineering. </br> 
 It will set you up with all the fundamentals required for successful future learning. </br>
-During this course you will apply a wide range of DevOps principles and use modern technologies in a real world hands-on manner to create yourself a personal website. </br>
-The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained skills and abilities.</br>
+During this course you will apply a wide range of DevOps principles and use modern technologies in a real world hands-on manner to create yourself a personal website. </br> 
+While building your website, we will cover topics such as:
+* Source Control
+* Developer Tools
+* Operating Systems
+* Servers & Virtualization
+* Web technology
+* Monitoring, Logging, Metrics
+* Observability
+* Command line and automation scripting
+* CI / CD Pipelines
+* Infrastructure as Code
+* Basics of Cloud 
+* Cloud deployments 
+
+The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained above-mentioned skills and abilities.</br>
 You will build the ultimate foundation and be equiped to make more informed discisions on what you want to focus on next in your career. </br>
 
 ## 🛠 System Requirements
 
 * <b>Operating System:</b> Windows (Pro and Enterprise ), Linux or MacOS
   * <i>note: You'll need Pro or Enterprise Windows to support Virtualization</i>
+
+* You will need at least 8GB RAM and 20GB of hard disk space to complete modules related to virtualization. </br>
+  * <i>These numbers are early access guide only and may be reviewed and adjusted based on course feedback</i>
 
 ## 📖 Table of Contents 
 
