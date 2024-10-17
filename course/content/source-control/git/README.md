@@ -22,7 +22,7 @@ This will require a mechanism of tracking history of changes in these files and 
 
 ## Installing GIT
 
-We can download `git` for any operating system and follow the prompts to install. </br>
+We can download [Git](https://git-scm.com/) for any operating system and follow the prompts to install. </br>
 
 ## Using GIT and Command line
 
