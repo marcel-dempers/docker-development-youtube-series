@@ -26,7 +26,7 @@ In my many years working in the field, I have noticed a range of challenges and 
 * Cloud certifications often only focus on a specific cloud provider which can build bias
 * Often only solve really specific problems, and miss real world problems
 * Develop very narrow focussed problem solving skill
-* Miss out on powerful open source skils
+* Miss out on powerful open source skills
 * Vendor locking 
 
 ## 🎯 The solution: Goals & Expectations
@@ -49,7 +49,7 @@ While building your website, we will cover topics such as:
 * Cloud deployments 
 
 The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained above-mentioned skills and abilities.</br>
-You will build the ultimate foundation and be equiped to make more informed discisions on what you want to focus on next in your career. </br>
+You will build the ultimate foundation and be equipped to make more informed decisions on what you want to focus on next in your career. </br>
 
 ## 🛠 System Requirements
 

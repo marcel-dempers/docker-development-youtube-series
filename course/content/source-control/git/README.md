@@ -18,7 +18,7 @@ Our daily workflow may involve:
 * Review changes
 * Repeat
 
-This will require a mechanism of tracking history of changes in these files and allowing teams of people to work on the same files without overriding each others changes. </br>
+This will require a mechanism of tracking history of changes in these files and allowing teams of people to work on the same files without overriding each other's changes. </br>
 
 ## Installing GIT
 
@@ -26,24 +26,24 @@ We can download [Git](https://git-scm.com/) for any operating system and follow 
 
 ## Using GIT and Command line
 
-During this course, I will highlight the importance of using command line as a DevOps engineer or SRE. </br>
+During this course, I will highlight the importance of using the command line as a DevOps engineer or SRE. </br>
 For many development & IT professions, as well as in DevOps there are GUI tools available that have high user friendliness. </br>
 These GUI tools make life easier in many ways and we will come across many such tools in this course. </br>
 </hr>
 
-For most IT proffesions, especially for software developers, they start with GUI tools first, such as Integrated Development Environments or IDE's </br>
-IDE's are code editors and allows programmers to write, build, run and test code. </br>
+For most IT professionals, especially for software developers, they start with GUI tools first, such as Integrated Development Environments or IDE's </br>
+IDE's are code editors and allow programmers to write, build, run and test code. </br>
 Almost like an accountant using Excel spreadsheets or Word documents </br>
 Many of these functions stop entirely, when there are no GUI tools available and developers become unproductive. </br>
 The accountant stops, when Excel no longer works. </br>
 
-In DevOps, most tooling are built from the commandline up. </br>
+In DevOps, most tooling is built from the command line up. </br>
 So although there are GUI tools available for use, when these tools are not available, DevOps engineers can still 
-continue to be productive by continueing to use the commandline instead. </br>
+continue to be productive by continuing to use the command line instead. </br>
 
 For example, if you are on a Linux server and it ran out of disk space. </br>
 There are no GUI tools on the server other than a shell terminal. </br>
-In this scenario, you are forced to use the command line, so its very important to be effecient in its use. 
+In this scenario, you are forced to use the command line, so it's very important to be efficient in it's use. 
 
 ## Installation
 
@@ -99,7 +99,7 @@ If we try this command using `--local` we get an error stating that we can only 
 
 ## Create your first GIT repository
 
-To turn a folder into a GIT repo its very simple. We simply run command:
+To turn a folder into a GIT repo it's very simple. We simply run command:
 
 ```
 # create a folder for our GIT repo called my-website
@@ -135,7 +135,7 @@ git status
 ```
 
 We'll see one "Untracked file" </br>
-To add this changes to GIT, we need to stage the file. </br>
+To add these changes to GIT, we need to stage the file. </br>
 We do this by using the `git add` command:
 
 ```
@@ -249,7 +249,7 @@ Let's update our skills to set our first skill to source control:
  <li>Source Version Control: GIT</li>
 ```
 
-Now we commit the changes just like we did before. The more we do this, the more comfortable we will become with the comand line, especially as we go further along in this course. </br>
+Now we commit the changes just like we did before. The more we do this, the more comfortable we will become with the command line, especially as we go further along in this course. </br>
 
 ```
 git add -A
@@ -259,9 +259,9 @@ git commit -m "set our first skill"
 
 ## Merging Branches
 
-To merge branches, we need to make sure we have both branches. In our case, we do have `master` and the `skills` branch.
+To merge branches, we need to make sure we have both branches. In our case, we do have a `master` and the `skills` branch.
 
-Now for interest sake, let's checkout master. Notice when we `cat home.html` to see the content, the content still has our old skill. </br>
+Now for interest's sake, let's checkout master. Notice when we `cat home.html` to see the content, the content still has our old skill. </br>
 This is because our changes are on the `skills` branch </br>
 
 To merge our `skills` branch into `master` we need to be on the `master` branch. 
@@ -293,10 +293,10 @@ It's important to store your code on a hosted GIT repository as it reduces the c
 You can host your own GIT server too </br>
 In this video, we'll be using Github and I'll show you how to clone the repo that contains all this source code and many other tutorials. </br>
 
-Note that you dont need a Github account to clone repositories as this repo is public.
+Note that you don't need a Github account to clone repositories as this repo is public.
 
 ```
-#make sure we are in our respositories folder
+#make sure we are in our repositories folder
 
 cd gitrepos
 
@@ -312,15 +312,15 @@ ls
 
 ## UI Tools for GIT
 
-So far in this guide we've mostly looked at basic tools to edit folder and files as well as a basic terminal for command line work. </br>
-I have done so on purpose so viewers enjoy familiarity and helps understand the course content at play. </br>
+So far in this guide we've mostly looked at basic tools to edit folders and files as well as a basic terminal for command line work. </br>
+I have done so on purpose so viewers enjoy familiarity and help understand the course content at play. </br>
 
-During our entire course, we will focus primarily on command line as I've outlined the importance of it. </br>
-However for creating folders, editing files and having a terminal all-in-one its very important to start using whats called an IDE. </br>
+During our entire course, we will focus primarily on the command line as I've outlined the importance of it. </br>
+However, for creating folders, editing files and having a terminal all-in-one it's very important to start using what's called an IDE. </br>
 An IDE is an Integrated Development Environment. </br>
-Or in simple terms, its a file editor with a built-in terminal, so we can do everything we have done today, but all in one place. </br>
+Or in simple terms, it's a file editor with a built-in terminal, so we can do everything we have done today, but all in one place. </br>
 
-I will give you some home work to go and install [Visual Studio Code](https://code.visualstudio.com/) </br>
+I will give you some homework to go and install [Visual Studio Code](https://code.visualstudio.com/) </br>
 
 I will demonstrate in this guide, that VSCode has:
 

@@ -6,7 +6,7 @@ Back to [Course Introduction](../../README.md)
 
 [GIT](https://en.wikipedia.org/wiki/Git) is the foundation of DevOps, Programming & Software Engineering </br> 
 This is because it is a source code distributed version control system. </br>
-In DevOps, you will deal with code, command line, documentation, scripts, automation, intrastructure-as-code and more. </br>
+In DevOps, you will deal with code, command line, documentation, scripts, automation, infrastructure-as-code and more. </br>
 Generally, all of this involves writing files and storing them.
 GIT is the system you use to store these files. </br>
 
