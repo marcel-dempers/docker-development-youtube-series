@@ -1,6 +1,6 @@
 # Chapter-1 : Source Control and GIT
 
-Back to [Course Introduction](../../course.md)
+Back to [Course Introduction](../../README.md)
 
 ### 🎬 [Module 1: Introduction to GIT: Source Control](../../content/source-control/git/README.md)
 
