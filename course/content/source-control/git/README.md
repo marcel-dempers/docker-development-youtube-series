@@ -10,6 +10,8 @@ This module is part of [chapter 1](../../../chapters/chapter-1-source-control-gi
 
 [Git](https://git-scm.com/) is a free and open source distributed version control system. </br>
 
+History of [Git](https://en.wikipedia.org/wiki/Git) </br>
+
 As engineers, we will often work on files, such as code, scripts, configuration as well as documents etc. </br>
 Our daily workflow may involve:
 * Create files

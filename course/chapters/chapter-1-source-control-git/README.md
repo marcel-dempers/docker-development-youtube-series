@@ -2,6 +2,17 @@
 
 Back to [Course Introduction](../../README.md)
 
+## Introduction
+
+In this chapter we will cover the fundamental tools you need to know to start a DevOps, SRE or platform engineering career. This starts with knowing how to work with files. Source control allows us to work with files, collaborate with others and track changes and histrory of source code.
+
+What your will learn:
+* What source control is
+* How to use GIT to manage source code
+* Learn about the basics of hosted source control systems
+* What an IDE is
+* How to use an IDE as an engineer
+
 ### 🎬 [Module 1: Introduction to GIT: Source Control](../../content/source-control/git/README.md)
 
 [GIT](https://en.wikipedia.org/wiki/Git) is the foundation of DevOps, Programming & Software Engineering </br> 
