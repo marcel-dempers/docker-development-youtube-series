@@ -22,6 +22,8 @@ Our daily workflow may involve:
 
 This will require a mechanism of tracking history of changes in these files and allowing teams of people to work on the same files without overriding each other's changes. </br>
 
+![](git-example.svg)
+
 ## Installing GIT
 
 We can download [Git](https://git-scm.com/) for any operating system and follow the prompts to install. </br>
