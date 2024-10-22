@@ -75,15 +75,31 @@ usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
 <and more...>
 ```
 
+## Create directory for our repositories
+
+I would highly recommend to create a folder where you want to store your GIT repositories. </br>
+This may be in your USER, HOME folder, or you could create it on `C:\` if you are using Windows. </br>
+This is entirely up to you.
+
+Windows:
+```
+cd C:\
+mkdir gitrepos
+```
+Linux:
+```
+mkdir ~/gitrepos
+```
+
 ## Configure GIT
 
 We firstly have to tell GIT who we are. </br>
 For this we set a username and an email. </br>
 This is very important especially when we are planning to host our repository on Github or another source control provider </br>
 
-Remember the command `git help -a` which shows us all the available commands ? </br>
+Remember the command option `-h` which shows us all the available options and help text for a command? </br>
 The one we want to start off with is `git config` </br>
-note: `git config -a` Also has a `-a` to view all options </br>
+note: `git config -h` Has help texts that describes how we can use the command </br>
 
 We can configure GIT either globally, so which account to use for all repositories by using the `--global` flag, or only for a single repository by using the `--local` flag :
 
