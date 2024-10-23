@@ -36,7 +36,7 @@ In this module we'll take a read through [GIT](https://en.wikipedia.org/wiki/Git
   * VSCode
 
 
-### 🚧🎬 [Module 2: Introduction to IDEs: Visual Studio Code]()
+### 🎬 [Module 2: Introduction to IDEs: Visual Studio Code](../../content/editors/vscode/introduction/README.md)
 
 When working on source code using GIT, you will want to work on files and directories. </br>
 This includes configuration files, code files, scripts and so on. </br>
