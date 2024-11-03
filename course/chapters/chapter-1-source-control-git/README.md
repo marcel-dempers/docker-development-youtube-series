@@ -55,7 +55,7 @@ It is software that helps us deal with software development and engineering. </b
 * GIT features
 
 
-### 🚧🎬 [Module 3: Introduction to Github: Hosted Source Control]()
+### 🎬 [Module 3: Introduction to Github: Hosted Source Control](../../content/source-control/github/README.md)
 
 Storing source code in a Git repository on a local machine carries a risk of data loss. </br>
 If your harddrive crashes, or you lose your laptop, all your work would be lost. </br>
