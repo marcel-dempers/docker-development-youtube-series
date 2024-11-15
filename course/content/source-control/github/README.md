@@ -32,6 +32,49 @@ Benefits:
 
 Let's head over to [github.com](https://github.com/) and Sign up. </br>
 
+## Create a Personal Access token
+
+### Important Notes about Authentication 
+
+When we authenticate with GIT for Windows, GIT may popup a browser window that asks you to sign in to Github. </br>
+When you sign in this way, Github sets up authentication tokens for your account and GIT for Windows uses the Windows Credential manager
+to store the credential. </br>
+
+When you authenticate with GIT on Linux, you will get a prompt for username and password. </br>
+Important to know that the password here is not your Github password, but rather a personal access token. </br>
+
+Knowing how to create and manage personal access tokens (or PAT) is important because:
+* These tokens have a shorter lifespan than your password making them more secure.
+* They may have limited access, for example we may only use them to read repositories, or write, or both.
+* We may use these tokens to login via scripts and automation pipelines
+
+### GIT Credential Store
+
+Another important note is that when we sign in using GIT for Windows, Windows may cache the credential so we don't have to login every time we access Github. </br>
+
+For Linux, this is not done by default, and we may need to run a command once to set up credential caching. </br>
+
+We can either cache our token for default 15 minutes, by running the below command:
+
+```
+git config --global credential.helper cache
+
+```
+Or we can specify a time in seconds if we wanted a shorter or longer time than 15 minutes
+
+```
+git config --global credential.helper 'cache --timeout=3600'
+
+```
+
+Or we can store it in the credential store for Linux and store it forever
+
+```
+git config --global credential.helper store
+```
+
+You can choose the appropriate command above for you so you don't have to keep signing in to GitHub when using GIT. 
+
 ## Create our first repository
 
 On the [github.com](https://github.com/), top menu, you will find a `+` button where you can create a new repository </br>

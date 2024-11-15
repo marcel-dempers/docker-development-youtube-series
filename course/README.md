@@ -8,7 +8,7 @@ This course is my ultimate guide to DevOps,SRE & platform engineering for beginn
 
 In my many years working in the field, I have noticed a range of challenges and problems that people face when trying to start a DevOps, SRE, platform or cloud engineering career. </br>
 
-## 🔴The challenges - <i>where to start ?</i>
+## 🔴The current challenges of careers in Tech - <i>where to start ?</i>
 
  <b>DevOps has its challenges:</b>
 * There is no simple starting point to start learning about DevOps
@@ -29,7 +29,7 @@ In my many years working in the field, I have noticed a range of challenges and 
 * Miss out on powerful open source skills
 * Vendor locking 
 
-## 🎯 The solution: Goals & Expectations
+## 🎯 Course Goals & Expectations
 
 This course provides a practical hands-on roadmap into the world of DevOps, SRE and platform engineering. </br> 
 It will set you up with all the fundamentals required for successful future learning. </br>
@@ -74,8 +74,10 @@ You will build the ultimate foundation and be equipped to make more informed dec
 
 ## 📖 Where to find the full course
 
-The Youtube series will cover the course content so you can benefit from the course roadmap for free. </br>
+The course will have a free summarised and editted version which touches on each topic for you to get started so you can benefit from the roadmap </br>
+
 However, the YouTube videos are in shorter, edited, summarised form. So although you may benefit from the content, if you are a beginner, you may prefer the long form content where I elaborate, provider more in-depth explanations and cover more examples </br>
+The paid course will also provide some bonus content </br>
 
 If you are a beginner, I highly recommend you checkout the full course on your favourite platform below:
 
