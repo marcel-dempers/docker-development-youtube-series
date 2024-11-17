@@ -5,7 +5,7 @@
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name linkerd --image kindest/node:v1.19.1
+kind create cluster --name linkerd --image kindest/node:v1.30.4
 ```
 
 ## Deploy our microservices (Video catalog)
@@ -40,9 +40,10 @@ videos-web-598c76f8f-chhgm      1/1     Running   0          100s
 
 ```
 kubectl -n ingress-nginx get pods
-NAME                                        READY   STATUS    RESTARTS   AGE  
-nginx-ingress-controller-6fbb446cff-8fwxz   1/1     Running   0          2m38s
-nginx-ingress-controller-6fbb446cff-zbw7x   1/1     Running   0          2m38s
+NAME                                       READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-fxzx8       0/1     Completed   0          9m2s
+ingress-nginx-admission-patch-fwc2k        0/1     Completed   2          9m2s
+ingress-nginx-controller-d49697d5f-6qggd   1/1     Running     0          9m2s
 
 ```
 
@@ -57,7 +58,7 @@ Let's fake one by adding the following entry in our hosts (`C:\Windows\System32\
 ## Let's access our applications via Ingress 
 
 ```
-kubectl -n ingress-nginx port-forward deploy/nginx-ingress-controller 80
+kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 80
 ```
 
 ## Access our application in the browser
