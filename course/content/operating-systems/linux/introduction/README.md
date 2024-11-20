@@ -3,7 +3,7 @@
 ## 💡 Preface
 
 This module is part of a course on DevOps. </br>
-Checkout the [course introduction](../../../README.md) for more information </br>
+Checkout the [course introduction](../../../../README.md) for more information </br>
 This module is part of [chapter 2](../../../../chapters/chapter-2-operating-systems/README.md)
 
 ## What is Linux
