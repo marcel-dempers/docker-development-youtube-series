@@ -2,7 +2,7 @@
 
 Back to [Course Introduction](../../README.md)
 
-### 🎬 [Module 1: Introduction Operating Systems for DevOps](../../content/operating-systems/intro/README.md)
+### 🎬 [Module 1: Introduction Operating Systems for DevOps](../../content/operating-systems/introduction/README.md)
 
 #### In this module
 
@@ -20,7 +20,7 @@ Back to [Course Introduction](../../README.md)
 * The Kernel
 * Terminal & Command Line
 
-### 🚧🎬 [Module 2: Introduction to Servers & Virtualisation](../../content/operating-systems/virtualization/README.md)
+### 🎬 [Module 2: Introduction to Servers & Virtualisation](../../content/operating-systems/virtualization/README.md)
 
 #### In this module
 
@@ -29,7 +29,7 @@ Back to [Course Introduction](../../README.md)
 * Virtualisation software
 * Creating our first server
 
-### 🚧🎬 [Module 3: Introduction to Linux for beginners](../../content/operating-systems/linux/README.md)
+### 🎬 [Module 3: Introduction to Linux for beginners](../../content/operating-systems/linux/introduction/README.md)
 
 #### In this module
 

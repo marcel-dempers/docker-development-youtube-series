@@ -56,7 +56,7 @@ You will build the ultimate foundation and be equipped to make more informed dec
 * <b>Operating System:</b> Windows (Pro and Enterprise ), Linux or MacOS
   * <i>note: You'll need Pro or Enterprise Windows to support Virtualization</i>
 
-* You will need at least 8GB RAM and 20GB of hard disk space to complete modules related to virtualization. </br>
+* You will need at least 2GB EXTRA RAM and 25GB of hard disk space to complete modules related to virtualization. </br>
   * <i>These numbers are early access guide only and may be reviewed and adjusted based on course feedback</i>
 
 ## 📖 Table of Contents 
