@@ -39,7 +39,7 @@ In DevOps, SRE and even cloud engineering, Operating systems will play a fundame
 Your workstation or laptop, may be Microsoft Windows, or MacOS, or you may have Linux installed </br>
 Therefore all the tools you may use will be dependant or compatible with either one for different operating systems </br>
 
-In addition to that, production systems you may interact with will have an Operating system installed </br>
+In addition to that, production systems you may interact with, will have an Operating system installed </br>
 Therefore, scripts, automation and deployment pipelines, open-source tools, infrastructure as code and all the DevOps technologies we will use in this course, needs to cater for operating systems </br>
 
 To support and monitor production systems in real world scenarios, you need to have an understanding of how to use different operating systems </br>
