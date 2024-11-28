@@ -40,7 +40,7 @@ Back to [Course Introduction](../../README.md)
 * User accounts 
 * File management
 
-### 🚧🎬 [Module 4: Understanding the command line](../../content/operating-systems/commandline/introduction/README.md)
+### 🎬 [Module 4: Understanding the command line](../../content/operating-systems/commandline/introduction/README.md)
 
 #### In this module
 
@@ -51,7 +51,7 @@ Back to [Course Introduction](../../README.md)
 * Navigating command usage
 * Command line tools
 
-### 🚧🎬 [Module 5: Bash scripting for beginners](../../content/operating-systems/scripting/bash/README.md)
+### 🎬 [Module 5: Bash scripting for beginners](../../content/operating-systems/scripting/bash/README.md)
 
 #### In this module
 
