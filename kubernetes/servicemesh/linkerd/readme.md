@@ -5,7 +5,7 @@
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name linkerd --image kindest/node:v1.19.1
+kind create cluster --name linkerd --image kindest/node:v1.30.4
 ```
 
 ## Deploy our microservices (Video catalog)
@@ -40,9 +40,10 @@ videos-web-598c76f8f-chhgm      1/1     Running   0          100s
 
 ```
 kubectl -n ingress-nginx get pods
-NAME                                        READY   STATUS    RESTARTS   AGE  
-nginx-ingress-controller-6fbb446cff-8fwxz   1/1     Running   0          2m38s
-nginx-ingress-controller-6fbb446cff-zbw7x   1/1     Running   0          2m38s
+NAME                                       READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-fxzx8       0/1     Completed   0          9m2s
+ingress-nginx-admission-patch-fwc2k        0/1     Completed   2          9m2s
+ingress-nginx-controller-d49697d5f-6qggd   1/1     Running     0          9m2s
 
 ```
 
@@ -57,7 +58,7 @@ Let's fake one by adding the following entry in our hosts (`C:\Windows\System32\
 ## Let's access our applications via Ingress 
 
 ```
-kubectl -n ingress-nginx port-forward deploy/nginx-ingress-controller 80
+kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 80
 ```
 
 ## Access our application in the browser
@@ -88,20 +89,20 @@ export KUBE_EDITOR="nano"
 
 #test cluster access:
 /work # kubectl get nodes
-NAME                    STATUS   ROLES    AGE   VERSION
-linkerd-control-plane   Ready    master   26m   v1.19.1
+NAME                    STATUS   ROLES           AGE   VERSION
+linkerd-control-plane   Ready    control-plane   40m   v1.30.4
 
 ```
 
 ## Linkerd CLI
 
 Lets download the `linkerd` command line tool <br/>
-I grabbed the `edge-20.10.1` release using `curl`
+I grabbed the `edge-24.11.3` release using `curl`
 
-You can go to the [releases](https://github.com/linkerd/linkerd2/releases/tag/edge-20.10.1) page to get it
+You can go to the [releases](https://github.com/linkerd/linkerd2/releases/tag/edge-24.11.3) page to get it
 
 ```
-curl -L -o linkerd https://github.com/linkerd/linkerd2/releases/download/edge-20.10.1/linkerd2-cli-edge-20.10.1-linux-amd64 
+curl -L -o linkerd https://github.com/linkerd/linkerd2/releases/download/edge-24.11.3/linkerd2-cli-edge-24.11.3-linux-amd64 
 chmod +x linkerd && mv ./linkerd /usr/local/bin/
 
 linkerd --help
@@ -119,13 +120,16 @@ linkerd check --pre
 ## Get the YAML
 
 ```
-linkerd install > ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.10.1.yaml
+# install CRDs first
+linkerd install --crds > ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-24.11.3-crds.yaml
+linkerd install  > ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-24.11.3.yaml
 ```
 
 ## Install Linkerd
 
 ```
-kubectl apply -f ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-20.10.1.yaml
+kubectl apply -f ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-24.11.3-crds.yaml
+kubectl apply -f ./kubernetes/servicemesh/linkerd/manifest/linkerd-edge-24.11.3.yaml
 ```
 
 Let's wait until all components are running
@@ -143,10 +147,11 @@ linkerd check
 
 ## The dashboard
 
-Let's access the `linkerd` dashboard via `port-forward`
+To access the `linkerd` dashboard, we need to install the viz extension
 
 ```
-kubectl -n linkerd port-forward svc/linkerd-web 8084
+linkerd viz install | kubectl apply -f -
+kubectl -n linkerd-viz port-forward svc/web 8084
 ```
 
 # Mesh our video catalog services
@@ -180,7 +185,7 @@ kubectl get deploy playlists-db -o yaml | linkerd inject - | kubectl apply -f -
 kubectl get deploy videos-api -o yaml | linkerd inject - | kubectl apply -f -
 kubectl get deploy videos-db -o yaml | linkerd inject - | kubectl apply -f -
 kubectl get deploy videos-web -o yaml | linkerd inject - | kubectl apply -f -
-kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | linkerd inject - | kubectl apply -f -
+kubectl -n ingress-nginx get deploy ingress-nginx-controller  -o yaml | linkerd inject - | kubectl apply -f -
 
 ```
 

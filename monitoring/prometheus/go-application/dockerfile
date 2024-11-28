@@ -1,4 +1,4 @@
-FROM golang:1.11.13-alpine3.10 as builder
+FROM golang:1.22.5-alpine as builder
 
 # installing git
 RUN apk update && apk upgrade && \
@@ -7,14 +7,11 @@ RUN apk update && apk upgrade && \
 # setting working directory
 WORKDIR /go/src/app
 
-# installing dependencies
-RUN go get github.com/leonelquinteros/gorand
-RUN go get github.com/sirupsen/logrus
-RUN go get github.com/prometheus/client_golang/prometheus
-RUN go get github.com/prometheus/client_golang/prometheus/promauto
-RUN go get github.com/prometheus/client_golang/prometheus/promhttp
 
 COPY / /go/src/app/
+# installing dependencies
+RUN go mod download
+
 RUN go build -o myapp
 
 FROM alpine:3.10
