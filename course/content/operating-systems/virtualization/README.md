@@ -57,8 +57,6 @@ There are a number of benefits why Virtual machines are great. </br>
 * <b>Automation</b>: Using automation software or tools can help recreate servers and roll out updates
 * <b>Scalability</b>: Ability to quickly add more servers when demands increase 
 
-
-
 ## Virtualisation software
 
 There are many types of virtualization software that allows us to create Virtual machines </br>
@@ -139,13 +137,17 @@ In this course we will get Ubuntu Linux from [ubuntu.com](https://ubuntu.com/) <
 
 ### Setup Network
 
-One very important component of environments both for in data centers and in the cloud is the network. Servers communicate with one another over the network. </br>
-Networks can be either public (like sitting on the internet) or private or a combination of public and private </br>
+One very important component of environments both for in data centers and in the cloud is the network. </br> 
+Servers communicate with one another over the network. </br>
+Networks can be either <b>public</b> (like sitting on the internet) or <b>private</b> or a combination of public and private </br>
 
 * Host-only Networks
+  `This can be used to create a network containing the host and a set of virtual machines, without the need for the host's physical network interface`
 * NAT Networks `Network Address Translation (NAT) is the simplest way of accessing an external network from a virtual machine. Usually, it does not require any configuration on the host network and guest system. For this reason, it is the default networking mode in Oracle VM VirtualBox.`
 * Cloud Networks 
+`This can be used to connect a local VM to a subnet on a remote cloud service.`
 
+In order for a server to communicate with another server it needs to belong to a network, and in order to belong to a network, a server needs an IP address </br>
 An IP is a series of numbers and dots that identify a device that is part of a network. </br>
 Networks have an IP range. </br> 
 
@@ -173,6 +175,22 @@ When a device connects to a network its assigned an IP address by [DHCP](https:/
 
 `Port Forwarding` allows us to forward certain ports from our machine to this virtual machine network. This is because the NAT Network is isolated so we need to setup any connections between us and the virtual machine </br>
 
+Now to create the network, we can briefly walk through the VirtualBox UI and look at the default NAT Network that is created. </br>
+In this walk through, I'd like you to get a bit more of an understanding of networks, so I would prefer if we create our own and not rely on the default one </br> The default network could be subject to change which may cause it to break in the future. </br>
+To create a network and setup a DHCP for it, we will use the `VBoxManage` command line. </br>
+
+On Linux, if you have VirtualBox installed you can simply type VBoxManage in a terminal window and you should see its output. </br>
+
+Let's create our NAT Network and a DHCP for it using the following commands: 
+
+<i>For Windows, you will need to add the following directory to your PATH environemnt variable: `C:\Program Files\Oracle\VirtualBox`</i>
+<i>Once done, open a new PowerShell terminal</i>
+```
+VBoxManage natnetwork add --netname "my-website" --network "10.0.0.0/27" --enable --ipv6 off
+VBoxManage dhcpserver add --netname "my-website" --ip "10.0.0.1" --netmask "255.255.255.224" --lowerip "10.0.0.4" --upperip "10.0.0.30" --enable
+VBoxManage natnetwork modify --netname "my-website" --dhcp on
+```
+   
 ### Creating Virtual Machine 
 
 On the main panel, we can click on `Machine` and `New` to get to the server creation page. </br>
@@ -192,21 +210,51 @@ Next we create a hard disk, by filling out `Hard Disk File Location and Size`
 
 Then we press `Finish` to create the virtual server </br>
 
+Now before starting the virtual server, we need to add it to our network we created. </br> We can do this from the settings page </br>
+
 ## Setup Server Access
 
 Now Virtual Box allows us to access our server by giving us a screen interface. </br>
 Now if we wanted to automate things later and remotly manage this server, we need to setup [SSH](https://en.wikipedia.org/wiki/Secure_Shell) access
 
-Get the local IP to setup port forwarding in Virtual Box
+Get the local IP to setup port forwarding in Virtual Box.
+For this demo, we can set a non-standard port just incase you already have port `22` used on your system. </br>
+Therefore the host port we will set it to `2222` and the Guest port (which is the virtual server) will set it as `22`
 
 ```
 # grab the IP address from the `inet` section
 ip addr
 ```
+The IP address of the virtual server will be the "Guest IP" in the port forward rule. </br>
+This means all traffic on our system from port `2222` will not be forwarded to port `22` of our virtual server.
 
-Install SSH server:
+On our Virtual server, we will need to install SSH server. </br>
+
 ```
 sudo apt-get update
 sudo apt-get install -y openssh-server
 ```
 
+Ensure that the SSH server is up and running 
+
+```
+sudo service ssh status
+sudo service ssh start
+sudo service ssh status
+```
+
+We can now see the SSH service is running, but is disabled. So when our VM reboots it will not automatically start up. To make the SSH service start up automatically, we need to enable it. Let's do that
+
+```
+# enable SSH
+sudo systemctl enable ssh
+
+# now we can see its enabled:
+sudo service ssh status
+```
+
+Now on our system, we can open up Visual Studio code terminal and SSH to our Virtual server:
+
+```
+ssh -p 2222 <username>@127.0.0.1
+```
