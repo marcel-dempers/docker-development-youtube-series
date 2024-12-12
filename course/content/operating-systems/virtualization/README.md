@@ -212,6 +212,30 @@ Then we press `Finish` to create the virtual server </br>
 
 Now before starting the virtual server, we need to add it to our network we created. </br> We can do this from the settings page </br>
 
+### Server Settings Summary
+
+Here are some of the settings we used in this module when creating our Virtual Machine:
+
+| Property    | Value |
+| -------- | ------- |
+| name  | my-website-1    |
+| directory | C:\temp\vms     |
+| memory    | 4096MB    |
+| cpu    | 4 cores    |
+| disk    | 25GB    |
+
+During the installation we also provided some Operating system settings. I've recorded those below:
+
+| Property    | Value |
+| -------- | ------- |
+| computer name  | my-website-1    |
+| your name | devopsguy     |
+| username | devopsguy     |
+| password (for simplicity of this demo i kept it simple) | devopsguy     |
+
+
+
+
 ## Setup Server Access
 
 Now Virtual Box allows us to access our server by giving us a screen interface. </br>
