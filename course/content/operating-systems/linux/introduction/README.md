@@ -90,7 +90,7 @@ sudo userdel -r bob
 
 ### List users
 
-User information in Linux is stored in the `passwd` file which exists in the `/etc` directly
+User information in Linux is stored in the `passwd` file which exists in the `/etc` directory
 
 View the content of the file with the `cat` command
 
@@ -105,6 +105,8 @@ Another useful command to see who we are logged in as, is the `whoami` command
 In order to navigate around, we will learn a couple of commands to navigate, but we also need to know what we are navigating </br>
 
 * `ls` is a command we use to list contents in a directory. `/` id the root directory in Linux, which is the equivalent of `C:\` in Windows. Type `ls /` in the terminal to list out contents in the `/` root directory.
+  `ls -l` helps us return a "list" format so we can see type of files\folders and permissions on those. 
+  'ls -a' helps us view hidden folders. In Linux, folders starting with a `.` is hidden. Just like the `.git` folders we saw in the previous chapter when working on GIT.
 
 * <b>Home directories:</b> Under the `/` directory you will see a directory called `/root` which is the `$HOME` directory of the root user. </br> All other user folders are under `/home` </br>
 The `~` also represents the full path to the home directory for your current user
