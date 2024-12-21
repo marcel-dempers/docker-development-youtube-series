@@ -104,7 +104,7 @@ Another useful command to see who we are logged in as, is the `whoami` command
 
 In order to navigate around, we will learn a couple of commands to navigate, but we also need to know what we are navigating </br>
 
-* `ls` is a command we use to list contents in a directory. `/` id the root directory in Linux, which is the equivalent of `C:\` in Windows. Type `ls /` in the terminal to list out contents in the `/` root directory.
+* `ls` is a command we use to list contents in a directory. `/` is the root directory in Linux, which is the equivalent of `C:\` in Windows. Type `ls /` in the terminal to list out contents in the `/` root directory.
   `ls -l` helps us return a "list" format so we can see type of files\folders and permissions on those. 
   'ls -a' helps us view hidden folders. In Linux, folders starting with a `.` is hidden. Just like the `.git` folders we saw in the previous chapter when working on GIT.
 
@@ -209,7 +209,7 @@ rm my-second-script.sh
 
 We can move or rename a file with the `mv` command
 ```
-cp my-first-script.sh my-final-script.sh
+mv my-first-script.sh my-final-script.sh
 ```
 
 ## Package managers 
