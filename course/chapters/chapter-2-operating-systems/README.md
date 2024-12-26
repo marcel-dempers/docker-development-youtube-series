@@ -1,6 +1,6 @@
 # Chapter 2 : Operating Systems
 
-Back to [Course Introduction](../../README.md)
+Back to [Course Introduction](../../README.md#table-of-contents)
 
 ### 🎬 [Module 1: Introduction Operating Systems for DevOps](../../content/operating-systems/introduction/README.md)
 

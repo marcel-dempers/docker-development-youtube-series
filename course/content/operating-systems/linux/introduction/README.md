@@ -18,7 +18,7 @@ There are many popular Linux Distros, including Ubuntu, Debian, Arch Linux, Fedo
 For this module, you will need access to a Linux server. </br>
 See the Preface section above for a link to the chapter overview page where you will find the module on Servers & Virtualization for creating a Virtual Server. </br>
 
-Checkout [chapter 2: module: Introduction to Servers & Virtualization](../../../chapters/chapter-2-operating-systems/README.md) if you need to create a Linux server </br>
+Checkout the <b>Introduction to Servers & Virtualization</b> in [Chapter 2](../../../../chapters/chapter-2-operating-systems/README.md) if you need to create a Linux server </br>
 
 ## Terminal, Shell & Command Line
 

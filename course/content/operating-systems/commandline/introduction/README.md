@@ -143,10 +143,19 @@ Above, `-m` stands for message.
 * `pwd` : Writes the full path of the currend working directory to the screen
 * `touch` : Creates a file without content
 * `nano` : Starts a simple Linux text editor
+* `mkdir` : Create a directory
 * `cp` : Copies a file or directory
 * `mv` : Renames a file or directory. Useful for renaming files or moving content
 * `rm` : Removes a file or directory
-
+* `grep` : Find text in a file or in output
+* `df` : Displays the amount of disk space available on the file system
+* `du` : Estimates file space usage for a directory
+* `ps` : Displays information about active processes. `ps aux` displays all processes
+* `top` : Command line utility to monitor system load
+* `kill` : Terminates a process by process ID
+* `wget` : Downloads files from the web
+* `curl` : Create and send a Web request to a server
+ 
 ## Command inputs and outputs
 
 We can capture outputs of a command. </br>

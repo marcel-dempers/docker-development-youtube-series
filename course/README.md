@@ -13,7 +13,7 @@ In my many years working in the field, I have noticed a range of challenges and 
  <b>DevOps has its challenges:</b>
 * There is no simple starting point to start learning about DevOps
 * DevOps requires a very broad range of skills that can be very overwhelming for new people to learn
-* DevOps is often treated as "Dev" and "Ops" which means you need understanding of two broad fields
+* DevOps is often treated as "Dev" and "Ops" which means you need understanding of two very broad fields
 * DevOps technologies are littered with buzz words, such as cloud, AI, machine learning, CI/CD, scalability, immutable infrastructure, automation, security and it never ends
 
 <b>Qualifications have its challenges:</b>
@@ -27,7 +27,7 @@ In my many years working in the field, I have noticed a range of challenges and 
 * Often only solve really specific problems, and miss real world problems
 * Develop very narrow focussed problem solving skill
 * Miss out on powerful open source skills
-* Vendor locking 
+* Vendor locking: Often stuck only specialising in one vendor's product
 
 ## 🎯 Course Goals & Expectations
 
