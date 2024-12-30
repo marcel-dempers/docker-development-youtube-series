@@ -1,0 +1,38 @@
+# kind create cluster --name pods --image kindest/node:v1.31.1
+# kubectl apply -f pod.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+  namespace: default
+  labels:
+    app: example-app
+    test: test
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+  - name: example-app
+    image: aimvector/python:1.0.4
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 5000
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 5000
+      initialDelaySeconds: 3
+      periodSeconds: 3
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 5000
+      initialDelaySeconds: 3
+      periodSeconds: 3
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
+      limits:
+        memory: "256Mi"
+        cpu: "500m"
