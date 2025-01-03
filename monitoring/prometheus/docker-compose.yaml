@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   go-application:
     build:
@@ -7,7 +6,6 @@ services:
     image: go-application
     ports:
       - "80:5000"
-
   python-application:
     build:
       context: ./python-application
@@ -15,7 +13,6 @@ services:
     image: python-application
     ports:
       - "81:5000"
-
   dotnet-application:
     build:
       context: ./dotnet-application
@@ -23,7 +20,6 @@ services:
     image: dotnet-application
     ports:
       - "82:5000"
-
   nodejs-application:
     build:
       context: ./nodejs-application
@@ -31,45 +27,33 @@ services:
     image: nodejs-application
     ports:
       - "83:5000"
-
   prometheus:
     container_name: prometheus-svc
-    image: prom/prometheus:latest
+    image: prom/prometheus
     ports: 
       - "9091:9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yaml"
+    command: --config.file=/etc/prometheus/prometheus.yaml
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
-    depends_on:
-      - go-application
-      - python-application
-      - dotnet-application
-      - nodejs-application
-
   grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
+    image: grafana/grafana:9.0.0
     ports:
       - "3000:3000"
     environment:
-      GF_AUTH_BASIC_ENABLED: "false"
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
-
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
   grafana-dashboards:
     image: alpine:3.10
     depends_on:
       - grafana
     volumes:
       - ./grafana-data:/grafana
-    entrypoint:
-      - /bin/sh
-      - -c
-      - |
-        apk add --no-cache curl;
-        echo 'waiting for grafana';
-        sleep 5s;
-        cd /grafana;
-        curl --request POST http://grafana:3000/api/datasources --header 'Content-Type: application/json' -d @datasources.json;
-        curl --request POST http://grafana:3000/api/dashboards/db --header 'Content-Type: application/json' -d @dashboard.json
+    command: >
+      /bin/sh -c "
+        apk add --no-cache curl
+        echo 'waiting for grafana'
+        sleep 5s
+        cd /grafana
+        curl --request POST http://grafana:3000/api/datasources --header 'Content-Type: application/json' -d @datasources.json
+        curl --request POST http://grafana:3000/api/dashboards/db --header 'Content-Type: application/json' -d @dashboard.json"
