@@ -62,10 +62,10 @@ Let's setup a shared folder for our server so we can play around with our script
 
 ```
 # Windows:
-VBoxManage sharedfolder add "my-website" --name GIT --hostpath "C:\gitrepos\"
+VBoxManage sharedfolder add "my-website-1" --name GIT --hostpath "C:\gitrepos\"
 
 # Linux:
-VBoxManage sharedfolder add "my-website" --name GIT --hostpath "~/gitrepos"
+VBoxManage sharedfolder add "my-website-1" --name GIT --hostpath "~/gitrepos"
 ```
 
 ## Access our Server
@@ -85,7 +85,15 @@ sudo mount -t vboxsf -o uid=1000,gid=1000 GIT ~/gitrepos
 echo "GIT $HOME/gitrepos vboxsf defaults,uid=1000,gid=1000,rw  0  0" | sudo tee -a /etc/fstab
 ```
 
-Now we should be able to see our GIT repositories on our virtual server when running `ls ~/gitrepos`
+Above, the `mkdir` creates our directory we want to use as a mount point </br>
+The files we have on our machine will be mounted into this folder in the virtual server </br>
+The `mount` command performs the mount operation that will mount the `vboxsf` file system managed by VirtualBox called `GIT` (That we created with `vboxmanage`). </br> 
+It will mount it to the newly created `~/gitrepos` directory. </br>
+Now we should be able to see our GIT repositories on our virtual server when running `ls ~/gitrepos` </br>
+
+However when the server reboots, mount points are not persisted, so we need to create an entry in a special Linux file that defines mount points in Linux, called `etc/fstab` </br>
+
+
 Let's change folder to our GIT repo:
 
 ```
