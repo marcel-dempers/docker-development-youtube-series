@@ -108,7 +108,7 @@ cd kubernetes\autoscaling\components\application
 kubectl apply -f .\traffic-generator.yaml
 
 # get a terminal to the traffic-generator
-kubectl exec -it traffic-generator sh
+kubectl exec -it traffic-generator -- sh
 
 # install wrk
 apk add --no-cache wrk
