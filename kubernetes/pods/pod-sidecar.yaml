@@ -1,0 +1,64 @@
+# kind create cluster --name pods --image kindest/node:v1.31.1
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+  namespace: default
+  labels:
+    app: example-app
+spec:
+  shareProcessNamespace: true
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+  - name: config-watcher
+    image: alpine:latest
+    command: ["/bin/sh", "-c"]
+    args:
+    - | 
+      apk add --no-cache inotify-tools
+      while true; do
+        inotifywait -e modify /etc/nginx/nginx.conf 
+        pkill -HUP nginx 
+      done
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/nginx/
+  - name: nginx
+    image: nginx:latest
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/nginx/
+  volumes:
+  - name: config-volume
+    configMap:
+      name: nginx-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+            listen 80;
+            server_name localhost;
+
+             location / {
+                root /usr/share/nginx/html;
+                index index.html index.htm;
+            }
+
+            location = /health {
+                access_log off;
+                default_type text/plain;
+                add_header Content-Type text/plain;
+                return 200 "ok";
+            }
+      }
+    }
