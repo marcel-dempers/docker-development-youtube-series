@@ -182,7 +182,7 @@ Permissions are shown in three groups, each group has 3 characters, making up a 
 * The last set of 3 characters represent others permission
 
 
-To give our script execute permission `x` , we run `chmod +x setup.sh`
+To give our script execute permission `x` , we run `sudo chmod +x setup.sh`
 
 ```
 sudo chmod +x setup.sh
@@ -195,7 +195,7 @@ Now we can execute our script
 hello from our script!
 ```
 
-## Sripting 
+## Scripting 
 
 Now we can finally start scripting. </br>
 In this module, we'll extend our `setup.sh` script which we will use to setup our website content and basically deploy our website files to a destination folder where a web server could be running from. </br>
@@ -468,6 +468,16 @@ echo "deployed website to $NEW_DEPLOYMENT_DIR"
 
 ```
 
+### Error \ Exit code checking 
+
+```
+if [ $? -ne 0 ]
+then
+  echo "Error: there was an error running the git command"
+  exit 1
+fi
+```
+
 ### File manipulation
 
 Now that we have our website files deployed in a unique folder location, we want to tell our web server to serve those new files and not the current ones. </br>
@@ -610,19 +620,19 @@ If you have a process you need to kick off manually that may require secrets lik
 This means we don't store sensitive information in our scripts. 
 
 <i>Important note: DevOps engineers should always avoid storing sensitive information such as API keys, tokens, passwords and authentication details in scripts.
-Auotmation tools for CI/CD & automation pipelines generally allow for a way to pass sensitive details to scripts</i>
+Automation tools for CI/CD & automation pipelines generally allow for a way to pass sensitive details to scripts</i>
 
 #### Outputs
 
 The pipe operator or `|` is used to pass the output of one command as input to another command.
 For example, we can grab the content of our website config
 
-`cat /webites/my-website/nginx.conf`
+`cat $HOME/webites/my-website/nginx.conf`
 Let's say this is a large config file and we only want the `root` section we can pipe it to another command called `grep`.
 
 [grep](https://en.wikipedia.org/wiki/Grep) is a command-line utility for searching plaintext datasets for lines that match a regular expression
 
-`cat /webites/my-website/nginx.conf | grep 'root'`
+`cat $HOME/webites/my-website/nginx.conf | grep 'root'`
 
 This command and pipe is useful if you have to search a large file for some specific text. <br/>
 
