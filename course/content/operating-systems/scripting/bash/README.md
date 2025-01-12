@@ -225,7 +225,7 @@ This destination folder may be where our web server could be serving the files f
 # settings
 GITHUB_REPO_URL="https://github.com/marcel-dempers/my-website.git"
 DEPLOYMENT_SOURCE_DIR="$HOME/gitrepos/my-website"
-DEPLOYMENT_DEST_DIR="/webites/my-website"
+DEPLOYMENT_DEST_DIR="$HOME/webites/my-website"
 ```
 
 Printing logs our output is very useful in scripting. </br>
@@ -269,7 +269,7 @@ fi
 
 if [ expression ]; then
     # commands go here
-elif
+elif [ expression ]; then
     # other commands
 else
     # last commands
@@ -469,6 +469,18 @@ echo "deployed website to $NEW_DEPLOYMENT_DIR"
 ```
 
 ### Error \ Exit code checking 
+
+We learned in our Command line module that all the commands we run are executable programs and most of them in Linux are kept under the `/bin` directory. </br>
+
+When we run a command in Linux that run executable will return what we call an "Exit Code". </br>
+In software engineering, programs will return a non-zero exit code when they terminate with an error. </br>
+This means if a command in our script fails to run, it returns an exit code that is greater than 0 and our script will continue to execute. </br>
+
+This may cause the outcome of our script executions to be undesirable. </br>
+
+To overcome this we can always check the exit codes of commands using a special variable called `$?` which will contain the exit code of the previously executed program. </br>
+
+Let's implement this for our two `git` commands that we have in our script and evaluate its exit status incase `git` fails:
 
 ```
 if [ $? -ne 0 ]
