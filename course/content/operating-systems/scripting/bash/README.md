@@ -58,14 +58,16 @@ To do this, we will use the `vboxmanage` command we used in earlier modules to c
 
 Let's setup a shared folder for our server so we can play around with our scripts locally and run it directly in a Linux server. This will make it convenient for us to test our script and we don't need to copy it to the server all the time. </br>
 
-<b>important: take note of the host path which is the path to your GIT directory we created in an earlier chapter</b>
+<b> Important: 
+* The virtual machine should be in a stopped state to run the below commands
+* Take note of the host path which is the path to your GIT directory we created in an earlier chapter</b>
 
 ```
 # Windows:
 VBoxManage sharedfolder add "my-website-1" --name GIT --hostpath "C:\gitrepos\"
 
 # Linux:
-VBoxManage sharedfolder add "my-website-1" --name GIT --hostpath "~/gitrepos"
+VBoxManage sharedfolder add "my-website-1" --name GIT --hostpath ~/gitrepos
 ```
 
 ## Access our Server
