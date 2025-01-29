@@ -63,7 +63,7 @@ You will build the ultimate foundation and be equipped to make more informed dec
 
 * [Chapter 1: Source Control & GIT](./chapters/chapter-1-source-control-git/README.md)
 * [Chapter 2: Operating Systems](./chapters/chapter-2-operating-systems/README.md)
-* 🚧[Chapter 3: Monitoring](./chapters/chapter-3-monitoring/README.md)
+* 🚧[Chapter 3: Linux Monitoring](./chapters/chapter-3-linux-monitoring/README.md)
 * 🚧[Chapter 4: Web Servers](./chapters/chapter-4-web-servers/README.md)
 * 🚧[Chapter 4.1: Web Server Monitoring](./chapters/chapter-4.1-web-server-monitoring/README.md)
 * 🚧[Chapter 5: CI/CD Pipelines](./chapters/chapter-5-ci-cd-pipelines/README.md)

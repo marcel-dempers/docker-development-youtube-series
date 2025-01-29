@@ -1,4 +1,4 @@
-# Chapter 3 : Monitoring
+# Chapter 3 : Linux Monitoring
 
 Back to [Course Introduction](../../README.md)
 
@@ -13,12 +13,13 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 #### In this module
 
 * Importance of Monitoring
+* Monitoring vs Observability
 * Resources to monitor: CPU, Memory, Network, Disk
 * Monitoring Tools Overview
 * Basic Monitoring Commands
-* Logs vs Metrics vs Traces
+* Logs vs Metrics vs Traces & tooling
 
-### 🚧🎬 Module 2: Linux CPU Monitoring
+### 🚧🎬 [Module 2: Linux CPU Monitoring](../../content/operating-systems//linux/monitoring/cpu/README.md)
 
 #### In this module
 
@@ -27,7 +28,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Analyzing CPU Usage
 * Practical Examples
 
-### 🚧🎬 Module 3: Linux Memory Monitoring
+### 🚧🎬 [Module 3: Linux Memory Monitoring](../../content/operating-systems//linux/monitoring/memory/README.md)
 
 #### In this module
 
@@ -36,7 +37,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Analyzing Memory Usage
 * Practical Examples
 
-### 🚧🎬 Module 4: Linux Disk Usage Monitoring
+### 🚧🎬 [Module 4: Linux Disk Usage Monitoring](../../content/operating-systems//linux/monitoring/disk/README.md)
 
 #### In this module
 
@@ -45,7 +46,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Analyzing Disk Usage
 * Practical Examples
 
-### 🚧🎬 Module 5: Linux Network Monitoring
+### 🚧🎬 [Module 5: Linux Network Monitoring](../../content/operating-systems//linux/monitoring/network/README.md)
 
 #### In this module
 
