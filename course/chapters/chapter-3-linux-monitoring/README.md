@@ -8,7 +8,7 @@ This means engineers often lack the knowledge and expertise on how to dismantle 
 
 In this chapter we'll take a look at monitoring concepts and introduce a few more command line tools that help us monitor our server. </br>
 
-### 🚧🎬 [Module 1: Introduction to Linux monitoring](../../content/operating-systems/linux/monitoring/README.md)
+### 🎬 [Module 1: Introduction to Linux monitoring](../../content/operating-systems/linux/monitoring/README.md)
 
 #### In this module
 
@@ -19,7 +19,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Basic Monitoring Commands
 * Logs vs Metrics vs Traces & tooling
 
-### 🚧🎬 [Module 2: Linux CPU Monitoring](../../content/operating-systems//linux/monitoring/cpu/README.md)
+### 🎬 [Module 2: Linux CPU Monitoring](../../content/operating-systems//linux/monitoring/cpu/README.md)
 
 #### In this module
 

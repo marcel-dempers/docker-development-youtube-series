@@ -6,8 +6,7 @@ This module is part of a course on DevOps. </br>
 Checkout the [course introduction](../../../../../README.md) for more information </br>
 This module is part of [chapter 3](../../../../../chapters/chapter-3-linux-monitoring/README.md)
 
-This module is based on my long experience looking after servers, performance, monitoring and diagnosing issues. </br>
-This is not your usual average Linux CPU monitoring guide. </br>
+This module draws from my extensive experience in server management, performance monitoring, and issue diagnosis. Unlike typical Linux CPU monitoring guides, which delve into the technical history and intricate workings of CPUs, this guide is rooted in practical, hands-on experience. It focuses on my approach to CPU functionality, the key aspects I prioritize when monitoring CPU performance, and the strategies I employ to address related challenges.
 
 ## CPU usage - How the CPU works
 
@@ -42,17 +41,47 @@ Because a single CPU core is extremely fast as mentioned above, it may process t
 However, we now know that a single CPU core can only perform one task at a time. </br>
 To speed this up, the CPU has multiple cores for true paralel processing. </br>
 
+So CPU is a shared resource, similar to memory and disk and other resources. </br>
+If an application needs disk, it gets disk space allocation. </br>
+If an application needs memory, it gets memory allocated. </br>
+However, CPU is a much more intensively shared resources as it does not get allocated to an application . <br>
+Applications all queue up their tasks and CPU executes it </br>
+
+This makes it difficult for operating systems to display exactly how much CPU each application
+is using, but it does a pretty good job in doing so. </br>
+
+### Understanding CPU as a Shared Resource
+
+The CPU, like memory and other resouces, is a critical resource that is shared among all running applications on a system.
+
+The CPU is not allocated to applications in fixed chunks. Instead, the CPU time is shared among all running applications through a process called scheduling.
+
+The operating system's scheduler rapidly switches the CPU's focus between different applications, giving each one a small time slice to execute its tasks. This switching happens so quickly that it appears as though applications are running simultaneously.
+
+Because the CPU is a highly contended resource, the operating system must manage this sharing efficiently to ensure that all applications get a fair amount of CPU time and that high-priority tasks are executed promptly.
+
 ## Why is this important for DevOps, Platform, Cloud & SRE Engineers ?
 
-Its important to understand how CPU works for the following reasons:
+Understanding how the CPU is shared and utilized is crucial for several reasons:
 
-* CPU monitoring and usage visualization
-  * Because of the way CPU works, How does the operating system determine CPU usage ?
-  * If the operating system tells us, we have 65% CPU usage, How is that determined ?
-  * Because of the way CPU works, the operating system has to deal with complexities in translating CPU usage to human understandable form.
-  * Overall CPU as a `%` gives us an indication how busy a server is, but does not always tell the full story
+* Reporting CPU usage 
 
-* In addition to the above, we may need to understand the `%` of CPU usage <b>on all cores</b> of CPU. </br>
+When we monitor a system's CPU usage using some tool, we need to understand what the values mean. </br>
+If you work for an organization, they would likely use external 3rd party systems like [New Relic](https://newrelic.com/) or [DataDog](https://www.datadoghq.com/) to monitor servers and applications. </br>
+
+As engineers we'll want to understand :
+* How these metrics are generated 
+* Where these metrics come from
+* How they are measured and collected
+* What it all means for performance and health of the system.
+
+The operating system provides metrics on CPU usage, but interpreting these metrics requires an understanding of how CPU time is shared among processes.
+For example, a reported CPU usage of 65% indicates that 65% of the CPU's time is being used to execute tasks, but it doesn't specify which applications are using that time or how it is distributed among them.
+
+Overall CPU as a `%` gives us an indication how busy a server is, but does not always tell the full story. </br>
+And that's what we'll be learning here today. </br>
+
+In addition to the above, we may need to understand the `%` of CPU usage <b>on all cores</b> of CPU. </br>
 
 ###  Understanding Single vs Multithreaded applications </br>
  
@@ -65,7 +94,9 @@ This means your application is not running optimally and not utilizing all avail
 
 Example 3: Another example of poorly written code where one tasks is awaiting on another task, may end up in whats called a CPU "Deadlock". This occurs when all executing tasks are waiting on each other in a circular reference. </br>
 
-To solve the above issues, programming, scripting and runtime frameworks allows us to write our code in such a way that we can create whats called "threads", "worker threads", or "tasks". </br>
+### Worker threads and tasks
+
+To solve for some of the above issues, programming, scripting and runtime frameworks allows us to write our code in such a way that we can create whats called "threads", "worker threads", or "tasks". </br>
 
 Web servers are a good example of this. When an HTTP request comes to a web server, the web server can create a "worker thread" to handle that request. Then that request gets executed on a CPU core, the web server may issue another "worker thread" to handle other incoming requests. </br>
 
@@ -76,9 +107,13 @@ The web server code for handling each HTTP request may be viewed as "single thre
 
 We can take a look at two bash scripts that I have written that demonstrates single vs multithreaded code </br>
 
+#### example: single threaded code
+
 If we execute `./singlethread-cpu.sh`, we will notice that only one core of CPU is busy at a time. </br>
 Now because we execute a loop, each iteration of that loop will run on a different core. </br>
 Bash itself is single threaded, so this script needs to be optimized if we wanted to make use of all available CPU cores. </br>
+
+#### example: multi threaded code 
 
 If we execute `./multithread-cpu.sh`, we will notice all CPU cores get busy. </br>
 This is because in this script, we read the number of available cores with the `nproc` command. </br>
@@ -113,6 +148,12 @@ Most operating systems display CPU usage as a percentage, indicating the proport
 
 The percentage display mostly makes it easier for humans to interpret if CPU usage is high or not. </br>
 
+We've also learned that CPU reporting is generally based on time spent "on-cpu". So if the Operating System reports `65%` CPU usage, it means 65% of the CPU's time is being used to execute tasks. </br>
+
+Most monitoring tools we'll be looking at will show us `%` CPU. </br>
+Some advanced monitoring tools may show us CPU by process in `seconds` instead. </br>
+So that tells us how much CPU time the process had and we can calculate the `%` ourselves. </br>
+
 ## CPU monitoring tools for Linux 
 
 ### top
@@ -125,11 +166,16 @@ This will give us overall CPU usage for processes as well as other performance m
 
 ### sysstat tools 
 
-[sysstat](https://github.com/sysstat/sysstat) is a Linux system performance tool for the Linux operating system. </br>
+[sysstat](https://github.com/sysstat/sysstat) is a collection of performance tools for the Linux operating system. </br>
 
 The `sysstat` package provides us with may performance monitoring tools such as `iostat`, `mpstat`, `pidstat` and more. </br>
 All of these providing insights to CPU usage and load on the system </br>
 
+<b>Important Note:</b> <br/> 
+`sysstat` also contains tools which you can schedule to collect and historize performance and activity data. </br>
+We'll learn throughout this chapter, that Linux writes performance data to file, but only has the current statistics written to file. So in order to monitor statistics over time, we need to collect this data from these file and collect it over a period of time we'd like to monitor. </br>
+
+To install sysstat on Ubuntu Linux: 
 ```
 sudo apt-get install -y sysstat
 ```
@@ -239,6 +285,30 @@ As per our discussion on single vs multithreaded applications, `pidstat` allows 
 pidstat -t 1 5
 ```
 
+## sar - report statistics over time
+
+The sysstat tools covered so far all report statistics that Linux provides in realtime and have no historical data. In order to 
+get historical data over time, we would need to enable the `sysstat` service and it will collect statistics in the `/var/log/sysstat` folder. </br>
+
+To enable and start `sysstat`, we run the following commands: 
+
+```
+sudo systemctl enable sysstat
+sudo systemctl start sysstat
+```
+
+Now the `sysstat` service will start collecting metrics and store it so we can use another command called `sar` to view historical data. 
+View the available logs by running `sar` against the files. Each file represents the day of the month
+
+```
+ls /var/log/sysstat/
+sa07
+
+sar -u -f /var/log/sysstat/sa07
+```
+
+This is good to understand, but keep in mind that in modern distributed systems, we generally export this statistical data to external storage
+
 ## Troubleshooting High CPU usage
 
 The first challenge to resolve high CPU usage is to locate the overall cause of CPU usage, by using the above tools such as `top`, `htop` or the `sysstat` tools </br>
@@ -291,6 +361,7 @@ For the topic we discussed today there are several layers from 1) being the deep
 1) Linux Kernel writes process statistics in the `/proc` folder
 2) top, htop, sysstat and other tools read and parse this data and displays it
   * Historical data is not stored, this is up to engineers to use as they please
+  * We can keep historical data with the `sysstat` service and use `sar` to report on it
 3) Tools like Prometheus, DataDog, NewRelic has "collectors" or "agents" that read that data so it can be sent to a central storage
   * We do not want to store data on our servers 
   * Send data off to highly available storage
