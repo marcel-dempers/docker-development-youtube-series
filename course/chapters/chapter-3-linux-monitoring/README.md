@@ -28,7 +28,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Analyzing CPU Usage
 * Practical Examples
 
-### 🚧🎬 [Module 3: Linux Memory Monitoring](../../content/operating-systems//linux/monitoring/memory/README.md)
+### 🎬 [Module 3: Linux Memory Monitoring](../../content/operating-systems//linux/monitoring/memory/README.md)
 
 #### In this module
 
@@ -37,7 +37,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Analyzing Memory Usage
 * Practical Examples
 
-### 🚧🎬 [Module 4: Linux Disk Usage Monitoring](../../content/operating-systems//linux/monitoring/disk/README.md)
+### 🎬 [Module 4: Linux Disk Usage Monitoring](../../content/operating-systems//linux/monitoring/disk/README.md)
 
 #### In this module
 
@@ -46,7 +46,7 @@ In this chapter we'll take a look at monitoring concepts and introduce a few mor
 * Analyzing Disk Usage
 * Practical Examples
 
-### 🚧🎬 [Module 5: Linux Network Monitoring](../../content/operating-systems//linux/monitoring/network/README.md)
+### 🎬 [Module 5: Linux Network Monitoring](../../content/operating-systems//linux/monitoring/network/README.md)
 
 #### In this module
 

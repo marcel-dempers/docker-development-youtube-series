@@ -16,19 +16,19 @@ As a DevOps, SRE or platform engineer, we need to form a basic understanding of 
 Since developers will write applications that use data, this data would ultimately be stored and processed which will consume memory on the server. </br>
 Software developers may forget that memory is not an unlimited resource and may also not know what the memory limits on servers are. </br>
 
-In my experience most applications use anywhere between roughtly `50mb` to `2gb` of memory depending on the role of the applications.
+In my experience most applications use anywhere between roughly `50mb` to `2gb` of memory depending on the role of the applications.
 
-The size of the memory is generally dependant on what data the application uses. </br>
+The size of the memory is generally dependent on what data the application uses. </br>
 In a future chapter, we will cover HTTP & Web servers. </br>
 Some applications that developers write, will be hosted by web servers and these applications will often accept HTTP requests and accept some data. 
 
 These applications may also rely on external systems like databases and other microservices to retrieve data like inventory records etc. </br>
 
 The size of this data can cause memory usage to increase. </br>
-Think about it. If an application accepts an HTTP request and loads a customer record from a database, let's say that record is `500kb` in size. If we deal with large number of HTTP requests per second, this data could add up quickly.
+Think about it. If an application accepts an HTTP request and loads a customer record from a database, let's say that record is `500kb` in size. If we deal with a large number of HTTP requests per second, this data could add up quickly.
 That means memory usage could be pretty high for this one application. </br>
 
-As requests by this application increases or decreases, memory usage can either increase or decrease over time. </br>
+As requests by this application increase or decrease, memory usage can either increase or decrease over time. </br>
 
 If this application runs on a server that is shared by other applications, they would contend for the memory resource. </br>
 
@@ -55,7 +55,7 @@ In the previously mentioned example of an application that deals with customer r
 
 Garbage collector may run as a separate thread in the application that runs periodically and releases memory back to the operating system. </br>
 There are more trade-offs here. </br>
-The more frequest the GC runs, the more CPU it may consume to iterate memory objects, but the less frequent it runs, the longer it will hold onto memory. </br>
+The more frequent the GC runs, the more CPU it may consume to iterate memory objects, but the less frequent it runs, the longer it will hold onto memory. </br>
 The larger the applications memory demand, the more CPU the GC may consume to iterate over large quantities of memory. </br>
 
 If this process is not working as expected, or there is a bug in the application code preventing release of unused memory, we would call that a memory leak </br>
@@ -114,7 +114,7 @@ sudo apt-get install -y htop
 ### free
 [free](https://man7.org/linux/man-pages/man1/free.1.html) is a Linux tool that displays the amount of free and used memory in the system. The `free` command in Linux provides a summary of the system's memory usage, including total, used, free, shared, buffer/cache, and available memory </br>
 
-#### Undestanding the output
+#### Understanding the output
 
 * `total`: The total amount of physical RAM in the system.
 * `used`: The amount of RAM currently used by processes and the operating system.
@@ -123,7 +123,7 @@ sudo apt-get install -y htop
 * `buff`/cache: The amount of memory used for buffers and cache. This memory is available for use by processes if needed.
 * `available`: An estimate of the amount of memory available for starting new applications, without swapping. This value is calculated by the kernel and is more accurate than the free column for determining how much memory is truly available.
 
-The above tools are great when you need to jump into a server to see whats going on in relation to system load, cpu and memory usage. </br>
+The above tools are great when you need to jump into a server to see what's going on in relation to system load, cpu and memory usage. </br>
 
 Linux stores memory statistics in `/proc/meminfo`
 
@@ -136,12 +136,12 @@ cat /proc/meminfo
 
 [sysstat](https://github.com/sysstat/sysstat) is a collection of performance tools for the Linux operating system. </br>
 
-The `sysstat` package provides us with may performance monitoring tools such as `iostat`, `mpstat`, `pidstat` and more. </br>
-Some of these provide insights to memory usage by the system as well as indidual breakdowns of memory usage by applications.  </br>
+The `sysstat` package provides us with many performance monitoring tools such as `iostat`, `mpstat`, `pidstat` and more. </br>
+Some of these provide insights to memory usage by the system as well as individual breakdowns of memory usage by applications.  </br>
 
 <b>Important Note:</b> <br/> 
 `sysstat` also contains tools which you can schedule to collect and historize performance and activity data. </br>
-We'll learn throughout this chapter, that Linux writes performance data to file, but only writes the current statistics to file. So in order to monitor statistics over time, we need to collect this data from these file and collect it over a period of time we'd like to monitor. </br>
+We'll learn throughout this chapter that Linux writes performance data to file, but only writes the current statistics to file. So in order to monitor statistics over time, we need to collect this data from these files and collect it over a period of time we'd like to monitor. </br>
 
 To install sysstat on Ubuntu Linux: 
 ```
@@ -150,7 +150,7 @@ sudo apt-get install -y sysstat
 
 ### pidstat
 
-`pidstat` provides detailed statistics on memory usage for individual processes. This is useful for identifying which processes are consuming memory and report on memory usage for a specific process over time . </br>
+`pidstat` provides detailed statistics on memory usage for individual processes. This is useful for identifying which processes are consuming memory and reporting on memory usage for a specific process over time . </br>
 
 According to documentation: 
 
@@ -169,7 +169,7 @@ Usage: pidstat [ options ] [ <interval> [ <count> ] ] [ -e <program> <args> ]
 We can have `pidstat` also monitor a given program using the `-e` option as shown above. `-e` allows us to:
 
 ```
-Execute program with given arguments args and monitor it with pidstat.  pidstat stops when program terminates.
+Execute program with given arguments and monitor it with pidstat.  pidstat stops when the program terminates.
 ```
 
 Examples:

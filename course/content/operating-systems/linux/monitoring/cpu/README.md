@@ -29,22 +29,22 @@ The cycle of a CPU involves:
 3) Read the address from memory
 4) Execute the instruction
 
-In Chapter 2, I suggested thinking of a CPU Core this as a spinning wheel, each "wheelspin" is a CPU cycle that processes 1 task. </br>
-When the wheel is spinning, it cannot process another task and has to finish its cycle so another task can hop on. </br>
+In Chapter 2, I suggested thinking of a CPU Core as a spinning wheel, each "wheelspin" is a CPU cycle that processes 1 task. </br>
+When the wheel is spinning, it cannot process another task and has to finish it's cycle so another task can hop on. </br>
 
-This means that tasks may queue to wait their turn to get onto CPU. </br>
+This means that tasks may queue to wait their turn to get onto the CPU. </br>
 
-### CPU Multitask execution
+### CPU Multi Task execution
 
-Because a single CPU core is extremely fast as mentioned above, it may process tasks extremely fast and appear as if its completing them all at once. </br>
+Because a single CPU core is extremely fast as mentioned above, it may process tasks extremely fast and appear as if it's completing them all at once. </br>
 
 However, we now know that a single CPU core can only perform one task at a time. </br>
-To speed this up, the CPU has multiple cores for true paralel processing. </br>
+To speed this up, the CPU has multiple cores for true parallel processing. </br>
 
 So CPU is a shared resource, similar to memory and disk and other resources. </br>
-If an application needs disk, it gets disk space allocation. </br>
+If an application needs disk space, it gets disk space allocation. </br>
 If an application needs memory, it gets memory allocated. </br>
-However, CPU is a much more intensively shared resources as it does not get allocated to an application . <br>
+However, CPU is a much more intensively shared resource as it does not get allocated to an application . <br>
 Applications all queue up their tasks and CPU executes it </br>
 
 This makes it difficult for operating systems to display exactly how much CPU each application
@@ -52,11 +52,11 @@ is using, but it does a pretty good job in doing so. </br>
 
 ### Understanding CPU as a Shared Resource
 
-The CPU, like memory and other resouces, is a critical resource that is shared among all running applications on a system.
+The CPU, like memory and other resources, is a critical resource that is shared among all running applications on a system.
 
 The CPU is not allocated to applications in fixed chunks. Instead, the CPU time is shared among all running applications through a process called scheduling.
 
-The operating system's scheduler rapidly switches the CPU's focus between different applications, giving each one a small time slice to execute its tasks. This switching happens so quickly that it appears as though applications are running simultaneously.
+The operating system's scheduler rapidly switches the CPU's focus between different applications, giving each one a small time slice to execute it's tasks. This switching happens so quickly that it appears as though applications are running simultaneously.
 
 Because the CPU is a highly contended resource, the operating system must manage this sharing efficiently to ensure that all applications get a fair amount of CPU time and that high-priority tasks are executed promptly.
 
@@ -87,48 +87,48 @@ In addition to the above, we may need to understand the `%` of CPU usage <b>on a
  
 Since we know that a CPU core can only execute one task at a time, it's important for engineers to know how to take advantage of this and also avoid the pitfalls.  
 
-Example 1:  If you have a task which may contain poorly written code, it could keep CPU cores busy unnessasarily, causing other tasks to queue up for execution. This can slow the entire system down. </br>
+Example 1:  If you have a task which may contain poorly written code, it could keep CPU cores busy unnecessarily, causing other tasks to queue up for execution. This can slow the entire system down. </br>
 
 Example 2: If you have code that may be poorly written, you could end up in situations where you are only utilizing 1 core during task execution. This is common when engineers write loops in their programs. </br>
 This means your application is not running optimally and not utilizing all available CPU cores. </br>
 
-Example 3: Another example of poorly written code where one tasks is awaiting on another task, may end up in whats called a CPU "Deadlock". This occurs when all executing tasks are waiting on each other in a circular reference. </br>
+Example 3: Another example of poorly written code where one task is waiting on another task, may end up in what's called a CPU "Deadlock". This occurs when all executing tasks are waiting on each other in a circular reference. </br>
 
 ### Worker threads and tasks
 
-To solve for some of the above issues, programming, scripting and runtime frameworks allows us to write our code in such a way that we can create whats called "threads", "worker threads", or "tasks". </br>
+To solve some of the above issues, programming, scripting and runtime frameworks allows us to write our code in such a way that we can create what's called "threads", "worker threads", or "tasks". </br>
 
 Web servers are a good example of this. When an HTTP request comes to a web server, the web server can create a "worker thread" to handle that request. Then that request gets executed on a CPU core, the web server may issue another "worker thread" to handle other incoming requests. </br>
 
-This way, a web server can handle mutlitple incoming requests and makes use of all available CPU cores on the system </br>
+This way, a web server can handle multiple incoming requests and makes use of all available CPU cores on the system </br>
 
-We may call the HTTP request handler of the web server a mutlithreaded application. </br>
+We may call the HTTP request handler of the web server a multithreaded application. </br>
 The web server code for handling each HTTP request may be viewed as "single threaded" code </br>
 
 We can take a look at two bash scripts that I have written that demonstrates single vs multithreaded code </br>
 
 #### example: single threaded code
 
-If we execute `./singlethread-cpu.sh`, we will notice that only one core of CPU is busy at a time. </br>
+If we execute `./singlethread-cpu.sh`, we will notice that only one core of the CPU is busy at a time. </br>
 Now because we execute a loop, each iteration of that loop will run on a different core. </br>
-Bash itself is single threaded, so this script needs to be optimized if we wanted to make use of all available CPU cores. </br>
+Bash itself is single threaded, so this script needs to be optimized if we want to make use of all available CPU cores. </br>
 
 #### example: multi threaded code 
 
 If we execute `./multithread-cpu.sh`, we will notice all CPU cores get busy. </br>
 This is because in this script, we read the number of available cores with the `nproc` command. </br>
 Then we loop the number of available cores and execute our `simulate_cpu_usage()` function. </br>
-At this point it would technically still be single threaded, because its still a loop and does not create more threads or processes. </br> To get around this we use a special character in bash called `&` at the end of our function. </br>
+At this point it would technically still be single threaded, because it's still a loop and does not create more threads or processes. </br> To get around this we use a special character in bash called `&` at the end of our function. </br>
 
 In Bash, the `&` character is used to run a command or a script in the background. When you append `&` to the end of a command, it tells the shell to execute the command asynchronously, allowing the shell to continue processing subsequent commands without waiting for the background command to complete. </br>
 
 So if we have 8 CPU cores, our script will spawn 8 instances of our function, and each will run on a different CPU core. </br>
 
-This means our application a is mutlithreaded application! </br>
+This means our application is a multithreaded application! </br>
 
 ### CPU Busy vs. System Busy: Understanding the Difference
 
-Common scenarios where CPU usage interpretations may lead to misdiagnoses include:
+Common scenarios where CPU usage interpretations may lead to misdiagnosis include:
 
 When CPU overall CPU usage is low, applications or systems can still be slow if there are other bottlenecks </br>
 
@@ -168,12 +168,12 @@ This will give us overall CPU usage for processes as well as other performance m
 
 [sysstat](https://github.com/sysstat/sysstat) is a collection of performance tools for the Linux operating system. </br>
 
-The `sysstat` package provides us with may performance monitoring tools such as `iostat`, `mpstat`, `pidstat` and more. </br>
+The `sysstat` package provides us with many performance monitoring tools such as `iostat`, `mpstat`, `pidstat` and more. </br>
 All of these providing insights to CPU usage and load on the system </br>
 
 <b>Important Note:</b> <br/> 
 `sysstat` also contains tools which you can schedule to collect and historize performance and activity data. </br>
-We'll learn throughout this chapter, that Linux writes performance data to file, but only has the current statistics written to file. So in order to monitor statistics over time, we need to collect this data from these file and collect it over a period of time we'd like to monitor. </br>
+We'll learn throughout this chapter that Linux writes performance data to file, but only has the current statistics written to file. So in order to monitor statistics over time, we need to collect this data from these files and collect it over a period of time we'd like to monitor. </br>
 
 To install sysstat on Ubuntu Linux: 
 ```
@@ -196,12 +196,12 @@ Usage: iostat [ options ] [ <interval> [ <count> ] ]
 ```
 
 `iostat` Gives us average CPU load and IO since system startup </br>
-This means that if the system is only recently busy, the average CPU usage may be very low because its an average from the time the system started up </br>
+This means that if the system is only recently busy, the average CPU usage may be very low because it's an average from the time the system started up </br>
 
 
 To get the current stats, we can provide an interval and we can also provide a count of snapshots we want of the stats. For example, we can get stats for every second, with a total of 5 snapshots. 
 
-We can also provide `-c` option, which states that we are only interested in CPU stats and not I/O stats. </br>
+We can also provide the `-c` option, which states that we are only interested in CPU stats and not I/O stats. </br>
 ```
 iostat -c 1 5
 ```
@@ -213,7 +213,7 @@ Let's understand the output. This output is pretty common across `sysstat` tools
 * `%nice` 
   * Percentage of CPU utilization that occurred while executing at the user level with nice priority.
 
-The Niceness value is a number assigned to processes in Linux. It helps the kernel decide how much CPU time each process gets by determining its priority.
+The Niceness value is a number assigned to processes in Linux. It helps the kernel decide how much CPU time each process gets by determining it's priority.
 
 * `%system`
   * Percentage of CPU utilization that occurred while executing at the system level (kernel).
@@ -269,7 +269,7 @@ Usage: pidstat [ options ] [ <interval> [ <count> ] ] [ -e <program> <args> ]
 We can have `pidstat` also monitor a given program using the `-e` option as shown above. `-e` allows us to:
 
 ```
-Execute program with given arguments args and monitor it with pidstat.  pidstat stops when program terminates.
+Execute program with given arguments and monitor it with pidstat.  pidstat stops when the program terminates.
 ```
 
 Examples:
@@ -321,9 +321,9 @@ The `PID` is the process identifier of a process running on the operating system
 Once we have the process we can see the command that is causing it. </br>
 Most of the time, you can identify the culprit by looking at the `COMMAND` column of `top` or `htop`. </br>
 
-If its an executable, a script or program running somewhere we can located it using the `ps` command. </br>
+If it's an executable, a script or program running somewhere we can locate it using the `ps` command. </br>
 This command line helps us display information about a selection of the active processes </br>
-You can checkout `man ps` to get more details about all the available options. We are after the process using the `-p` option to pass the process ID of the culprit. This process ID can change, so if you follow along be aware of that. 
+You can check out `man ps` to get more details about all the available options. We are after the process using the `-p` option to pass the process ID of the culprit. This process ID can change, so if you follow along be aware of that. 
 
 ```
 ps -p 6268 -o pid,cmd
@@ -331,9 +331,9 @@ PID CMD
 6268 /bin/bash ./singlethread-cpu.sh
 ```
 
-Above, we use `-p` to pass the process ID, we use `-o` to display output about the process and its command and that helps us locate the executable, in our case a bash script called `singlethread-cpu.sh` which is executed by bash, under the `/bin` folder. </br>
+Above, we use `-p` to pass the process ID, we use `-o` to display output about the process and it's command and that helps us locate the executable, in our case a bash script called `singlethread-cpu.sh` which is executed by bash, under the `/bin` folder. </br>
 
-Now we learned in our command line episode, that the `./` allows to execute scripts and executables in the current working directory. </br>
+Now we learned in our command line episode, that the `./` allows us to execute scripts and executables in the current working directory. </br>
 We cannot see what the current directory is, so if we need to locate that culprit, we can try to find it using the `find` command </br>
 
 `find` takes a file path, where we can specify to search from the root of the filesystem with `/` </br>
