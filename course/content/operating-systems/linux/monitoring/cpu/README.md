@@ -30,9 +30,11 @@ The cycle of a CPU involves:
 4) Execute the instruction
 
 In Chapter 2, I suggested thinking of a CPU Core as a spinning wheel, each "wheelspin" is a CPU cycle that processes 1 task. </br>
-When the wheel is spinning, it cannot process another task and has to finish it's cycle so another task can hop on. </br>
+When the wheel is spinning, it cannot process another task and has to finish it's cycle so another task can hop on. </br> 
 
 This means that tasks may queue to wait their turn to get onto the CPU. </br>
+
+![cpu-single](cpu-single.drawio.svg)
 
 ### CPU Multi Task execution
 
@@ -49,6 +51,8 @@ Applications all queue up their tasks and CPU executes it </br>
 
 This makes it difficult for operating systems to display exactly how much CPU each application
 is using, but it does a pretty good job in doing so. </br>
+
+![cpu-single](cpu-multi.drawio.svg)
 
 ### Understanding CPU as a Shared Resource
 
@@ -84,7 +88,7 @@ And that's what we'll be learning here today. </br>
 In addition to the above, we may need to understand the `%` of CPU usage <b>on all cores</b> of CPU. </br>
 
 ###  Understanding Single vs Multithreaded applications </br>
- 
+
 Since we know that a CPU core can only execute one task at a time, it's important for engineers to know how to take advantage of this and also avoid the pitfalls.  
 
 Example 1:  If you have a task which may contain poorly written code, it could keep CPU cores busy unnecessarily, causing other tasks to queue up for execution. This can slow the entire system down. </br>
@@ -93,6 +97,8 @@ Example 2: If you have code that may be poorly written, you could end up in situ
 This means your application is not running optimally and not utilizing all available CPU cores. </br>
 
 Example 3: Another example of poorly written code where one task is waiting on another task, may end up in what's called a CPU "Deadlock". This occurs when all executing tasks are waiting on each other in a circular reference. </br>
+
+![](cpu-cpu-threads.drawio.svg)
 
 ### Worker threads and tasks
 

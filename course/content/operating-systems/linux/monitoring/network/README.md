@@ -37,21 +37,7 @@ The box on the left is our source server which runs a process and makes a networ
 This could be a Web browser (left box) opening a web page (Github.com) which connects to a Web server (right box) on the internet somewhere hosted by Github. </br>
 It could be Web client to server, Two applications talking to another, Two microservices, a service talking to a database, or technically anything talking to something else over a network or internet </br>
 
-```
-connection from server-a to 143.0.1.2:443
-or https://143.0.1.2
-
-              ---  144.0.1.2 -------- 143.0.1.2:443 -\                                                        
-          ---/     public IP          public IP       ---\                                                    
-     ----/                                                ---\                                                
-  --/                                                         --                                              
-+----------------------+                   +----------------------+                                           
-|  private IP          |                   |   private IP         |                                           
-|  10.0.0.4:1024       |                   |   10.0.0.4:443       |                                           
-|            port      |                   |            port      |                                           
-|  server-a            |                   |   server-b           |                                           
-+----------------------+                   +----------------------+                                                                                                   
-```
+![network components](network.drawio.svg)
 
 ## Importand Network components
 
