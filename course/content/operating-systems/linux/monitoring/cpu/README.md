@@ -115,13 +115,13 @@ We can take a look at two bash scripts that I have written that demonstrates sin
 
 #### example: single threaded code
 
-If we execute `./singlethread-cpu.sh`, we will notice that only one core of the CPU is busy at a time. </br>
+If we execute [./singlethread-cpu.sh](.test/singlethread-cpu.sh), we will notice that only one core of the CPU is busy at a time. </br>
 Now because we execute a loop, each iteration of that loop will run on a different core. </br>
 Bash itself is single threaded, so this script needs to be optimized if we want to make use of all available CPU cores. </br>
 
 #### example: multi threaded code 
 
-If we execute `./multithread-cpu.sh`, we will notice all CPU cores get busy. </br>
+If we execute [./multithread-cpu.sh](.test/multithread-cpu.sh), we will notice all CPU cores get busy. </br>
 This is because in this script, we read the number of available cores with the `nproc` command. </br>
 Then we loop the number of available cores and execute our `simulate_cpu_usage()` function. </br>
 At this point it would technically still be single threaded, because it's still a loop and does not create more threads or processes. </br> To get around this we use a special character in bash called `&` at the end of our function. </br>
