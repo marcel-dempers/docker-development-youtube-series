@@ -136,7 +136,7 @@ This means our application is a multithreaded application! </br>
 
 Common scenarios where CPU usage interpretations may lead to misdiagnosis include:
 
-When CPU overall CPU usage is low, applications or systems can still be slow if there are other bottlenecks </br>
+When overall CPU usage is low, applications or systems can still be slow if there are other bottlenecks </br>
 
 <u>For example:</u>
 
