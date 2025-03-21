@@ -98,6 +98,19 @@ Virtual memory is also known as SWAP memory.
 SWAP memory is a portion of the hard drive designated to be used as virtual memory when the physical memory is fully utilized. It acts as an overflow area for the system's memory, allowing the operating system to continue running applications even when the physical memory is exhausted.
 
 
+## Tools to test monitoring tools
+
+Throughout my journey, I have used many monitoring tools in the field when production servers are having issues. There is one positive thing from learning about monitoring tools as we will do in this module, but theres another positive which is very important, which is to have tooling available to TEST your monitoring tools to help validate your understanding of said monitoring tool. </br>
+
+
+Sometimes our interpretation of what a monitoring tool tells us can be incorrect or slightly off. 
+For example, when using tools that provide insights to memory usage, and you see a process is using 100mb of memory, you can validate the tool by writing a small script that utilises 100mb of memory and validate whether or not you can see that same number in the monitoring tool. Now you know you are using 100mb of memory because you wrote that in the script and you also see the 100mb memory usage in the monitoring tool. </br>
+The above is a very simplistic example, but when it comes to monitoring things like networks, it can be extremely helpful to validate your findings by using simulation scripts. </br>
+
+In this guide we have a [simulation script](./.test/memoryleak-memory.sh) to generate memory usage, simulating a memory leak. </br>
+<i><b>Important Note:</b> Please note that links to these files can change without notice and may be different from what you read on screen in the video at the time of recording.</i>
+
+
 ## Memory monitoring tools for Linux
 
 The simplest way to check memory usage on a server is to use the native `top` and extended `htop` tools. </br>
