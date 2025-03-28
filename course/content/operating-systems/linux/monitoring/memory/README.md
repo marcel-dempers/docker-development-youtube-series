@@ -32,6 +32,14 @@ As requests by this application increase or decrease, memory usage can either in
 
 If this application runs on a server that is shared by other applications, they would contend for the memory resource. </br>
 
+<b>General Memory usage: </b>
+* Memory is used when an application starts as it is loaded into memory from disk
+* Memory usage is dependant on the type of application and how it uses data
+  * Database application may hold data in memory (caching)
+  * Microservice may load data over the network (from another service or database)
+  * Memory used in an ongoing manner by application and needs cleanup
+  * Job application that processes a large amount of data 
+
 <b>Things we have to consider: </b>
 * Is the memory usage of each application justified and normal ?
 * What does the memory usage of this application look like over time ?
