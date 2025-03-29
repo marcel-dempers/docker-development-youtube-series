@@ -21,6 +21,8 @@ As a DevOps, SRE or platform engineer, we need to form a basic understanding of 
 As we have learned in our introduction to monitoring, disk is the only long term persistent storage for a computer system </br>
 When a server shuts down, all important data, files, applications and configuration files are all retained on disk. </br>
 
+![diagram](disk.drawio.svg)
+
 ### Applications are just files
 
 Applications that developers write are compiled into binaries or executables which are all but files on disk. </br>
