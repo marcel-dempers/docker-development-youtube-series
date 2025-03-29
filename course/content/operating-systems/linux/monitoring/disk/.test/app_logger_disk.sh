@@ -12,15 +12,9 @@ FILE_SIZE_MB=1
 
 # Create large files
 for i in $(seq 1 $NUM_FILES); do
-    TIME=$(date  +%YYYY%m%d%H%M%s%N)
+    TIME=$(date  +%Y%m%d%H%M%s%N)
     mkdir -p "$TARGET_DIR/$TIME"
     dd if=/dev/zero of="$TARGET_DIR/$TIME/app_${i}.log" bs=1M count=$FILE_SIZE_MB
 done
-
-# Wait for all background processes to finish
-wait
-
-#give time to troubleshoot
-sleep 60
 
 echo "Disk usage simulation complete. Large files created in $TARGET_DIR."
