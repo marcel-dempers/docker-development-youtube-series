@@ -105,6 +105,9 @@ For disk monitoring tools, we should be able to monitor disk space for the overa
 
 In addition to disk space, we also need to monitor disk I/O usage to identify any bottlenecks when processes are intensively writing to disk. </br>
 
+In this guide we have a [simulation script](./.test/app_logger_disk.sh) to generate disk usage and high I/O. </br>
+<i><b>Important Note:</b> Please note that links to these files can change without notice and may be different from what you read on screen in the video at the time of recording.</i>
+
 ### df
 
 [df](https://man7.org/linux/man-pages/man1/df.1.html) is a native linux monitoring tool that allows us to review disk space of each file system. </br>
