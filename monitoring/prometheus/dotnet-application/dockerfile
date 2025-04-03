@@ -1,28 +1,30 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch as debug
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2.105 AS debug
 
-#install debugger for NET Core
-RUN apt-get update
-RUN apt-get install -y unzip
-RUN curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l ~/vsdbg
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list && \
+    sed -i '/security.debian.org/d' /etc/apt/sources.list && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y --no-install-recommends unzip curl && \
+    curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/vsdbg && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /work/
-WORKDIR /work/
 
-COPY ./src/work.csproj /work/work.csproj
+WORKDIR /work
+
+COPY ./src/work.csproj .
 RUN dotnet restore
 
-COPY ./src/ /work/
-RUN mkdir /out/
+COPY ./src/ .
 RUN dotnet publish --no-restore --output /out/ --configuration Release
 
 ENTRYPOINT ["dotnet", "run"]
 
-###########START NEW IMAGE###########################################
+########### START NEW IMAGE ###########################################
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim as prod
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.3 AS prod
 
-RUN mkdir /app/
-WORKDIR /app/
-COPY --from=debug /out/ /app/
-RUN chmod +x /app/ 
-CMD dotnet work.dll
+WORKDIR /app
+
+COPY --from=debug /out/ .
+
+CMD ["dotnet", "work.dll"]
