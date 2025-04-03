@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: "{{ .Values.name }}"
-  replicas: 2
+  replicas: {{ .Values.deployment.replicas | default 2 }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

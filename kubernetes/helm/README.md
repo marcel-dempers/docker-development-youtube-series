@@ -7,7 +7,7 @@
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-kind create cluster --name helm --image kindest/node:v1.26.0
+kind create cluster --name helm --image kindest/node:v1.31.1
 ```
 
 # Getting Started with Helm
@@ -32,16 +32,16 @@ export KUBE_EDITOR="nano"
 # test cluster access:
 /work # kubectl get nodes
 NAME                    STATUS   ROLES    AGE   VERSION
-helm-control-plane   Ready    master   26m   v1.26.0
+helm-control-plane   Ready    control-plane   26m   v1.31.1
 
 ```
 
 ## Install Helm CLI
 
 ```
-curl -LO https://get.helm.sh/helm-v3.4.0-linux-amd64.tar.gz
-tar -C /tmp/ -zxvf helm-v3.4.0-linux-amd64.tar.gz
-rm helm-v3.4.0-linux-amd64.tar.gz
+curl -LO https://get.helm.sh/helm-v3.17.2-linux-amd64.tar.gz
+tar -C /tmp/ -zxvf helm-v3.17.2-linux-amd64.tar.gz
+rm helm-v3.17.2-linux-amd64.tar.gz
 mv /tmp/linux-amd64/helm /usr/local/bin/helm
 chmod +x /usr/local/bin/helm
 
