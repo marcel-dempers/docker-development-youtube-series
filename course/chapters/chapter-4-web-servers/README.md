@@ -22,7 +22,7 @@ In this chapter we'll learn about the basics of web servers and get our first we
   - TCP\UDP and Ports
   - Network testing tools
 
-### 🚧🎬 Module 2: The basics of HTTP
+### 🚧🎬 [Module 2: The Basics of HTTP](../../content/web/http/README.md)
 
 #### In this module
 
@@ -30,10 +30,8 @@ In this chapter we'll learn about the basics of web servers and get our first we
 * Roles of clients and servers
 * Understanding requests and responses
 * Interpreting responses & status codes
-* Understanding response logs
-* Tools
 
-### 🚧🎬 Module 3: The basics of HTML and Web Services
+### 🚧🎬 [Module 3: The basics of HTML and Web Services](../../content/web/html/README.md)
 
 DevOps engineers are often tasked to troubleshoot and assist developers who may have Web applications deployed. </br>
 Perhaps there are network failures, resources may not be correctly loading or incorrectly deployed. </br>
@@ -63,7 +61,8 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 
 * Troubleshooting client and servers 
 * Understanding HTTP status codes and meaning of errors
-* Interpret web server error and access logs
+* Interpret & Understand web server error and access logs
+* Tools
 
 ### 🚧🎬 Module 6: DNS, Domains, SSL & TLS
 
