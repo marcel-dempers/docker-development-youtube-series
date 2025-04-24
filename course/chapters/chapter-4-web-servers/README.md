@@ -31,7 +31,7 @@ In this chapter we'll learn about the basics of web servers and get our first we
 * Understanding requests and responses
 * Interpreting responses & status codes
 
-### 🚧🎬 [Module 3: The basics of HTML and Web Services](../../content/web/html/README.md)
+### 🚧🎬 [Module 3: The Basics of HTML Websites and Web Services or APIs ](../../content/web/html/README.md)
 
 DevOps engineers are often tasked to troubleshoot and assist developers who may have Web applications deployed. </br>
 Perhaps there are network failures, resources may not be correctly loading or incorrectly deployed. </br>
