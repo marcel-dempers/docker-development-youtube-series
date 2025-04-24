@@ -4,7 +4,6 @@ node_modules/
 __pycache__/
 *.pem
 *.csr
-# terraform
 .terraform
 *.tfstate
 *.tfstate.*
@@ -17,3 +16,6 @@ kubernetes/portainer/business/volume*
 
 #ignore postgres data for sample and database tutorials
 pgdata
+
+#ignore sample data mount points
+.data
