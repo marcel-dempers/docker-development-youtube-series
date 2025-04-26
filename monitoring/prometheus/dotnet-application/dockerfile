@@ -1,28 +1,20 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch as debug
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-#install debugger for NET Core
-RUN apt-get update
-RUN apt-get install -y unzip
-RUN curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l ~/vsdbg
+RUN mkdir -p /src/
+COPY ./src/dotnet.csproj /src/dotnet.csproj
 
-RUN mkdir /work/
-WORKDIR /work/
-
-COPY ./src/work.csproj /work/work.csproj
+WORKDIR /src/
 RUN dotnet restore
 
-COPY ./src/ /work/
+COPY ./src/ /src/
 RUN mkdir /out/
-RUN dotnet publish --no-restore --output /out/ --configuration Release
 
-ENTRYPOINT ["dotnet", "run"]
+RUN dotnet build dotnet.csproj --configuration Debug --no-restore
+RUN dotnet publish dotnet.csproj --output /out --configuration Debug --no-restore
 
-###########START NEW IMAGE###########################################
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim as prod
+WORKDIR /app
+COPY --from=build /out/ /app
 
-RUN mkdir /app/
-WORKDIR /app/
-COPY --from=debug /out/ /app/
-RUN chmod +x /app/ 
-CMD dotnet work.dll
+ENTRYPOINT ["dotnet", "dotnet.dll"]
