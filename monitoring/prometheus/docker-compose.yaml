@@ -29,14 +29,14 @@ services:
       - "83:5000"
   prometheus:
     container_name: prometheus-svc
-    image: prom/prometheus
+    image: prom/prometheus:v3.3.0
     ports: 
       - "9091:9090"
     command: --config.file=/etc/prometheus/prometheus.yaml
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
   grafana:
-    image: grafana/grafana:5.0.4
+    image: grafana/grafana:11.6.1
     ports:
       - "3000:3000"
     environment:
@@ -44,7 +44,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
   grafana-dashboards:
-    image: alpine:3.10
+    image: alpine:latest
     depends_on:
       - grafana
     volumes:
