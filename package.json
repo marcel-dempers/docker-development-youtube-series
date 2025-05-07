@@ -1,0 +1,14 @@
+{
+    "name": "js-npm",
+    "version": "1.0.0",
+    "description": "Minimal Node.js project for Dependabot demo",
+    "main": "index.js",
+    "dependencies": {
+      "lodash": "4.17.19",
+      "express": "4.17.1",
+      "minimist": "0.2.0",
+      "jquery": "3.4.0",
+      "debug": "2.6.8",
+      "handlebars": "4.0.11"
+    }
+}
