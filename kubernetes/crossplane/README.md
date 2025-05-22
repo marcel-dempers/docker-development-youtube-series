@@ -99,7 +99,7 @@ az ad sp create-for-rbac --sdk-auth  \
 --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP" > azure-credentials.json
 ```
 
-### Create Prpovider Kubernetes Secret 
+### Create Provider Kubernetes Secret 
 
 ```
 kubectl create secret \
@@ -164,4 +164,13 @@ Deploy a Virtual Machine:
 
 ```
 kubectl apply -f kubernetes/crossplane/resources/azure/resource-virtualmachine.yaml
+```
+
+## Cleanup Resources
+
+```
+kubectl delete linuxvirtualmachine marcel-test
+kubectl delete networkinterface marcel-test
+kubectl delete subnet marcel-test
+kubectl delete virtualnetwork marcel-test
 ```

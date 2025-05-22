@@ -1,7 +1,7 @@
 apiVersion: network.azure.upbound.io/v1beta1
 kind: VirtualNetwork
 metadata:
-  name: marcel-test-vnet
+  name: marcel-test
   labels:
     app: marcel-test
 spec:
