@@ -6,7 +6,7 @@ Web servers are an importand foundation of the IT ecosystem. </br>
 The internet is fundamentally made up of web servers. </br>
 In this chapter we'll learn about the basics of web servers and get our first web server up and running. </br>
 
-### 🚧🎬 [Module 1: Introduction to Web](../../content/web/README.md)
+### 🎬 [Module 1: Introduction to Web](../../content/web/README.md)
 
 #### In this module
 

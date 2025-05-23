@@ -1,0 +1,11 @@
+FROM golang:1.24
+
+WORKDIR /app
+
+COPY . .
+
+RUN go build -o server .
+
+# docker run -it -v ${PWD}:/work -w /work -p 8080:8080 golang:1.24 bash
+# go build -o server .
+# ./server
