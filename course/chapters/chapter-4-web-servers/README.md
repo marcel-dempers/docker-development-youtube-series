@@ -22,7 +22,7 @@ In this chapter we'll learn about the basics of web servers and get our first we
   - TCP\UDP and Ports
   - Network testing tools
 
-### 🚧🎬 [Module 2: The Basics of HTTP](../../content/web/http/README.md)
+### 🎬 [Module 2: The Basics of HTTP](../../content/web/http/README.md)
 
 #### In this module
 
