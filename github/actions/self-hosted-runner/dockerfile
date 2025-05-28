@@ -32,8 +32,11 @@ RUN useradd -m github && \
   usermod -aG sudo github && \
   echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-USER github
+
 WORKDIR /actions-runner
+RUN chown github .
+USER github
+
 RUN curl -Ls https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz | tar xz \
   && sudo ./bin/installdependencies.sh
 
