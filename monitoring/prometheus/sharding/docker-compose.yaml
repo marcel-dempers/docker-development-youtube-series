@@ -1,0 +1,26 @@
+networks:
+  prometheus:
+    name: prometheus
+    driver: bridge
+    external: true
+services:
+  prometheus-00:
+      container_name: prometheus-00
+      image: prom/prometheus:v3.3.0
+      ports: 
+        - "9090:9090"
+      command: --config.file=/etc/prometheus/prometheus.yaml
+      volumes:
+        - ./prometheus-00.yaml:/etc/prometheus/prometheus.yaml
+      networks:
+        - prometheus
+  prometheus-01:
+      container_name: prometheus-01
+      image: prom/prometheus:v3.3.0
+      ports: 
+        - "9091:9090"
+      command: --config.file=/etc/prometheus/prometheus.yaml
+      volumes:
+        - ./prometheus-01.yaml:/etc/prometheus/prometheus.yaml
+      networks:
+        - prometheus

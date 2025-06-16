@@ -1,3 +1,7 @@
+networks:
+  prometheus:
+    name: prometheus
+    driver: bridge
 services:
   go-application:
     build:
@@ -6,6 +10,8 @@ services:
     image: go-application
     ports:
       - "80:5000"
+    networks:
+      - prometheus
   python-application:
     build:
       context: ./python-application
@@ -13,6 +19,8 @@ services:
     image: python-application
     ports:
       - "81:5000"
+    networks:
+      - prometheus
   dotnet-application:
     build:
       context: ./dotnet-application
@@ -20,6 +28,8 @@ services:
     image: dotnet-application
     ports:
       - "82:5000"
+    networks:
+      - prometheus
   nodejs-application:
     build:
       context: ./nodejs-application
@@ -27,6 +37,8 @@ services:
     image: nodejs-application
     ports:
       - "83:5000"
+    networks:
+      - prometheus
   prometheus:
     container_name: prometheus-svc
     image: prom/prometheus:v3.3.0
@@ -35,6 +47,8 @@ services:
     command: --config.file=/etc/prometheus/prometheus.yaml
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+    networks:
+      - prometheus
   grafana:
     image: grafana/grafana:11.6.1
     ports:
@@ -43,6 +57,8 @@ services:
       - GF_AUTH_BASIC_ENABLED=false
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    networks:
+      - prometheus
   grafana-dashboards:
     image: alpine:latest
     depends_on:
@@ -57,3 +73,5 @@ services:
         cd /grafana
         curl --request POST http://grafana:3000/api/datasources --header 'Content-Type: application/json' -d @datasources.json
         curl --request POST http://grafana:3000/api/dashboards/db --header 'Content-Type: application/json' -d @dashboard.json"
+    networks:
+      - prometheus
