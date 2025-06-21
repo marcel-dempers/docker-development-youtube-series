@@ -31,7 +31,7 @@ In this chapter we'll learn about the basics of web servers and get our first we
 * Understanding requests and responses
 * Interpreting responses & status codes
 
-### 🚧🎬 [Module 3: The Basics of HTML Websites and Web Services or APIs ](../../content/web/html/README.md)
+### 🎬 [Module 3: The Basics of HTML Websites and Web Services or APIs ](../../content/web/html/README.md)
 
 DevOps engineers are often tasked to troubleshoot and assist developers who may have Web applications deployed. </br>
 Perhaps there are network failures, resources may not be correctly loading or incorrectly deployed. </br>
@@ -49,6 +49,7 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 
 #### In this module
 
+* Web Server overview
 * Installing NGINX Web server
 * Understand the NGINX configuration
 * Setup a basic web site with a few pages
@@ -64,17 +65,28 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 * Interpret & Understand web server error and access logs
 * Tools
 
-### 🚧🎬 Module 6: DNS, Domains, SSL & TLS
+### 🚧🎬 [Module 6: The Basics of DNS & Domains]()
 
 #### In this module
 
-* What is DNS
 * What are domains
+* What are host names
+* What is DNS
+* DNS tooling
+* Types of DNS
 * Importance of TLS/SSL for secure communication  
+
+### 🚧🎬 [Module 7: The Basics of SSL & TLS]()
+
+#### In this module
+
+* What is SSL & TLS
 * HTTPS connections
+* Importance of encryption on the Web
+* TLS Tools
 * Setting up TLS in Web servers for HTTPS
 
-### ⏳🎬 Module 7: Creating our own personal website
+### ⏳(Coming Soon)🎬 Module 7: Creating our own personal website
 
 During this entire course we will touch on a wide spectrum of DevOps tooling, concepts and technology. </br>
 The outcome of this course is to have real-world hands-on experience with all these topics, all the way from setup, scripting, coding to building, CI/CD and deployment including monitoring and observability. </br>
@@ -84,7 +96,7 @@ The outcome of this course is to have real-world hands-on experience with all th
 * Put together a DevOps CV personal website using HTML, CSS and Javascript
 * Understanding website deployment and changes
 
-### ⏳🎬 Module 8: Get free SSL certificates
+### ⏳(Coming Soon)🎬 Module 8: Get free SSL certificates
 
 To make our website public on the web, we should introduce a domain and SSL certificate
 
