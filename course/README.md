@@ -88,4 +88,4 @@ If you are a beginner, I highly recommend you checkout the full course on your f
 
 ## Explore the Course
 
-![](course-diagram.svg)
+![](course.drawio.svg)

@@ -45,7 +45,7 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 * Understanding different HTTP responses: API vs WEB
 * Monitoring and Debugging
 
-### 🚧🎬 Module 4: Creating web servers with NGINX
+### 🎬 [Module 4: Creating web servers with NGINX](../../content/web/servers/README.md)
 
 #### In this module
 
