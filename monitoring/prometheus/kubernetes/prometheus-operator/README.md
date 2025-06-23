@@ -37,4 +37,43 @@ We will need a service account with RBAC permissions for our new Prometheus inst
 kubectl apply -f monitoring/prometheus/kubernetes/prometheus-operator/serviceaccount.yaml
 ```
 
+Apply Prometheus instance
+
+```
+kubectl apply -f monitoring/prometheus/kubernetes/prometheus-operator/prometheus.yaml
+```
+
+Apply Service Monitors 
+
+```
+kubectl apply -f monitoring/prometheus/kubernetes/prometheus-operator/servicemonitors.yaml
+```
+
+We can now see our Prometheus instance in the `default` namespace:
+
+```
+kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+dotnet-application-74dbc8b5d9-gmr7h    1/1     Running   0          14m
+go-application-65bbc698f-fjmqr         1/1     Running   0          14m
+nodejs-application-c47c5f4c8-b9hls     1/1     Running   0          14m
+prometheus-prometheus-applications-0   2/2     Running   0          33m
+python-application-759b44fff7-9q7ws    1/1     Running   0          14m
+```
+
+Checkout the Prometheus instance 
+
+```
+kubectl port-forward prometheus-prometheus-applications-0 9090
+```
+
+Checkout Grafana
+
+```
+kubectl -n monitoring port-forward svc/grafana 3000:80
+```
+
+Then access Grafana on [localhost:3000](http://localhost:3000/)
+
+
 

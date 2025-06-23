@@ -25,10 +25,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: dotnet-application
+  labels:
+    app: dotnet-application
 spec:
   selector:
     app: dotnet-application
   ports:
   - port: 80
+    name: http
     targetPort: 5000
   type: ClusterIP
