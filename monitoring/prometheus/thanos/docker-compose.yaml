@@ -1,0 +1,43 @@
+networks:
+  prometheus:
+    name: prometheus
+    driver: bridge
+    external: true
+services:
+  # Object Storage for Thanos (using MinIO for local testing)
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000" # MinIO console/API
+      - "9001:9001" # MinIO console
+    environment:
+      MINIO_ROOT_USER: thanos_user
+      MINIO_ROOT_PASSWORD: thanos_password
+    command: server /data --console-address ":9001"
+    networks:
+      - prometheus
+  thanos-sidecar-00:
+    image: quay.io/thanos/thanos:v0.38.0 # Use a specific version
+    container_name: thanos-sidecar-00
+    user: "65534"
+    volumes:
+      - sharding_prometheus_00:/prometheus # Mount Prometheus data
+      - ./thanos-sidecar-00:/etc/thanos # Mount Thanos config
+    command:
+      - 'sidecar'
+      - '--tsdb.path=/prometheus'
+      - '--prometheus.url=http://prometheus-00:9090' # External labels are crucial for Thanos Query to distinguish data sources
+      - '--objstore.config-file=/etc/thanos/thanos-objstore.yml'
+      - '--http-address=0.0.0.0:19090' # HTTP for metrics/status
+      - '--grpc-address=0.0.0.0:19091' # gRPC for Thanos Query to connect
+      - '--shipper.upload-compacted'
+    networks:
+      - prometheus
+    depends_on:
+      - minio
+volumes:
+  sharding_prometheus_00:
+    external: true
+  sharding_prometheus_01:
+    external: true
