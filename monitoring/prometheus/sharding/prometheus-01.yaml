@@ -4,7 +4,7 @@ global:
   # IMPORTANT: Add external labels for Thanos deduplication and identification
   external_labels:
     cluster: docker-compose-cluster
-    prometheus_replica: prometheus-00
+    prometheus_replica: prometheus-01
 
 
 scrape_configs:
