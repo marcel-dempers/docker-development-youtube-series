@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-application
+  labels:
+    app: dotnet-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dotnet-application
+  template:
+    metadata:
+      labels:
+        app: dotnet-application
+    spec:
+      containers:
+      - name: dotnet-application
+        image: dotnet-application:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnet-application
+  labels:
+    app: dotnet-application
+spec:
+  selector:
+    app: dotnet-application
+  ports:
+  - port: 80
+    name: http
+    targetPort: 5000
+  type: ClusterIP
