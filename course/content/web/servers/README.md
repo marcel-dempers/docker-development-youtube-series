@@ -147,6 +147,28 @@ We can start our NGINX by just running the `sudo nginx` command. We can then vie
 Once we have a port forward in place -
 We can access our site on `http://<IP>` where the IP is the private IP of our server. 
 
+### Automatic Start on Server Boot 
+
+It's impportant to also note that when NGINX installs using `apt`, 
+
+This is because the `apt` package manager, when installing system services like Nginx, typically sets them up to be managed by `systemd` (the modern init system in Ubuntu). Part of this setup usually involves enabling the service, which means it will automatically start at boot.
+
+You can verify this by running: </br>
+
+`systemctl status nginx`
+
+If it says `Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)`, then it's configured to start automatically. The "enabled" status indicates that it will start on boot. </br>
+
+`systemctl` is a command-line utility used to control and inspect the systemd system and service manager in Linux.
+
+#### systemd
+
+`systemd` is the "brain" or the "engine" that manages nearly everything that happens on a modern Linux system after the kernel loads. </br> 
+It's the first process that starts (PID 1) and is responsible for booting up the rest of the operating system, managing system services (like web servers, databases, networking, etc.), logging, and shutting down the system. It replaced older "init" systems like System V init.
+
+`systemctl` is the command line tool for interacting with `systemd`
+
+
 ### NGINX Configuration
 
 All web servers generally come with configuration support </br>
