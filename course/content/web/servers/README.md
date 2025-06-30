@@ -362,16 +362,16 @@ sudo nano /websites/my-website/nginx.conf
 
 ```
 user nginx;
-pid /tmp/nginx.pid;
+pid /run/nginx.pid;
 
 events {
   worker_connections  1024;
 }
 
-error_log  /tmp/error.log;
+error_log  /websites/my-website/error.log;
 
 http {
-  access_log /tmp/access.log;
+  access_log /websites/my-website/access.log;
   
   #nginx temporary files
   client_body_temp_path /tmp/client_temp;
@@ -410,6 +410,26 @@ Remember in our previous chapter on Linx and user security, we talked about `sud
 sudo -u nginx nginx -t -c /websites/my-website/nginx.conf
 ```
 
+We notice that we get an error stating:
+```
+nginx: [emerg] bind() to 0.0.0.0:80 failed (13: Permission denied)
+```
+
+This is because our unpriviledged user does not have access to bind to ports lower than 1024. To get this addressed, we can either use another port, or allow the binding to those ports by using the `setcap` command.
+The `setcap` command should be installed in our version of Ubuntu. Let's run it:
+
+```
+sudo setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx
+```
+
+* `cap_net_bind_service`: The specific capability.
++ep: This means "Effective" and "Permitted".
+
+* `e` (effective): The capability is immediately active.
+
+* `p` (permitted): The capability is in the process's permitted set, meaning it can be added to the effective set later if needed.
+
+
 Then stop the previous NGINX process and start our server to test it
 
 ```
@@ -432,6 +452,26 @@ We can go ahead and grab the content from a previous module where we learned abo
 We can copy the content of the above three files from the previous module and simply paste them into these new ones. 
 
 If we refresh the page, we can see that we now have a web server that serves our HTML home page, and that requests two additional files, our JS and CSS files and we now have a prettier looking website. </br>
+
+## Update `systemd` with our Configurations
+
+Now so far, we manually stopped and ran NGINX as our unprivileged user, and told it to use our configuration file. </br>
+So we learned how to do that all manually. </br>
+However, we do know that NGINX uses `systemd` to start our web server and will point to the default configuration file. </br>
+
+So we want to change this. Do do it, we will use `systemctl` to change our `systemd` file so that we use our custom configuration file. 
+
+Edit the `systemd` file:
+```
+sudo systemctl edit nginx.service
+```
+
+Reloud `systemd` and restart `nginx`:
+
+```
+sudo systemctl daemon-reload
+sudo systemctl start nginx
+```
 
 ## DevOps, SRE & Platform Engineering Key takeaways
 
