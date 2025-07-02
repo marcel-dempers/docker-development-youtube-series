@@ -56,7 +56,7 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 * Make our website public
 * Understanding SSL\TLS security for Web servers
 
-### 🚧🎬 Module 5: HTTP Troubleshooting
+### 🎬[Module 5: HTTP Troubleshooting](../../content/web/http/troubleshooting/README.md)
 
 #### In this module
 
