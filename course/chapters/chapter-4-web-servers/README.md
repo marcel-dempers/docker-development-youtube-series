@@ -65,7 +65,7 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 * Interpret & Understand web server error and access logs
 * Tools
 
-### 🚧🎬 [Module 6: The Basics of DNS & Domains]()
+### 🚧🎬 [Module 6: The Basics of DNS & Domains](../../content/web/dns/README.md)
 
 #### In this module
 
@@ -76,7 +76,7 @@ In this chapter we will learn about the basics of HTML and web assets, how they 
 * Types of DNS
 * Importance of TLS/SSL for secure communication  
 
-### 🚧🎬 [Module 7: The Basics of SSL & TLS]()
+### 🚧🎬 [Module 7: The Basics of SSL & TLS](../../content/web/tls/README.md)
 
 #### In this module
 
