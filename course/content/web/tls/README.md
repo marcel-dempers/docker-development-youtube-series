@@ -8,7 +8,7 @@ This module is part of [chapter 4](../../../chapters/chapter-4-web-servers/READM
 
 This module draws from my extensive experience in the world of Web. Building and managing Web servers, building web sites, web services, monitoring , security, networking etc.  
 In this module, we will cover the basics of SSL and TLS and the importance of it in the DevOps field. </br>
-SSL & TLS goes quite deep in terms of complexity and is a very broad security field. </br>
+SSL & TLS goes quite deep in terms of complexity and is a very broad topic in the security landscape. </br>
 The aim of this module is to highlight important aspects, basic usage and tools for engineers. </br>
 
 As an engineer, you will encounter TLS\SSL when working with HTTPS. 
@@ -20,6 +20,8 @@ In our overview of the web, we talked about client and server and that they both
 
 Generally speaking HTTP requests and responses are unencrypted when using HTTP on port 80. </br>
 Which means the data between the client and servers are passed in plain text which is readable by humans and any network devices in between. </br>
+
+That can be problematic especially when an HTTP client needs to pass sensitive information to an HTTP server, like passwords (for authentication) or credit card information (such as on payment webpages)
 
 ### What is encryption
 
@@ -37,8 +39,10 @@ Most time in HTTP, we need to pass sensitive information. Things like personal i
 
 Just like we saw in the browser network tools and `curl` , any network device where this traffic passes through, can read the information if its unencrypted. </br>
 
+This is not only concerning for sensitive information like passwords and credit card information, but overall privacy in general. <br/>
+
 This is why we have HTTPS, which is HTTP, but its encrypted. The "S" stands for "Secure"
-In order or HTTP traffic to be secure over HTTPS, the server would pass a TLS or SSL "handshake"
+In order or HTTP traffic to be secure over HTTPS, the server would pass a TLS or SSL "handshake" </br>
 
 SSL stands for `Secure Sockets Layer` </br>
 TLS stands for Transport Layer Security</br>
@@ -47,7 +51,7 @@ TLS is a protocol used to encrypt communication between applications and systems
 Pretty much does what SSL does, however TLS is a successor to SSL and provides a secure, encrypted channel for data exchange.
 
 
-SSL and TLS are cryptographic algorythms that allow us to enrypt HTTP payloads. </br>
+SSL and TLS are cryptographic algorythms that allow us to encrypt HTTP payloads. </br>
 It's important to know that SSL is an older technology and technically vulnerable and superceeded by TLS. People still often refer to TLS as SSL because the term has been used for so long and the term has become interchangable </br>
 
 From now on throughout this module and course, we will refer to TLS only
@@ -58,7 +62,7 @@ and validate ciphers and establish a secure encrypted channel to communicate ove
 
 ## HTTPS Connections with TLS
 
-**The TLS Handshake**
+### The TLS Handshake
 
 To summarise all the above, lets run a `curl` command to see the TLS handshake:
 
@@ -109,8 +113,7 @@ The main important points about a self-signed certificate:
 There are some great tools available to 
 * Generate self-signed TLS certificates that we can use for testing and development
 * Test TLS certificates for HTTPS </br>
-  - We can test a website address to validate its certificate
-
+  - We can test a website address to validate its certificate. We may want to validate a website and it's certificate before we send traffic to it.
 
 ### Creating a self-signed TLS certificate 
 
@@ -147,8 +150,6 @@ You should now have two files in your current directory after running this comma
 * `server.key`: your private key
 * `server.crt`: your self-signed certificate
 
-🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
-
 ## Setting up TLS in Web servers for HTTPS
 
 To setup TLS connections, you will need a valid and trusted TLS certificate </br>
@@ -156,10 +157,15 @@ For learning purposes, we have introduced a self-signed certificate.
 
 ### Move certificate and key to a secure location 
 
+Move our certificates to the NGINX folder and give the `nginx` user correct permissions to the certificate and ensuring `root` has ownership:
+
 ```
 sudo mkdir -p /etc/nginx/ssl
 sudo mv server.crt /etc/nginx/ssl/
 sudo mv server.key /etc/nginx/ssl/
+
+sudo chmod 600 /etc/nginx/ssl/server.key
+sudo chown root:root /etc/nginx/ssl/server.key /etc/nginx/ssl/server.crt
 ```
 
 ### Edit web server configuration file
@@ -167,10 +173,14 @@ sudo mv server.key /etc/nginx/ssl/
 We will need to enable TLS within our web server configuration. </br>
 This generally involves setting our port to `443` , enabling `TLS\SSL` and providing a key and certificate file. </br>
 
-Let's edit our NGINX configuration file in `/etc/nginx/nginx.conf`
+Let's edit our NGINX configuration file. Remember we used `systemd` to configure our web server so it manages `nginx`. </br>
+We used a custom configuration file. </br>
+We can locate it, using `sudo systemctl cat nginx.service` and we can see it tells us where our configuration is pointing to. 
+
+We can edit this using `nano` 
 
 ```
-nano /etc/nginx/nginx.conf
+sudo nano /websites/my-website/nginx.conf
 ```
 
 We will need to add the following configuration items in the `server` block
@@ -188,11 +198,6 @@ server {
     # Optional: Stronger SSL/TLS settings
     ssl_protocols TLSv1.2 TLSv1.3;
 
-    # Define a simple response for testing
-    location / {
-        add_header Content-Type text/plain;
-        return 200 "Hello from Nginx HTTPS!";
-    }
 }
 ```
 
@@ -200,7 +205,7 @@ Next, we can test our configuration to ensure there are no errors
 We should see output indicating a success
 
 ```
-sudo nginx -t
+sudo nginx -t -c /websites/my-website/nginx.conf
 ```
 
 Restart our NGINX web server so it takes the new configuration changes
