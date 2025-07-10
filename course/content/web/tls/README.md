@@ -251,6 +251,10 @@ This is less secure and should only be used for testing or in environments where
 curl -k https://localhost
 ```
 
+Remember if we wanted to access our web server from our browser (outside the VM) we will need to forward ports.
+We use port `8080` forwarded to port `80` for HTTP </br>
+We can forward port `8081` to port `443` for HTTPS </br>
+
 # Key Takeaways 
 
 * TLS & Encryption is a very broad topic under security and cryptography. Although DevOps will be dealing with Web, HTTPS, TLS and Web server configuration, we will often encounter it. </br>
