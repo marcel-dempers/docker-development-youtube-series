@@ -1,4 +1,4 @@
-# Chapter 4 : Web servers
+# Chapter 4 : The Web & HTTP
 
 Back to [Course Introduction](../../README.md)
 

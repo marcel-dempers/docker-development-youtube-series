@@ -165,7 +165,8 @@ sudo mv server.crt /etc/nginx/ssl/
 sudo mv server.key /etc/nginx/ssl/
 
 sudo chmod 600 /etc/nginx/ssl/server.key
-sudo chown root:root /etc/nginx/ssl/server.key /etc/nginx/ssl/server.crt
+sudo chown root:root /etc/nginx/ssl/server.key
+sudo chown root:root /etc/nginx/ssl/server.crt
 ```
 
 ### Edit web server configuration file
