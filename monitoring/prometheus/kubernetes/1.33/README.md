@@ -3,9 +3,7 @@
 Create a cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
-cd monitoring\prometheus\kubernetes\1.33
-
-kind create cluster --name monitoring --image kindest/node:v1.33.1 --config kind.yaml
+kind create cluster --name monitoring --image kindest/node:v1.33.1 --config monitoring/prometheus/kubernetes/1.33/kind.yaml
 ```
 
 Test our cluster to see all nodes are healthy and ready:
@@ -43,10 +41,7 @@ helm show values prometheus-community/kube-prometheus-stack > prometheus-values.
 
 ## Configation
 
-We can take anything from the values file and create our own `values.yaml` file to configure anything we want:
-
-```
-```
+We can take anything from the values file and create our own [values.yaml](./values.yaml) file to configure anything we want.
 
 ## Installation
 
@@ -63,11 +58,10 @@ helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
   --version ${CHART_VERSION} \
   --namespace monitoring \
   --create-namespace \
-  --values values.yaml
+  --values monitoring/prometheus/kubernetes/1.33/values.yaml
 ```
 
 ## Prometheus Operator
-
 
 
 # Check Monitoring

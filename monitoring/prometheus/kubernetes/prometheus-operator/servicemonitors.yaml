@@ -4,6 +4,7 @@ metadata:
   name: dotnet-application
   labels:
     monitoring: prometheus-applications
+    prometheus-shard: prometheus-00
 spec:
   selector:
     matchLabels:
@@ -17,6 +18,7 @@ metadata:
   name: go-application
   labels:
     monitoring: prometheus-applications
+    prometheus-shard: prometheus-00
 spec:
   selector:
     matchLabels:
@@ -30,6 +32,7 @@ metadata:
   name: nodejs-application
   labels:
     monitoring: prometheus-applications
+    prometheus-shard: prometheus-01
 spec:
   selector:
     matchLabels:
@@ -43,6 +46,7 @@ metadata:
   name: python-application
   labels:
     monitoring: prometheus-applications
+    prometheus-shard: prometheus-01
 spec:
   selector:
     matchLabels:
