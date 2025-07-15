@@ -5,6 +5,7 @@ metadata:
 data:
   config.json: |
     {
-      "environment" : "dev"
+      "environment" : "dev",
+      "version" : "1.0.0"
     }
 # kubectl create configmap example-config --from-file ./golang/configs/config.json

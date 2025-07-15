@@ -1,6 +1,4 @@
-# Introduction to Kubernetes: Configmaps
-
-<a href="https://youtu.be/o-gXx7r7Rz4" title="k8s-cm"><img src="https://i.ytimg.com/vi/o-gXx7r7Rz4/hqdefault.jpg" width="20%" alt="k8s-cm" /></a> 
+# Introduction to K8s Reloader 
 
 ## Create a cluster with Kind
 
@@ -16,10 +14,11 @@ NAME                 STATUS   ROLES           AGE   VERSION
 demo-control-plane   Ready    control-plane   19m   v1.33.1
 ```
 
-Deploy a `ConfigMap` 
+For this demo, we'll want to deploy a `ConfigMap` and/or a `Secret` and consume these using a `Deployment`
+
+Deploy a `ConfigMap`
 
 ```
 kubectl apply -f kubernetes/configmaps/configmap.yaml
 ```
 
-Deploy a pod that consumes the `ConfigMap` 
