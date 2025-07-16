@@ -4,6 +4,9 @@ metadata:
   name: example-deploy
   labels:
     app: example-app
+  annotations:
+    secret.reloader.stakater.com/auto: "true"
+    configmap.reloader.stakater.com/auto: "true"
 spec:
   selector:
     matchLabels:
@@ -16,25 +19,30 @@ spec:
       maxUnavailable: 0
   template:
     metadata:
-      annotations:
-        # Detect changes when using Helm:  calculate a hash of the ConfigMap content.
-        # This forces the Deployment to change and pod to rollout when ConfigMap changes.
-        #checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app: example-app
     spec:
       containers:
       - name: example-app
-        image: nginx:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
+        image: ubuntu
+        command: ["/bin/bash"]
+        args:
+        - "-c"
+        - |
+          CONFIG=$(cat /configs/config.json);
+          echo $CONFIG
+
+          while true; do
+            echo "Content read at startup: $CONFIG";
+            echo "CONFIGURATION_ENABLED = $CONFIGURATION_ENABLED"
+            sleep 5;
+          done
         env:
-        - name: CONFIGURATION_FILENAME
+        - name: CONFIGURATION_ENABLED
           valueFrom:
             configMapKeyRef:
               name: example-config #name of our configmap object
-              key: config_filename
+              key: config_enabled
         volumeMounts:
         - name: config-volume
           mountPath: /configs/

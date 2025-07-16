@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: example-config
 data:
+  config_enabled: "true"
   config.json: |
     {
       "environment" : "dev",

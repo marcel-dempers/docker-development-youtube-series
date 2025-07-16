@@ -23,3 +23,23 @@ kubectl apply -f kubernetes/configmaps/configmap.yaml
 ```
 
 Deploy a pod that consumes the `ConfigMap` 
+
+```
+kubectl apply -f kubernetes/configmaps/deployment.yaml
+```
+
+Checking the deployment pods
+The `kubectl describe` command is essential for checking out kubernetes resources
+
+```
+kubectl describe deploy example-deploy
+```
+
+We can checkout the config contents inside the pod's container with the `kubectl exec` command to get shell
+
+```
+kubectl exec -it <pod-name> -- bash
+```
+
+When we make a change to the `ConfigMap`, we will notice that the configuration file changes and reflects inside the pod. </br>
+This takes a number of seconds to a minute or so to propogate
