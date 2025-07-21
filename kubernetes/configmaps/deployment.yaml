@@ -34,7 +34,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: example-config #name of our configmap object
-              key: config_filename
+              key: config_enabled
         volumeMounts:
         - name: config-volume
           mountPath: /configs/
