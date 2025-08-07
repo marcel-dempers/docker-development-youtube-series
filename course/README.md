@@ -51,8 +51,9 @@ While building your website, we will cover topics such as:
 The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained above-mentioned skills and abilities.</br>
 You will build the ultimate foundation and be equipped to make more informed decisions on what you want to focus on next in your career. </br>
 
-## 🛠 System Requirements
+## 🛠 System & Other Requirements
 
+* <b>a Github account:</b> To follow along, we will be creating GitHub accounts
 * <b>Operating System:</b> Windows (Pro and Enterprise ), Linux or MacOS
   * <i>note: You'll need Pro or Enterprise Windows to support Virtualization</i>
 
@@ -64,9 +65,9 @@ You will build the ultimate foundation and be equipped to make more informed dec
 * [Chapter 1: Source Control & GIT](./chapters/chapter-1-source-control-git/README.md)
 * [Chapter 2: Operating Systems](./chapters/chapter-2-operating-systems/README.md)
 * [Chapter 3: Linux Monitoring](./chapters/chapter-3-linux-monitoring/README.md)
-* [Chapter 4: The Web & HTTP](./chapters/chapter-4-web-servers/README.md)
-* 🚧[Chapter 4.1: Web Server Monitoring](./chapters/chapter-4.1-web-server-monitoring/README.md)
-* 🚧[Chapter 5: CI/CD Pipelines](./chapters/chapter-5-ci-cd-pipelines/README.md)
+* [Chapter 4: The Web & HTTP](./chapters/chapter-4-web-and-http/README.md)
+* ⏳[Chapter 4.1: Web Server Monitoring](./chapters/chapter-4.1-web-server-monitoring/README.md)
+* 🚧[Chapter 5: CI/CD & Automation](./chapters/chapter-5-ci-cd/README.md)
 * 🚧[Chapter 6: Containers & Docker](./chapters/chapter-6-docker/README.md)
 * 🚧[Chapter 7: Docker Compose ](./chapters/chapter-7-docker-compose/README.md)
 * 🚧[Chapter 8: Infrastructure as Code ](./chapters/chapter-8-infra-as-code/README.md)

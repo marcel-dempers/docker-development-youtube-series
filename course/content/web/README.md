@@ -4,7 +4,7 @@
 
 This module is part of a course on DevOps. </br>
 Checkout the [course introduction](../../README.md) for more information </br>
-This module is part of [chapter 4](../../chapters/chapter-4-web-servers/README.md)
+This module is part of [chapter 4](../../chapters/chapter-4-web-and-http/README.md)
 
 This module draws from my extensive experience in the world of Web. Building and managing Web servers, building web sites, web services, monitoring , security, networking etc.  
 
