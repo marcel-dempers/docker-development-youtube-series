@@ -1,0 +1,34 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+processors:
+  memory_limiter:
+    check_interval: 5s
+    limit_percentage: 90
+    spike_limit_percentage: 20
+  batch:
+    send_batch_max_size: 512
+    send_batch_size: 256
+    timeout: 8s
+exporters:
+  file:
+    path: /etc/otelcol-contrib/.data/output_traces.log
+  otlp/tempo:
+    endpoint: "http://tempo:4317"
+    tls:
+      insecure: true
+  debug:
+extensions:
+  zpages:
+    endpoint: 0.0.0.0:55679
+service:
+  extensions: [zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/tempo, file, debug]
