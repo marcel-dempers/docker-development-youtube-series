@@ -22,11 +22,7 @@ exporters:
     tls:
       insecure: true
   debug:
-extensions:
-  zpages:
-    endpoint: 0.0.0.0:55679
 service:
-  extensions: [zpages]
   pipelines:
     traces:
       receivers: [otlp]

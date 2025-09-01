@@ -9,11 +9,9 @@ services:
     volumes:
     - ./config.yaml:/etc/otelcol-contrib/config.yaml
     - ./.data:/etc/otelcol-contrib/.data
-    - /var/lib/docker/containers:/var/lib/docker/containers
     networks:
     - tracing
-    ports:
-    - "55679:55679"
+
   videos-web:
     container_name: videos-web
     image: aimvector/service-mesh:videos-web-1.0.0
@@ -43,6 +41,8 @@ services:
     image: otel/autoinstrumentation-go
     privileged: true
     pid: "host"
+    depends_on:
+    - playlists-api
     environment:
     - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
     - OTEL_GO_AUTO_TARGET_EXE=/shared/app
