@@ -1,4 +1,4 @@
-FROM nginx:1.19-alpine
+FROM nginx:1.29-alpine
 
 #config
 COPY ./nginx.conf /etc/nginx/nginx.conf

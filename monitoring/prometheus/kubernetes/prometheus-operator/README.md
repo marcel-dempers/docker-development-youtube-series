@@ -8,7 +8,7 @@ To follow this walkthrough , you will need [Kubernetes Monitoring](../1.33/READM
 You may need to build the applications first using docker
 
 ```
-docker compose -f monitoring\prometheus\docker-compose.yaml build 
+docker compose -f monitoring/prometheus/docker-compose.yaml build 
 ```
 
 Load the images into our cluster created in the monitoring guide:

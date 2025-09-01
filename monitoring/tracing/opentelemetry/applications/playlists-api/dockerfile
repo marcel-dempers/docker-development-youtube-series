@@ -1,4 +1,4 @@
-FROM golang:1.15-alpine as build
+FROM golang:1.25-alpine as build
 RUN apk add --no-cache git
 
 WORKDIR /src 
@@ -11,7 +11,7 @@ COPY app.go /src
 
 RUN go build -o app
 
-FROM alpine:3.12
+FROM alpine:latest
 
 RUN mkdir -p /app
 COPY --from=build /src/app /app/app

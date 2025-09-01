@@ -13,14 +13,14 @@ kind create cluster --name linkerd --image kindest/node:v1.30.4
 ```
 # ingress controller
 kubectl create ns ingress-nginx
-kubectl apply -f kubernetes/servicemesh/applications/ingress-nginx/
+kubectl apply -f monitoring/tracing/opentelemetry/applications/ingress-nginx/
 
 # applications
-kubectl apply -f kubernetes/servicemesh/applications/playlists-api/
-kubectl apply -f kubernetes/servicemesh/applications/playlists-db/
-kubectl apply -f kubernetes/servicemesh/applications/videos-web/
-kubectl apply -f kubernetes/servicemesh/applications/videos-api/
-kubectl apply -f kubernetes/servicemesh/applications/videos-db/
+kubectl apply -f monitoring/tracing/opentelemetry/applications/playlists-api/
+kubectl apply -f monitoring/tracing/opentelemetry/applications/playlists-db/
+kubectl apply -f monitoring/tracing/opentelemetry/applications/videos-web/
+kubectl apply -f monitoring/tracing/opentelemetry/applications/videos-api/
+kubectl apply -f monitoring/tracing/opentelemetry/applications/videos-db/
 ```
 
 ## Make sure our applications are running 
