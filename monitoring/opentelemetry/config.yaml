@@ -15,16 +15,24 @@ processors:
     send_batch_size: 256
     timeout: 8s
 exporters:
-  file:
+  file/traces:
     path: /etc/otelcol-contrib/.data/output_traces.log
+  file/metrics:
+    path: /etc/otelcol-contrib/.data/output_metrics.log
   otlp/tempo:
     endpoint: "http://tempo:4317"
     tls:
       insecure: true
+  prometheus:
+    endpoint: "0.0.0.0:9464"
   debug:
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [otlp/tempo, file, debug]
+      exporters: [otlp/tempo, file/traces, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus, file/metrics]

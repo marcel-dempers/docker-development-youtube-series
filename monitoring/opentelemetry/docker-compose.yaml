@@ -85,6 +85,9 @@ services:
     - "OTEL_TRACES_SAMPLER_ARG=1"
     - "OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=ManualInstrumentations.*"
     - "OTEL_DOTNET_AUTO_TRACES_INSTRUMENTATION_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_ASPNETCORE_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_HTTPCLIENT_ENABLED=true"
     - "OTEL_DOTNET_AUTO_LOG_DIRECTORY=/tmp"
     - "OTEL_LOG_LEVEL=error"
     - "OTEL_EXPORTER_OTLP_PROTOCOL=grpc"
@@ -107,6 +110,7 @@ services:
       - "3000:3000"
     volumes:
       - ./applications/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/tempo.yaml
+      - ./applications/grafana/dashboards:/etc/grafana/provisioning/dashboards
     networks:
     - tracing
   tempo:
@@ -115,6 +119,17 @@ services:
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
     - ./applications/tempo/tempo.yaml:/etc/tempo.yaml
+    networks:
+    - tracing
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+    volumes:
+      - ./applications/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
     networks:
     - tracing
 volumes:
