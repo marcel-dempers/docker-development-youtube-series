@@ -1,0 +1,20 @@
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-operated.monitoring.svc.cluster.local:9090
+      access: proxy
+      isDefault: true
+      jsonData:
+        httpMethod: GET
+    - name: Tempo
+      type: tempo
+      url: http://tempo.grafana.svc.cluster.local:3200
+      access: proxy
+      isDefault: false
+      jsonData:
+        httpMethod: GET
+        serviceMap:
+          datasourceUid: 'Prometheus'
