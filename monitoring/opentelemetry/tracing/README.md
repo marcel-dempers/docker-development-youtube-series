@@ -11,7 +11,7 @@
 To build the applications navigate your terminal to the location of the compose file
 
 ```
-cd monitoring/opentelemetry/docker-compose.yaml
+cd monitoring/opentelemetry/
 ```
 
 Build: 
