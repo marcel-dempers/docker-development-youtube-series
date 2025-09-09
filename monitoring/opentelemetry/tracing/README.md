@@ -31,7 +31,7 @@ docker compose up
 ## Kubernetes
 
 For Kubernetes, we will use the OpenTelemetry Operator. </br>
-See that guide over [here](./kubernetes/README.md)
+See that guide over [here](../kubernetes/README.md)
 
 
 ## Generate from Traffic

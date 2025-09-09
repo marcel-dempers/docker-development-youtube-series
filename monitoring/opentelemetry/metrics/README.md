@@ -1,4 +1,4 @@
-# OpenTelemetry Metrics : Coming Soon
+# OpenTelemetry Metrics
 
 <a href="https://youtu.be/bIxt1b0GOU4" title="fluentd-intro"><img src="https://i.ytimg.com/vi/bIxt1b0GOU4/hqdefault.jpg" width="20%" alt="opentel-intro" /></a> 
 
@@ -28,7 +28,7 @@ docker compose up
 ## Kubernetes
 
 For Kubernetes, we will use the OpenTelemetry Operator. </br>
-See that guide over [here](./kubernetes/README.md)
+See that guide over [here](../kubernetes/README.md)
 
 
 ## Generate from Traffic
