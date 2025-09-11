@@ -28,11 +28,11 @@ helm repo update
 helm search repo open-telemetry --versions
 ```
 
-We'll install version `0.93.0` at the time of this guide.
+We'll install version `0.93.1` at the time of this guide.
 I would suggest to make sure the version you pick is compatible with the Kubernetes version you are running. </br> 
 
 ```
-OTEL_VERSION=0.93.0
+OTEL_VERSION=0.93.1
 ```
 
 ### Cert-manager chart
@@ -161,7 +161,7 @@ helm search repo  grafana/tempo
 
 TEMPO_VERSION=1.23.3
 
-helm upgrade tempo grafana/tempo \
+helm install tempo grafana/tempo \
     --create-namespace \
     --namespace grafana \
     --version $TEMPO_VERSION \
