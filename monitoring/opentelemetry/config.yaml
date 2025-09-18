@@ -23,8 +23,17 @@ exporters:
     endpoint: "http://tempo:4317"
     tls:
       insecure: true
-  prometheus:
-    endpoint: "0.0.0.0:9464"
+  
+  # Option A: Prometheus to scrape metrics from Otel
+  # prometheus:
+  #   endpoint: "0.0.0.0:9464"
+
+  # Option B: Otel to send metrics  to Prometheus
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+    tls:
+      insecure: true
+      insecure_skip_verify: true
   debug:
 service:
   pipelines:
@@ -35,4 +44,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [prometheus, file/metrics]
+      exporters: [prometheusremotewrite, file/metrics]

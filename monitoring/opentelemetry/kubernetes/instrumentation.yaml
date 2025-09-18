@@ -1,0 +1,33 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: app-instrumentation
+spec:
+  exporter:
+    endpoint: http://trace-collector-collector.monitoring.svc.cluster.local:4318
+  propagators:
+    - tracecontext
+    - baggage
+  sampler:
+    type: parentbased_traceidratio
+    argument: '1'
+  dotnet:
+    env:
+      - name: OTEL_EXPORTER_OTLP_TRACES_PROTOCOL
+        value: "grpc"
+      - name: OTEL_LOG_LEVEL
+        value: "error"
+      - name: OTEL_DOTNET_AUTO_LOG_DIRECTORY
+        value: /tmp
+      - name: "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_ENABLED"
+        value: "true"
+      - name: "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_ASPNETCORE_ENABLED"
+        value: "true"
+      - name: "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_HTTPCLIENT_ENABLED"
+        value: "true"
+  go:
+    env:
+      - name: OTEL_EXPORTER_OTLP_PROTOCOL
+        value: "grpc"
+      - name: OTEL_PROPAGATORS
+        value: "tracecontext,baggage"

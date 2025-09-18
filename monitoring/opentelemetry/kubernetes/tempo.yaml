@@ -1,0 +1,13 @@
+server:
+  http_listen_port: 3200
+tempo:
+  metricsGenerator:
+    # The metricsGenerator component converts traces into Prometheus metrics.
+    enabled: true
+    remoteWriteUrl: "http://prometheus-operated.monitoring.svc.cluster.local:9090/api/v1/write"
+  overrides:
+    defaults:
+      metrics_generator:
+        processors:
+        - service-graphs
+        - span-metrics

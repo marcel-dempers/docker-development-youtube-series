@@ -1,0 +1,45 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: trace-collector
+spec:
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.131.1
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 15
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+
+    exporters:
+      # NOTE: Prior to v0.86.0 use `logging` instead of `debug`.
+      debug: {}
+      otlp/tempo:
+        endpoint: "http://tempo.grafana.svc.cluster.local:4317"
+        tls:
+          insecure: true
+      prometheusremotewrite:
+        endpoint: "http://prometheus-operated:9090/api/v1/write"
+        tls:
+          insecure: true
+          insecure_skip_verify: true
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [debug, otlp/tempo]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [prometheusremotewrite]
