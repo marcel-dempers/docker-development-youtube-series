@@ -31,12 +31,13 @@ In previous chapters we've setup our own web server and website. </br>
 
 #### In this module
 
-* Continuous Integration overview
+* Continuous integration overview
+* Networking challenges & Security concerns
+* Architecture review
 * Scripting: Automate CI system install
 * Github Actions workflow file overview
-* Building and Packaging software (artifacts)
+* Building and packaging software (artifacts)
 * Create a CI pipeline using Github Actions 
-* Modern CI tools & Remarks
 
 ### 🎬 [Module 4: CD Example: Creating a CD pipeline with Github Actions](../../content/automation/cicd/cd/examples/github/README.md)
 
@@ -44,21 +45,27 @@ In previous chapters we've setup our own web server and website. </br>
 
 * Continuous delivery\deployment overview
 * Github Actions workflow file review
-* Tips: Deploying software 
-* Extend our pipeline & add Continuous deployment
-* Modern CD tools & Remarks
+* Graceful and Rolling deployments
+* Create CD steps in our CICD pipeline using Github Actions
 
 ### 🎬 [Module 5: Scripting Example: Automate our Infrastructure ](../../content/automation/scripting/examples/README.md)
 
 #### In this module
 
-* 
+* Scripting Requirements
+* Scripting our Server Infrastructure
+* Using the Command line
+* Process of building a script: iteration and testing
+* Challenges of Scripting
 
 ### 🎬 [Module 6: Declarative Tools Example: Automate our Infrastructure (Vagrant)](../../content/automation/config-management/examples/vagrant/README.md)
 
 #### In this module
 
-* 
+* Declarative vs Imperative Automation
+* Desired State
+* Infrastructure as Code
+* Declarative IaC with Vagrant
 
 ### 🎬 [Module 7: Configuration Management Example: Automate our Infrastructure (Ansible)](../../content/automation/config-management/examples/ansible/README.md)
 

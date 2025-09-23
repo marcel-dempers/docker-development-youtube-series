@@ -227,7 +227,7 @@ This destination folder may be where our web server could be serving the files f
 # settings
 GITHUB_REPO_URL="https://github.com/marcel-dempers/my-website.git"
 DEPLOYMENT_SOURCE_DIR="$HOME/gitrepos/my-website"
-DEPLOYMENT_DEST_DIR="$HOME/webites/my-website"
+DEPLOYMENT_DEST_DIR="$HOME/websites/my-website"
 ```
 
 Printing logs our output is very useful in scripting. </br>
@@ -641,12 +641,12 @@ Automation tools for CI/CD & automation pipelines generally allow for a way to p
 The pipe operator or `|` is used to pass the output of one command as input to another command.
 For example, we can grab the content of our website config
 
-`cat $HOME/webites/my-website/nginx.conf`
+`cat $HOME/websites/my-website/nginx.conf`
 Let's say this is a large config file and we only want the `root` section we can pipe it to another command called `grep`.
 
 [grep](https://en.wikipedia.org/wiki/Grep) is a command-line utility for searching plaintext datasets for lines that match a regular expression
 
-`cat $HOME/webites/my-website/nginx.conf | grep 'root'`
+`cat $HOME/websites/my-website/nginx.conf | grep 'root'`
 
 This command and pipe is useful if you have to search a large file for some specific text. <br/>
 

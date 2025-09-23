@@ -247,7 +247,7 @@ http {
   server {
     listen 80;
     location  / {
-        root /webites/my-website;
+        root /websites/my-website;
     }
   }
 }
@@ -271,7 +271,7 @@ http {
     listen 80;
     server_name my-website.com;
     location  / {
-        root /webites/my-website;
+        root /websites/my-website;
     }
   }
 
@@ -279,7 +279,7 @@ http {
     listen 81;
     server_name my-other-website.com;
     location  / {
-        root /webites/my-other-website;
+        root /websites/my-other-website;
     }
   }
 }
@@ -447,7 +447,12 @@ sudo touch /websites/my-website/script.js
 sudo touch /websites/my-website/style.css
 ```
 
-We can go ahead and grab the content from a previous module where we learned about [Websites & Web APIs](../html/README.md)
+We can go ahead and grab the content from a previous module where we learned about [Websites & Web APIs](../html/README.md) </br>
+
+Here are the links to the files:
+* [home.html](../.test/home.html)
+* [script.js](../.test/script.js)
+* [style.css](../.test/style.css)
 
 We can copy the content of the above three files from the previous module and simply paste them into these new ones. 
 
@@ -466,7 +471,14 @@ Edit the `systemd` file:
 sudo systemctl edit nginx.service
 ```
 
-Reloud `systemd` and restart `nginx`:
+After the first two comments, in the open space, let's define an environment variable that will tell NGINX the location of our configuration file 
+
+```
+[Service]
+Environment="CONFFILE=/websites/my-website/nginx.conf"
+```
+
+Reload `systemd` and restart `nginx`:
 
 ```
 sudo systemctl daemon-reload

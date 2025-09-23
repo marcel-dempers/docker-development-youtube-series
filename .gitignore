@@ -17,3 +17,5 @@ kubernetes/portainer/business/volume*
 
 #ignore postgres data for sample and database tutorials
 pgdata
+course/content/automation/config-management/examples/ansible/.test/set_env.ps1
+course/content/automation/config-management/examples/ansible/.test/set_env.sh
