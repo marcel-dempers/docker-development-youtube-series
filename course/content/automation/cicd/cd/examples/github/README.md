@@ -96,7 +96,7 @@ My example workflow file we will be using can be found [here](./.test/cicd-workf
 
 1. **Overview** Let us review the following block of Github Actions
 
-```
+```yaml
 - name: deploy package
   run: | 
     . infra/scripts/deploy.sh $PACKAGE_NUMBER
@@ -118,7 +118,7 @@ My example workflow file we will be using can be found [here](./.test/cicd-workf
 
 3. Commit the chages and push the changes to Github and watch our full CI/CD pipeline run
 
-```
+```shell
 git status
 git commit -m "add continous delivery to our pipeline"
 git push origin main

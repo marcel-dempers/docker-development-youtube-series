@@ -84,7 +84,7 @@ We can define some important parameters at the top of the script. </br>
 Some variables may be "settings" that we can tune over time. </br>
 Something like the memory and CPU sizes:
 
-```
+```shell
 VM_MEMORY="4096"
 VM_CPUS="4"
 VM_DISK_SIZE_MB="25600"
@@ -92,13 +92,13 @@ VM_DISK_SIZE_MB="25600"
 
 Other variables, like "VM_NAME" could be an input parameter. </br>
 
-```
+```shell
 VM_NAME=$1
 ```
 
 This will allow us to run a script and create a few servers and make our script **reusable**: 
 
-```
+```shell
 ./create-server "my-website-01"
 ./create-server "my-website-02"
 ./create-server "my-website-03"
@@ -116,7 +116,7 @@ There are some obvious structures that our script will need:
 
 We can also apply this flow to things like the virtual network which may or may not exist. </br>
 
-```
+```shell
 # network 
 
 if network_exists "$NETWORK_NAME"; then
@@ -142,7 +142,7 @@ Our `if` and `else` structures are very easy to read and to achieve that, we had
 
 Let's define our functions:
 
-```
+```shell
 network_exists() {
     VBoxManage natnetwork list | grep -q "Name: *$1"
 }
@@ -160,7 +160,7 @@ The cool thing about functions is we can paste them into the terminal and trigge
 
 Now we can go ahead and run our script because we have an idempotent structure with inputs and our script is now ready to run in the terminal. </br>
 
-```
+```shell
 ./create-server.sh "my-website-02"
 ```
 Now we have something we can iterate on. We can now add more and more functionality and test it. The quicker we define our above structure, the quicker we can start running our script. </br>
@@ -182,7 +182,7 @@ The final test is to run our script with input parameters and end up with the vi
 
 Please be aware, sometimes VirtualBox needs to be restarted to see the new server or network changes in the app 
 
-```
+```shell
 ./create-server.sh "my-website-02"
 ```
 

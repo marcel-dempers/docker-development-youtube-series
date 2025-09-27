@@ -31,7 +31,7 @@ Let's take a look at an Imperative script:
 
 ("How to create our virtual server")
 
-```
+```shell
 #!/bin/bash
 
 # 1. Create the virtual machine
@@ -59,7 +59,7 @@ The outcome of Imperative scripts are not garanteed. </br>
 
 Let's see what that would look like if we used a Declarative tool like Vagrant:
 
-```
+```shell
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/noble"
   
@@ -173,7 +173,7 @@ UserKnownHostsFile /dev/null
 
 The `vagrant init` command will initialise the current directory and generate a Vagrant file for a specific box. A "box" in Vagrant refers to a virtual server and in our case it will be a virtual box. </br>
 
-```
+```shell
 vagrant init --help
 ```
 
@@ -191,7 +191,7 @@ You can click the link above and either manually `cd` to the path or right click
 
 Once you `cd` to the directory, you should see the Vagrant file when running `ls` 
 
-```
+```shell
 ls -l
 total 4
 -rwxrwxrwx 1 marcel marcel 1795 Aug 11 09:01 Vagrantfile
@@ -214,19 +214,20 @@ Two variables that interest us:
 Let's set these variables! </br> 
 
 Windows:
-```
+```powershell
 $ENV:VAGRANT_HOME = "C:\temp\vms\vagrant"
 $ENV:VAGRANT_DOTFILE_PATH = "C:\temp\vms\vagrant\.vagrant"
 ```
 
 Linux :
-```
+```shell
 export VAGRANT_HOME="~/vagrant"
 export VAGRANT_DOTFILE_PATH="~/vagrant/.vagrant"
 ```
 
 Here is the full command I used to initialise our directory:
-```
+
+```shell
 vagrant init cloud-image/ubuntu-24.04 --box-version 20250805.0.0
 ```
 
@@ -244,7 +245,8 @@ This is because I already created a Vagrant file for us we can walk through. `va
 
 2. Configure our settings (Full variable list)
 
-```
+Windows:
+```powershell
 # windows
 $ENV:VAGRANT_HOME = "C:\temp\vms\vagrant"
 $ENV:VAGRANT_DOTFILE_PATH = "C:\temp\vms\vagrant\.vagrant"
@@ -258,7 +260,10 @@ $ENV:PAT_TOKEN = ""
 $ENV:GITHUB_ORG = "<your-github-username>"
 $ENV:GITHUB_REPO = "my-website"
 $ENV:RUNNER_NAME = "test-runner-01"
+```
 
+Linux:
+```shell
 # linux
 export VAGRANT_HOME="~/vagrant"
 export VAGRANT_DOTFILE_PATH="~/vagrant/.vagrant"
@@ -277,19 +282,19 @@ export RUNNER_NAME="test-runner-01"
 
 To run our server, we run
 
-```
+```shell
 vagrant up --provision
 ```
 
 Stop our server
 
-```
+```shell
 vagrant halt
 ```
 
 Destroy server: 
 
-```
+```shell
 vagrant destroy
 ```
 

@@ -91,7 +91,7 @@ export RUNNER_NAME="test-runner-01"
   Let's comment out all the "shell" provisioners, but keep the "file" ones that copy important files to the server.
 
 5. Start our server from scratch  
-```
+```shell
 #linux
 . ./set_env.sh
 #windows 
@@ -99,12 +99,6 @@ export RUNNER_NAME="test-runner-01"
 
 vagrant destroy
 vagrant up --provision
-```
-
-6. SSH terminal access to our new server
-
-```
-ssh devopsguy@localhost -p 2222
 ```
 
 ### Navigating the Documentation
@@ -122,7 +116,7 @@ We'll walk through the Introduction using the official documentation and talk th
 ### Installing Ansible
 
 Now according to the documentation, we could install Ansible with:
-```
+```shell
 pip install ansible
 ```
 
@@ -137,7 +131,7 @@ Now as our server is set up to be provisioned by code, we will need to add a pro
 There is an [Ansible Provisioner](https://developer.hashicorp.com/vagrant/docs/provisioning/ansible) for Vagrant.
 
 Our example starting point:
-```vagrantfile
+```shell
 Vagrant.configure("2") do |config|
 
   #
@@ -278,7 +272,13 @@ The above will create a user account if it does not already exist.
     append: yes
 ```
 
-## Migrating our Script Provisioners to Ansible playbook
+7. SSH terminal access to our new server using our new user account
+
+```
+ssh devopsguy@localhost -p 2222
+```
+
+## Migrating Script Provisioners to Ansible playbook
 
 Now you should get a clear idea of the benefits of Ansible and the power that the declarative configuration has over an imperative scripting approach. We can now go ahead and add all the other provisioners as Ansible plays to our playbook. </br>
 
@@ -480,7 +480,7 @@ We'll create user accounts, directories, files, run commands, download and insta
 
 Let's start with a new Play to provision our Github Actions Runner and add our basic task list
 
-```
+```yaml
 - name: Provision Github CI/CD runner
   hosts: all 
   remote_user: root

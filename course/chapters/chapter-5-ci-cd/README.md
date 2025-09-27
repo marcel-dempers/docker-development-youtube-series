@@ -71,4 +71,8 @@ In previous chapters we've setup our own web server and website. </br>
 
 #### In this module
 
-* 
+* What is Configuration Management
+* Challenges with Scripting & Idempotence
+* Declarative configuration
+* Introduction to Ansible
+* Migrating scripts to declarative configuration

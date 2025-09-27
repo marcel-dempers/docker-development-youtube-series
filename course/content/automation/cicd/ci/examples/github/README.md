@@ -243,7 +243,7 @@ My example workflow file we will be using can be found [here](./.test/cicd-workf
 
 8. Let's setup the following folder structure in our `my-website` repo with everything we have so far: 
 
-```
+```yaml
 /
 ├── infra/            # or 'infrastructure'
 │   └── scripts/      # Bash scripts for automation
@@ -257,7 +257,7 @@ My example workflow file we will be using can be found [here](./.test/cicd-workf
 
 **Make sure we have a terminal open at our my-website GIT repo**:
 
-```
+```shell
 mkdir -p infra/scripts/
 mkdir -p src/
 mkdir -p .github/worflows
@@ -277,7 +277,7 @@ mkdir -p .github/worflows
 12. **Review our Source Code**
     *  Our my-website repo structure should look like the following 
 
-```
+```yaml
 /
 ├── infra/           
 │   └── scripts/install-github-runner.sh     
@@ -298,7 +298,7 @@ mkdir -p .github/worflows
     * Lets `ssh` into our Virtual Server and run our script in the `/infra` folder
     * #TODO
 
-```
+```shell
 PAT_TOKEN=''
 GITHUB_ORG=''
 GITHUB_REPO=''
@@ -311,7 +311,7 @@ RUNNER_NAME=''
 
 15. We can now finally commit our script, as well as our new Github workflow file to our git repo and watch the pipeline run!
 
-```
+```shell
 git status
 git commit -m "add pipeline files and refactor our structure"
 git push origin main

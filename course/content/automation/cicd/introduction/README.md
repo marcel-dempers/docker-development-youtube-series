@@ -77,7 +77,7 @@ Given what we learned in Chapter 2 with Bash scripting, it sounds like it would 
 
 Imagine the following pseudo code for a potential bash script:
 
-```
+```shell
 while true
   sleep 60s
   CURRENT_COMMIT=$(read from a file)
