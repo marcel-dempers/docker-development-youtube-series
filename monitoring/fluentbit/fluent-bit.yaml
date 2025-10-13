@@ -8,23 +8,18 @@ service:
 
 pipeline:
   inputs:
-    #- name: random
+    - name: tail
+      path: /var/lib/docker/containers/*/*.log
+      multiline.parser: docker
     - name: http
       listen: 0.0.0.0
       port: 8888
-    # - name: tail
-    #   path: /var/lib/docker/containers/*/*.log
-    #   multiline.parser: docker
-  
   filters:
   - name: grep
     match: '*'
     exclude: namespace search
   outputs:
-    - name: stdout
-      match: '*'
-    
     - name: file
       match: '*'
       template: '{log}'
-      path: /fluent-bit/.data
+      path: /fluent-bit/.data/
