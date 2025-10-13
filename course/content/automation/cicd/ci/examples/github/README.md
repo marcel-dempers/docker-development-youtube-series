@@ -210,6 +210,8 @@ But the workflow we will create should still be the same and I will keep it up t
 
 Lets start with the [Github Actions Website](https://github.com/features/actions)
 
+Here is a link to the [Github Actions Documentation](https://docs.github.com/en/actions)
+
 #### Setting up a CI workflow
 
 In this module we'll setup a basic workflow and we'll start to see the relevant CI tasks as well as why our architecture is so important. </br>
@@ -231,9 +233,9 @@ My example workflow file we will be using can be found [here](./.test/cicd-workf
     * When we follow the navigation -> Github Repo | Settings | Actions | Runners
     * There is a button for `New self-hosted runner`
     * We can select `Linux` as the Runner image
-    * The architecture is `x86`.
+    * The architecture is `x64`.
 
-5. Copy the content of the Linux bash commands provided by the Github Runner Installation page from the `Download` and `Configure` sections 
+5. Review the content of the Linux bash commands provided by the Github Runner Installation page from the `Download` and `Configure` sections 
 
 6. We'll review these commands and notice its limitations in terms of idempotence and scalabbility.
     * One downside is that the TOKEN provided by the Github install page, expires as its short lived. We can use the Github API to get a TOKEN on demand. We'll look at the [GitHub API Documentation](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository)
@@ -296,14 +298,13 @@ mkdir -p .github/worflows
 
 13. **Finalise the CI/CD Tool**
     * Lets `ssh` into our Virtual Server and run our script in the `/infra` folder
-    * #TODO
 
 ```shell
 PAT_TOKEN=''
 GITHUB_ORG=''
 GITHUB_REPO=''
 RUNNER_NAME=''
-./infra/scripts install-github-runner.sh $PAT_TOKEN $GITHUB_ORG  $GITHUB_REPO $RUNNER_NAME
+./infra/scripts/install-github-runner.sh $PAT_TOKEN $GITHUB_ORG  $GITHUB_REPO $RUNNER_NAME
 ```
 
 14. **Review our CI/CD Tool installation**
@@ -313,6 +314,7 @@ RUNNER_NAME=''
 
 ```shell
 git status
+git add -A
 git commit -m "add pipeline files and refactor our structure"
 git push origin main
 ```
