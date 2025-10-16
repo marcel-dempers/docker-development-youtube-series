@@ -1,0 +1,25 @@
+service:
+  flush: 1
+  log_level: info
+  http_server: true
+  http_listen: 0.0.0.0
+  http_port: 2020
+  hot_reload: on
+
+pipeline:
+  inputs:
+    - name: tail
+      path: /var/lib/docker/containers/*/*.log
+      multiline.parser: docker
+    - name: http
+      listen: 0.0.0.0
+      port: 8888
+  filters:
+  - name: grep
+    match: '*'
+    exclude: namespace search
+  outputs:
+    - name: file
+      match: '*'
+      template: '{log}'
+      path: /fluent-bit/.data/
