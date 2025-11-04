@@ -49,7 +49,7 @@ In order to create virtual servers, we need the CLI tool for it. When we install
 To test out the command, we can run `vboxmanage --help` </br>
 We can also navigate the command tool using `man vboxmanage` </br>
 
-To start scripting, let's `cd` to the [location](.test/create-vm.sh) of this script. Remember the location can change, so use the link to see the location and use `cd` to follow it in the terminal. 
+To start scripting, let's `cd` to the [location](.test/example-create-server.sh) of this script. Remember the location can change, so use the link to see the location and use `cd` to follow it in the terminal. 
 
 To run this script we need a bash terminal. </br>
 In linux, you can use the default terminal </br>
@@ -85,6 +85,7 @@ Some variables may be "settings" that we can tune over time. </br>
 Something like the memory and CPU sizes:
 
 ```shell
+#!/bin/bash
 VM_MEMORY="4096"
 VM_CPUS="4"
 VM_DISK_SIZE_MB="25600"
@@ -99,9 +100,9 @@ VM_NAME=$1
 This will allow us to run a script and create a few servers and make our script **reusable**: 
 
 ```shell
-./create-server "my-website-01"
-./create-server "my-website-02"
-./create-server "my-website-03"
+./create-server.sh "my-website-01"
+./create-server.sh "my-website-02"
+./create-server.sh "my-website-03"
 ```
 
 **Idempotent Structure** </br>

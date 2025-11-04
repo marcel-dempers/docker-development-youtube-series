@@ -4,62 +4,71 @@ This course is my ultimate guide to DevOps,SRE & platform engineering for beginn
 
 <i>🚧 This course is currently under early access and undergoing constant review and updates</i>
 
-## 🚀 Introduction
+<h3>🚀 Setting the stage</h3>
 
-In my many years working in the field, I have noticed a range of challenges and problems that people face when trying to start a DevOps, SRE, platform or cloud engineering career. </br>
+<p>In my many years working in the field, I have noticed a range of challenges and problems that people face when trying to start a DevOps, SRE, platform or cloud engineering career.</p>
 
-## 🔴The current challenges of careers in Tech - <i>where to start ?</i>
+<h3>🔴The current challenges of careers in Tech - <i>where to start ?</i></h3>
 
- <b>DevOps has its challenges:</b>
-* There is no simple starting point to start learning about DevOps
-* DevOps requires a very broad range of skills that can be very overwhelming for new people to learn
-* DevOps is often treated as "Dev" and "Ops" which means you need understanding of two very broad fields
-* DevOps technologies are littered with buzz words, such as cloud, AI, machine learning, CI/CD, scalability, immutable infrastructure, automation, security and it never ends
+ <p>DevOps has its challenges:</p>
+<ul>
+  <li>There is no simple starting point to start learning about DevOps</li>
+  <li>DevOps requires a very broad range of skills that can be very overwhelming for new people to learn</li>
+  <li>DevOps is often treated as "Dev" and "Ops" which means you need understanding of two very broad fields</li>
+  <li>DevOps technologies are littered with buzz words, such as cloud, AI, machine learning, CI/CD, scalability, immutable infrastructure, automation, security and it never ends</li>
+</ul>
 
-<b>Qualifications have its challenges:</b>
+<p>Qualifications have its challenges:</p>
+<ul>
+  <li>Universities or Colleges offer IT degrees or courses, which often only cover traditional & "legacy" IT knowledge.</li>
+  <li>They do not cover real world challenges faced when working with the cloud, or working with popular open source technologies or modern challenges that businesses face these days</li>
+  <li>These technologies are often evolving at a rapid pace and traditional Universities cannot keep up with these.</li>
+</ul>
 
-* Universities or Colleges offer IT degrees or courses, which often only cover traditional & "legacy" IT knowledge.
-* They do not cover real world challenges faced when working with the cloud, or working with popular open source technologies or modern challenges that businesses face these days
-* These technologies are often evolving at a rapid pace and traditional Universities cannot keep up with these.
+<p>Cloud certifications have its challenges:</p>
+<ul>
+  <li>Cloud certifications often only focus on a specific cloud provider which can build bias</li>
+  <li>Often only solve really specific problems, and miss real world problems</li>
+  <li>Develop very narrow focussed problem solving skill</li>
+  <li>Miss out on powerful open source skills</li>
+  <li>Vendor locking: Often stuck only specialising in one vendor's product</li>
+</ul>
 
-<b>Cloud certifications have its challenges:</b>
-* Cloud certifications often only focus on a specific cloud provider which can build bias
-* Often only solve really specific problems, and miss real world problems
-* Develop very narrow focussed problem solving skill
-* Miss out on powerful open source skills
-* Vendor locking: Often stuck only specialising in one vendor's product
+<h3>🎯 Course Goals & Expectations</h3>
 
-## 🎯 Course Goals & Expectations
-
-This course provides a practical hands-on roadmap into the world of DevOps, SRE and platform engineering. </br> 
-It will set you up with all the fundamentals required for successful future learning. </br>
+<p>This course provides a practical hands-on roadmap into the world of DevOps, SRE and platform engineering.</p>
+<p>It will set you up with all the fundamentals required for successful future learning. </br>
 During this course you will apply a wide range of DevOps principles and use modern technologies in a real world hands-on manner to create yourself a personal website. </br> 
-While building your website, we will cover topics such as:
-* Source Control
-* Developer Tools
-* Operating Systems
-* Servers & Virtualization
-* Web technology
-* Monitoring, Logging, Metrics
-* Observability
-* Command line and automation scripting
-* CI / CD Pipelines
-* Infrastructure as Code
-* Basics of Cloud 
-* Cloud deployments 
+While building your website, we will cover topics such as:</p>
 
-The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained above-mentioned skills and abilities.</br>
-You will build the ultimate foundation and be equipped to make more informed decisions on what you want to focus on next in your career. </br>
+<ul> 
+<li>Source Control</li>
+<li>Developer Tools</li>
+<li>Operating Systems</li>
+<li>Servers & Virtualization</li>
+<li>Web technology</li>
+<li>Monitoring, Logging, Metrics</li>
+<li>Observability</li>
+<li>Command line and automation scripting</li>
+<li>CI / CD Pipelines</li>
+<li>Infrastructure as Code</li>
+<li>Basics of Cloud </li>
+<li>Cloud deployments </li>
+</ul>
 
-## 🛠 System & Other Requirements
+<p>The personal website created throughout this course will become your marketing tool for your career to demonstrate all your newly obtained above-mentioned skills and abilities.</br>
+You will build the ultimate foundation and be equipped to make more informed decisions on what you want to focus on next in your career. </br></p>
 
-* <b>a Github account:</b> To follow along, we will be creating GitHub accounts
-* <b>Operating System:</b> Windows (Pro and Enterprise ), Linux or MacOS
+<h3>🛠 System & Other Requirements</h3>
+<ul> 
+<li><b>a Github account:</b> To follow along, we will be creating GitHub accounts</li>
+<li><b>Operating System:</b> Windows (Pro and Enterprise ), Linux or MacOS</li>
   * <i>note: You'll need Pro or Enterprise Windows to support Virtualization</i>
 
-* You will need at least 2GB EXTRA RAM and 25GB of hard disk space to complete modules related to virtualization. </br>
+<li>You will need at least 2GB EXTRA RAM and 25GB of hard disk space to complete modules related to virtualization.</li>
   * <i>These numbers are early access guide only and may be reviewed and adjusted based on course feedback</i>
 
+</ul>
 ## 📖 Table of Contents 
 
 * [Chapter 1: Source Control & GIT](./chapters/chapter-1-source-control-git/README.md)
