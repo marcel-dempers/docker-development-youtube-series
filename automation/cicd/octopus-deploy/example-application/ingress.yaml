@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: marcel.test
+  - host: marcel.local
     http:
       paths:
       - path: /hello(/|$)(.*)

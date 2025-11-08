@@ -101,6 +101,16 @@ automation/cicd/octopus-deploy/example-application/service.yaml
 automation/cicd/octopus-deploy/example-application/ingress.yaml
 ```
 
+### Variable injection
+
+spec:fules:0:host
+
+```
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: marcel.local
+```
 
 
 
