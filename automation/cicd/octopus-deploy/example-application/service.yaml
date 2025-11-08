@@ -9,7 +9,7 @@ spec:
   selector:
     app: example-app
   ports:
-    - protocol: TCP
-      name: http
-      port: 80
-      targetPort: 5000
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 5000
