@@ -36,7 +36,7 @@ export ADMIN_EMAIL="octo-admin@admin.com"
 Spin up a database for Octopus to use:
 
 ```
-docker run -d --rm --name octopus-database \
+docker run -d --name octopus-database \
 --net kind \
 -u root \
 -e ACCEPT_EULA="Y" \
@@ -47,7 +47,7 @@ mcr.microsoft.com/mssql/server:2022-latest
 
 Create our first Octopus server:
 ```
-docker run -it --rm \
+docker run -it \
 --name octopus \
 --net kind \
 -p 8080:8080 \
@@ -103,7 +103,7 @@ automation/cicd/octopus-deploy/example-application/ingress.yaml
 
 ### Variable injection
 
-spec:fules:0:host
+spec:rules:0:host
 
 ```
 spec:
