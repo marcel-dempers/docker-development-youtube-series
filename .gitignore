@@ -19,3 +19,5 @@ kubernetes/portainer/business/volume*
 pgdata
 course/content/automation/config-management/examples/ansible/.test/set_env.ps1
 course/content/automation/config-management/examples/ansible/.test/set_env.sh
+
+.data/
