@@ -1,11 +1,9 @@
-version: "3.4"
 services:
   csharp: #docker run --rm -it -v ${PWD}:/work -w /work -p 5000:5000 aimvector/csharp:1.0.0 /bin/sh
     container_name: csharp
     image: aimvector/csharp:1.0.0
     build:
       context: ./c#
-      target: debug
     volumes:
     - ./c#/src/:/work/
     ports:
@@ -15,7 +13,6 @@ services:
     image: aimvector/golang:1.0.0
     build: 
       context: ./golang
-      target: prod
     volumes:
     - ./golang/configs:/configs/
     - ./golang/secrets:/secrets/
@@ -30,7 +27,7 @@ services:
     image: aimvector/python:1.0.0
     build:
       context: ./python
-      target: debug
+      #target: debug
     #working_dir: /work      #comment out for build.target:prod
     #entrypoint: /bin/sh     #comment out for build.target:prod
     #stdin_open: true        #comment out for build.target:prod
@@ -60,7 +57,6 @@ services:
     image: aimvector/spring-java:1.0.0
     build:
       context: ./springboot/java/
-      target: debug
     working_dir: /work/src/      #comment out for build.target:prod
     entrypoint: /bin/sh     #comment out for build.target:prod
     stdin_open: true        #comment out for build.target:prod

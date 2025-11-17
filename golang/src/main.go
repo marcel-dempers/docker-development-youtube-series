@@ -14,7 +14,7 @@ var configuration []byte
 var secret []byte
 
 func Response(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "Hello") 
+	fmt.Fprintf(ctx, "Hello from Go") 
 }
 
 func Status(ctx *fasthttp.RequestCtx) {
