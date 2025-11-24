@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+data:
+  # The index.html file that NGINX will serve
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CORS Demo Client</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background-color: #f0f4f8; }
+            .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); max-width: 600px; margin: auto; }
+            h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+            button { background-color: #3498db; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; margin-top: 15px; font-weight: bold; transition: background-color 0.3s; }
+            button:hover { background-color: #2980b9; }
+            pre { background-color: #ecf0f1; padding: 15px; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+            .status-ok { color: green; font-weight: bold; }
+            .status-error { color: red; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Client-Side CORS Demonstration</h1>
+            <button onclick="fetchData()">Make CORS Request</button>
+            <h2>Result:</h2>
+            <p>Status: <span id="status">Waiting...</span></p>
+            <pre id="output"></pre>
+        </div>
+
+        <script>
+            async function fetchData() {
+                const apiEndpoint = 'http://example-app.com/api/go';
+                const statusElement = document.getElementById('status');
+                const outputElement = document.getElementById('output');
+                
+                statusElement.textContent = 'Fetching...';
+                outputElement.textContent = 'Request sent to ' + apiEndpoint;
+
+                try {
+                    // This public API allows CORS, so the fetch should succeed.
+                    const response = await fetch(apiEndpoint);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.text();
+                    
+                    statusElement.innerHTML = '<span class="status-ok">SUCCESS (CORS Allowed)</span>';
+                    outputElement.textContent = data;
+
+                } catch (error) {
+                    // If the API did NOT allow CORS, this catch block would activate, 
+                    // often showing a generic "Failed to fetch" error in the console.
+                    statusElement.innerHTML = '<span class="status-error">FAILURE (Check Browser Console for CORS Error)</span>';
+                    outputElement.textContent = 'Error during fetch: ' + error.message;
+                    console.error("CORS Request Error:", error);
+                }
+            }
+        </script>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: nginx-web
+        image: nginx:stable-alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: web-app
+          defaultMode: 0644
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+spec:
+  type: ClusterIP
+  selector:
+    app: web-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http

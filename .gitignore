@@ -19,3 +19,5 @@ pgdata
 
 #ignore sample data mount points
 .data
+course/content/automation/config-management/examples/ansible/.test/set_env.ps1
+course/content/automation/config-management/examples/ansible/.test/set_env.sh
