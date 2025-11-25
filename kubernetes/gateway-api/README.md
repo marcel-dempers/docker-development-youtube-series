@@ -45,6 +45,43 @@ These APIs are part of the Experimental Channel:
 
 <b>Note: Gateway API is very new, and all of the above is subject to change quite rapidly </br></b>
 
+## Setup some example applications
+
+The following will deploy a `deployment`, `service` and required `configMap` and `secret` for the applications to work.
+
+```shell
+# deploy example apps
+kubectl apply -f python/deployment.yaml 
+kubectl apply -f golang/deployment.yaml
+kubectl apply -f kubernetes/gateway-api/web-app.yaml
+
+# check example apps
+kubectl get pods
+NAME                             READY   STATUS    RESTARTS
+go-deploy-b9c69978d-529qb        1/1     Running   0
+go-deploy-b9c69978d-jfb2b        1/1     Running   0
+python-deploy-54cbfc948b-5ch7w   1/1     Running   0
+python-deploy-54cbfc948b-qh22f   1/1     Running   0
+web-app-67fbb5d844-68wq4         1/1     Running   0
+
+kubectl get service
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)
+go-svc       ClusterIP   10.96.173.22   <none>        5000/TCP
+python-svc   ClusterIP   10.96.113.49   <none>        5000/TCP
+web-app      ClusterIP   10.96.44.18    <none>        80/TCP
+```
+
+### Create test Domains 
+
+We also need to imagine we have a domain called `example-app.com` , so let's set that up on our hosts file
+
+```log
+127.0.0.1  example-app.com
+127.0.0.1  example-app-go.com
+127.0.0.1  example-app-python.com
+```
+
+
 ## Install a Gateway API controller
 
 To use the Gateway API features in Kubernetes, you need a controller that implements the above CRDs. </br>
@@ -84,39 +121,6 @@ kubectl -n traefik logs -l app.kubernetes.io/instance=traefik-traefik
 kubectl -n traefik port-forward svc/traefik 80
 ```
 
-Also we need to imagine we have a domain called `example-app.com` , so let's set that up on our hosts file
-
-```log
-127.0.0.1  example-app.com
-127.0.0.1  example-app-go.com
-127.0.0.1  example-app-python.com
-```
-
-## Setup some example applications
-
-The following will deploy a `deployment`, `service` and required `configMap` and `secret` for the applications to work.
-
-```shell
-# deploy example apps
-kubectl apply -f python/deployment.yaml 
-kubectl apply -f golang/deployment.yaml
-kubectl apply -f kubernetes/gateway-api/web-app.yaml
-
-# check example apps
-kubectl get pods
-NAME                             READY   STATUS    RESTARTS
-go-deploy-b9c69978d-529qb        1/1     Running   0
-go-deploy-b9c69978d-jfb2b        1/1     Running   0
-python-deploy-54cbfc948b-5ch7w   1/1     Running   0
-python-deploy-54cbfc948b-qh22f   1/1     Running   0
-web-app-67fbb5d844-68wq4         1/1     Running   0
-
-kubectl get service
-NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)
-go-svc       ClusterIP   10.96.173.22   <none>        5000/TCP
-python-svc   ClusterIP   10.96.113.49   <none>        5000/TCP
-web-app      ClusterIP   10.96.44.18    <none>        80/TCP
-```
 
 ## Install a Gateway Class
 
@@ -164,6 +168,15 @@ The important fields on HTTP Route we will cover:
 * `matches`
 * `filters`
 
+Feature Table: 
+
+| Feature | Example |
+| ---|---|
+| Route by Hostname | [example](#route-by-hostname)|
+| Route by Path | [example](#route-by-path) | 
+| Route using URL Rewrite | [example](#route-using-url-rewrite)|
+| Header Modification | [example](#requestresponse-header-manipulation)|
+| HTTPS & TLS | [example](#https-and-tls) |
 
 For traffic management, we can take a look at some basic HTTP routes.</br>
 
@@ -184,10 +197,6 @@ kubectl apply -f kubernetes/gateway-api/03-httproute-by-hostname.yaml
 
 We can also route by host and path with different matching strategies. </br>
 
-```shell
-kubectl apply -f kubernetes/gateway-api/04-httproute-by-path-exact.yaml
-```
-
 Exact: </br>
 http://example-app-python.com/ 👉🏽 http://python-svc:5000/ </br>
 http://example-app-go.com/ 👉🏽 http://go-svc:5000/ </br>
@@ -195,6 +204,11 @@ http://example-app-go.com/ 👉🏽 http://go-svc:5000/ </br>
 PathPrefix: </br>
 http://example-app-python.com/* 👉🏽 http://python-svc:5000/* </br>
 http://example-app-go.com/* 👉🏽 http://go-svc:5000/* </br>
+
+
+```shell
+kubectl apply -f kubernetes/gateway-api/04-httproute-by-path-exact.yaml
+```
 
 ### Route using URL Rewrite
 
@@ -230,7 +244,7 @@ The Header modification:
 kubectl apply -f kubernetes/gateway-api/06-httproute-header-modify.yaml
 ```
 
-### TLS and HTTPS
+### HTTPS and TLS
 
 In my video, I generate a test TLS cert using [mkcert](https://github.com/FiloSottile/mkcert)
 
