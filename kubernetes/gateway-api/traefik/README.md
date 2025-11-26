@@ -118,8 +118,47 @@ filters:
     name: add-prefix
 ```
 
+### Prefix
+
+Note: To use `ExtensionRef` in Traefik you need to enable `providers.kubernetesCRD.enabled = true`. We have that enabled in our values.yaml file.
+
+Expectation: </br>
+
+http://example-app.com/anything 👉🏽 http://go-svc:5000/prefix/anything </br>
+
 ```shell
 kubectl apply -f kubernetes/gateway-api/traefik/08-middleware-addprefix.yaml
 ```
 
-Note: To use `ExtensionRef` in Traefik you need to enable `providers.kubernetesCRD.enabled = true`. We have that enabled in our values.yaml file.
+We can follow the log of our upstream to see the HTTP request:
+
+```shell
+kubectl logs -f -l app=go-app
+```
+
+### Basic Auth
+
+We can also add HTTP basic authentication to allow users to access secured resources protected by username and passwords. </br>
+
+The Basic Auth middleware points to a secret which supports Kubernetes basic auth secret type. </br>
+
+```shell
+kubectl apply -f kubernetes/gateway-api/traefik/09-middleware-basicauth.yaml
+```
+
+### Headers
+
+Traefik allows us to manipulate headers too using Middleware component called `headers` </br>
+We can use this to handle scenarios like CORS (Cross-Origin Resource Sharing)
+
+Let's access our web app directly over `localhost` which makes a call to `example-app.com` and should be blocked by CORS. </br>
+
+```shell
+kubectl port-forward svc/web-app 8000:80
+```
+
+Once we apply the Middleware update to our HTTPRoute, we can perform cross origin API calls:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/traefik/10-middleware-headers.yaml
+```

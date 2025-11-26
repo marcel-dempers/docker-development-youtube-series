@@ -17,13 +17,18 @@ spec:
   - matches: 
     - path:
         type: PathPrefix
-        value: /
-    filters:    
+        value: /api/go
+    filters:   
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: / 
     - type: ExtensionRef
       extensionRef:
         group: traefik.io
         kind: Middleware
-        name: add-prefix
+        name: headers
     
     backendRefs:
     - name: go-svc
@@ -33,8 +38,16 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: add-prefix
-  namespace: default
+  name: headers
 spec:
-  addPrefix:
-    prefix: /prefix
+  headers:
+    accessControlAllowMethods:
+      - "GET"
+      - "OPTIONS"
+      - "PUT"
+    accessControlAllowHeaders:
+      - "*"
+    accessControlAllowOriginList:
+      - "http://localhost:8000"
+    accessControlMaxAge: 100
+    addVaryHeader: true

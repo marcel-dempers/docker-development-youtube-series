@@ -23,7 +23,7 @@ spec:
       extensionRef:
         group: traefik.io
         kind: Middleware
-        name: add-prefix
+        name: basic-auth
     
     backendRefs:
     - name: go-svc
@@ -33,8 +33,17 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: add-prefix
+  name: basic-auth
   namespace: default
 spec:
-  addPrefix:
-    prefix: /prefix
+  basicAuth:
+    secret: basic-auth
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-auth
+type: kubernetes.io/basic-auth
+stringData:
+  username: admin
+  password: t0p-Secret

@@ -47,7 +47,7 @@ These APIs are part of the Experimental Channel:
 
 ## Setup some example applications
 
-The following will deploy a `deployment`, `service` and required `configMap` and `secret` for the applications to work.
+The following will deploy a `deployment`, `service` and require `configMap` and `secret` for the applications to work.
 
 ```shell
 # deploy example apps
@@ -87,7 +87,7 @@ We also need to imagine we have a domain called `example-app.com` , so let's set
 To use the Gateway API features in Kubernetes, you need a controller that implements the above CRDs. </br>
 In this introduction guide I will use an existing Gateway API controller called Traefik. </br>
 
-<i><b>Note:</b> Keep in mind that this introduction has no dependancy on Traefik specifically, therefore any controller that supports Gateway API can be used.
+<i><b>Note:</b> Keep in mind that this introduction has no dependency on Traefik specifically, therefore any controller that supports Gateway API can be used.
 At the bottom of this guide, I will provide guides on each of the popular Gateway API implementations.
 </i>
 
@@ -130,7 +130,7 @@ Note that we use a Traefik Class in our example. </br>
 
 [Documentation](https://gateway-api.sigs.k8s.io/api-types/gatewayclass/)
 
-`GatewayClass` is cluster-scoped resource defined by the infrastructure provider. This resource represents a class of Gateways that can be instantiated. </br>
+`GatewayClass` is a cluster-scoped resource defined by the infrastructure provider. This resource represents a class of Gateways that can be instantiated. </br>
 
 ```shell
 kubectl apply -f kubernetes/gateway-api/traefik/01-gatewayclass.yaml
@@ -144,7 +144,7 @@ kubectl describe gatewayclass
 
 ## Install a Gateway 
 
-Next we need to install a Gateway that impliments our Gateway Class </br>
+Next we need to install a Gateway that implements our Gateway Class </br>
 Note that we use a Traefik Gateway in our example. </br>
 
 [Documentation](https://gateway-api.sigs.k8s.io/api-types/gateway)
@@ -289,7 +289,7 @@ Checkout [More Official Guides](https://gateway-api.sigs.k8s.io/guides/) on the 
 
 ## Infrastructure Labels
 
-A usefull feature is the ability to customize infrastructure under the hood for Gateways. </br>
+A useful feature is the ability to customize infrastructure under the hood for Gateways. </br>
 For example, cloud load balancers etc. 
 
 We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels) to do so. This will set annotations or labels on any infrastructure that gets created. </br>
