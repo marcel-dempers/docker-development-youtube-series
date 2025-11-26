@@ -80,6 +80,8 @@ Let's get the IP of my machine so we can access Octopus:
 ifconfig eth0 | grep 'inet' | awk '{print $2}' | cut -d: -f2
 ```
 
+We can access the dashboard on `http://<IP>:8080`
+
 ## Setup Environments 
 
 The Octopus UI helps us setup and configure environments. </br>
@@ -151,7 +153,7 @@ We can refernce YAML in many ways, in this video we use Github:
 https://github.com/marcel-dempers/docker-development-youtube-series.git
 ```
 
-We also specify all our manifests path that portainer needs to deploy:
+We also specify all our manifests path that octopus needs to deploy:
 
 ```
 automation/cicd/octopus-deploy/example-application/deployment.yaml
