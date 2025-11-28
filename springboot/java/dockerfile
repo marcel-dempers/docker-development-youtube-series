@@ -1,4 +1,4 @@
-FROM openjdk:14.0-jdk-buster as dev
+FROM openjdk:26-ea-jdk as dev
 
 WORKDIR /work
 

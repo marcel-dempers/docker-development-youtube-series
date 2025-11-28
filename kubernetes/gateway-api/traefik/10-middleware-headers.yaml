@@ -1,0 +1,53 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: go-route
+  namespace: default
+
+spec:
+  parentRefs:
+  - name: gateway-api
+    sectionName: http
+    kind: Gateway
+
+  hostnames:
+  - example-app.com
+
+  rules:
+  - matches: 
+    - path:
+        type: PathPrefix
+        value: /api/go
+    filters:   
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: / 
+    - type: ExtensionRef
+      extensionRef:
+        group: traefik.io
+        kind: Middleware
+        name: headers
+    
+    backendRefs:
+    - name: go-svc
+      port: 5000
+      weight: 1
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: headers
+spec:
+  headers:
+    accessControlAllowMethods:
+      - "GET"
+      - "OPTIONS"
+      - "PUT"
+    accessControlAllowHeaders:
+      - "*"
+    accessControlAllowOriginList:
+      - "http://localhost:8000"
+    accessControlMaxAge: 100
+    addVaryHeader: true
