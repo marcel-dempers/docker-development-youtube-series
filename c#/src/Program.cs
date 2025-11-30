@@ -20,7 +20,7 @@ app.UseHttpsRedirection();
 app.MapGet("/", async () =>
 {
     await Task.Delay(40000); // Sleep for 40 seconds
-    return "Hello World!";
+    return "Hello from C#!";
 });
 
 app.Run();

@@ -1,24 +1,23 @@
 package main
 
 import (
-	"fmt" //to print messages to stdout
-	"log" //logging :)
-	//our web server that will host the mock
-	"github.com/buaazp/fasthttprouter" 
-	"github.com/valyala/fasthttp"
+	"fmt"
+	"log"
+	"net/http"
 	"os"
+	"io"
 	"io/ioutil"
 )
 
 var configuration []byte
 var secret []byte
 
-func Response(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "Hello") 
+func Response(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Hello from Go")
 }
 
-func Status(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "ok") 
+func Status(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "ok")
 }
 
 func ReadConfig(){
@@ -45,14 +44,37 @@ func ReadSecret(){
 
 }
 
+func Logger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Log basic request information
+		log.Printf(
+			"%s %s %s %s", // Format: [Remote Address] [Method] [Path] [Protocol]
+			r.RemoteAddr,
+			r.Method,
+			r.URL.Path,
+			r.Proto,
+		)
+
+		// Call the next handler in the chain
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
     
 	fmt.Println("starting...")
 	ReadConfig()
 	ReadSecret()
-	router := fasthttprouter.New()
-	router.GET("/", Response)
-	router.GET("/status", Status)
 	
-	log.Fatal(fasthttp.ListenAndServe(":5000", router.Handler))
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /{$}", Response)
+	mux.HandleFunc("GET /status", Status)
+	loggedMux := Logger(mux)
+
+	server := &http.Server{
+		Addr:    ":5000",
+		Handler: loggedMux,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
