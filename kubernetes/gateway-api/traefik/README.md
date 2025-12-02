@@ -2,9 +2,10 @@
 
 ## Prerequisites
 
-To get started, you will need to follow the the [Introduction to Gateway API](../README.md)
+To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>
+You'll need an understanding of the Gateway API. </br>
 
-<b>In the above guide, you will:</b>
+<b>In the introduction guide, you will:</b>
 * Create a local Kubernetes cluster
 * Install the Gateway API CRD
 * Deploy example apps to our cluster
