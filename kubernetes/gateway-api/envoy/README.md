@@ -55,23 +55,18 @@ helm upgrade envoy-gateway oci://docker.io/envoyproxy/gateway-helm \
 Most of the Gateway API controllers are installed using `helm`. </br>
 Before we install it, let's take a look at the [default-values.yaml](./default-values.yaml)
 
+### Check Installation
 
-Check our installation
+Now we should have the Envoy gateway API controller up and running. </br>
+This is not the gateway itself, but the controller that will manage the CRDs we get access to and implements some gateway API CRD's. </br>
 
 ```shell
-# check the pods
+# check the controller pods
 kubectl -n envoy-gateway-system get pods
 
-# check the logs 
+# check the controller pod logs 
 kubectl -n envoy-gateway-system logs -l app.kubernetes.io/instance=envoy-gateway
 
-# port forward for access
-kubectl -n envoy-gateway-system get svc
-NAME                                 TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                                    
-envoy-default-gateway-api-30a1473e   LoadBalancer   10.96.16.176   <pending>     80:31127/TCP  
-envoy-gateway                        ClusterIP      10.96.27.58    <none>        18000/TCP,18001/TCP,18002/TCP,19001/TCP,9443/TCP
-
-kubectl -n envoy-gateway-system port-forward svc/envoy-default-gateway-api-30a1473e 80
 ```
 
 ## Install an Envoy Gateway Class
@@ -86,6 +81,40 @@ kubectl apply -f kubernetes/gateway-api/envoy/01-gatewayclass.yaml
 kubectl apply -f kubernetes/gateway-api/envoy/02-gateway.yaml
 ```
 
+When we apply the gateway, we get a new gateway api pod. 
+
+```shell
+# check the new gateway-api pod
+kubectl -n envoy-gateway-system get pods
+
+# we also have a new service
+kubectl -n envoy-gateway-system get svc
+```
+
+### Gateway Configuration
+
+`EnvoyProxy` is the CRD that allows us to configure each gateway API instance. </br>
+For example, we can change the `deployment` or `service` of the instance like so:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/envoy/02.1-gateway-config.yaml
+
+# we should see 2 replicas 
+kubectl -n envoy-gateway-system get deploy
+kubectl -n envoy-gateway-system get pods
+
+# port forward for access (get the correct service)
+kubectl -n envoy-gateway-system get svc
+kubectl -n envoy-gateway-system port-forward svc/envoy-default-gateway-api-30a1473e 80
+```
+
+## HTTP Traffic management
+
+Feel free to quickly run through the basic [traffic management table](../README.md#traffic-management-features--http-routes) for using `HTTPRoute` routing for traffic. </br>
+
+<i>Note: HTTPRoute features are not specific to this controller and should be available to any other gateway API controller that you choose.</i>
+
+
 ## Security Policy
 
 ### CORS 
@@ -94,3 +123,6 @@ kubectl apply -f kubernetes/gateway-api/envoy/02-gateway.yaml
 ### API Auth 
 
 ### External Auth
+
+
+kubectl -n envoy-gateway-system logs -l app.kubernetes.io/managed-by=envoy-gateway
