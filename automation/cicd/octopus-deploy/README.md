@@ -213,6 +213,12 @@ We can then proceed to add this step to our deployment process. </br>
 
 We can do the same and create a Secret deployment template:
 
+Our step template name: `Deploy Secret to Kubernetes` </br>
+Parameters:
+* `secret_name` of the Secret to create
+* `secret_namespace` name of the Namespace to deploy the Secret to
+* `secret_body` the contents of the Secret as Multi-line text
+
 ```bash
 NAMESPACE=$(get_octopusvariable "secret_namespace")
 SECRET_NAME=$(get_octopusvariable "secret_name")
