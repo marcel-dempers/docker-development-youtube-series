@@ -42,8 +42,8 @@ spec:
   rules:
   - matches:
     - path:
-        #type: Exact  # matches the exact path, only allows to visit /
-        type: PathPrefix # prefix match, allows to visit /*  Passes entire URL to upstream
+        type: Exact  # matches the exact path, only allows to visit /
+        #type: PathPrefix # prefix match, allows to visit /*  Passes entire URL to upstream
         value: /
     backendRefs:
     - name: go-svc

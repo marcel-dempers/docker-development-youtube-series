@@ -22,17 +22,6 @@ spec:
         type: PathPrefix
         value: /api/go 
     filters:
-    - type: ResponseHeaderModifier 
-      responseHeaderModifier:
-        add:
-        - name: Access-Control-Allow-Origin
-          value: "http://localhost:8000" 
-        - name: Access-Control-Allow-Methods
-          value: "GET, POST, PUT, DELETE, OPTIONS"
-        - name: Access-Control-Allow-Headers
-          value: "Content-Type, Authorization"
-        - name: Access-Control-Max-Age
-          value: "86400" # Cache preflight for 24 hours
     - type: URLRewrite
       urlRewrite:
         path:

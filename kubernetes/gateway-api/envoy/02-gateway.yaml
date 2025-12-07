@@ -5,6 +5,9 @@ metadata:
   namespace: default
 spec:
   gatewayClassName: envoy
+  infrastructure:
+    labels:
+      app: envoy-gateway
   # Only Routes from the same namespace are allowed.
   listeners:
     - name: http
