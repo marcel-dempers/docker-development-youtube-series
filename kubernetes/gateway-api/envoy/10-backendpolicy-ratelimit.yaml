@@ -1,0 +1,19 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy 
+metadata:
+  name: ratelimit-go-httproute
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: go-route
+  rateLimit:
+    local:
+      rules:
+      - clientSelectors:
+        - headers:
+          - name: x-user-id
+            value: one
+        limit:
+          requests: 3
+          unit: Hour

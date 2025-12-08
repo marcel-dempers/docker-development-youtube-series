@@ -299,5 +299,5 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 | Name | Guide | Video |
 |------|-------|-------|
 | Traefik | [Introduction to Traefik Gateway API](./traefik/README.md)   | #TODO      |
+| Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | #TODO      |
 | Istio | #TODO   | #TODO      |
-| Envoy | #TODO   | #TODO      |
