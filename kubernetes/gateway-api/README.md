@@ -300,6 +300,6 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 
 | Name | Guide | Video |
 |------|-------|-------|
-| Traefik | [Introduction to Traefik Gateway API](./traefik/README.md)   |  <a href="https://youtu.be/MN-k29g97ik" title="traefik"><img src="https://i.ytimg.com/vi/MN-k29g97ik/hqdefault.jpg" width="20%" alt="traefik" /></a>      |
-| Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | #TODO      |
+| Traefik | [Introduction to Traefik Gateway API](./traefik/README.md)   |  <a href="https://youtu.be/MN-k29g97ik" title="traefik"><img src="https://i.ytimg.com/vi/MN-k29g97ik/hqdefault.jpg" width="30%" alt="traefik" /></a>      |
+| Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | <a href="https://youtu.be/me_5W_Q4ZWg" title="envoy"><img src="https://i.ytimg.com/vi/me_5W_Q4ZWg/hqdefault.jpg" width="30%" alt="envoy" /></a>      |
 | Istio | [Introduction to Istio Gateway API](./istio/README.md)   | #TODO      |

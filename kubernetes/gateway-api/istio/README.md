@@ -140,6 +140,13 @@ Feel free to quickly run through the basic [traffic management table](../README.
 
 Istio has been around for a lot longer than Gateway API has. Therefore Istio has solved much of the traffic management challenges using it's own CRDs, such as `VirtualService`. </br>
 
+There is a very important difference between Istio and the other Gateway APIs we've covered so far. </br>
+Istio has made a strict separation between it's own Gateway (`networking.istio.io/v1`) and Gateway API (`gateway.networking.k8s.io/v1`) </br>
+
+This means, their CRDs such as `VirtualService` does not attach to the new Kubernetes Gateway API like `Gateway` and `HTTPRoute`. </br>
+
+Therefore, to use Gateway API featuers, one should use Gateway API and not Istio Gateways. </br>
+
 [Virtual Services](https://istio.io/latest/docs/reference/config/networking/virtual-service/) are used throughout Istio to manage traffic. </br>
 
 ### CORS
