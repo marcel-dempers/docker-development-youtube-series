@@ -1,28 +1,3 @@
-apiVersion: networking.istio.io/v1
-kind: VirtualService
-metadata:
-  name: go-route-cors
-spec:
-  gateways:
-  - gateway-api
-  hosts:
-  - example-app.com
-  http:
-  - route:
-    - destination:
-        host: go-svc.default.svc.cluster.local
-        subset: v1
-    corsPolicy:
-      allowOrigins:
-      - exact: http://localhost:8000
-      allowMethods:
-      - POST
-      - GET
-      allowCredentials: false
-      allowHeaders:
-      - X-Foo-Bar
-      maxAge: "24h"
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:

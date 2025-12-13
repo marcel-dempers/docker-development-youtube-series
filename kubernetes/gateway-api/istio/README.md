@@ -136,12 +136,13 @@ Feel free to quickly run through the basic [traffic management table](../README.
 
 <i>Note: HTTPRoute features are not specific to this controller and should be available to any other gateway API controller that you choose.</i>
 
-## Istio Features for Traffic Management
+## Istio Gateway VS Istio Gateway API
 
 Istio has been around for a lot longer than Gateway API has. Therefore Istio has solved much of the traffic management challenges using it's own CRDs, such as `VirtualService`. </br>
 
 There is a very important difference between Istio and the other Gateway APIs we've covered so far. </br>
-Istio has made a strict separation between it's own Gateway (`networking.istio.io/v1`) and Gateway API (`gateway.networking.k8s.io/v1`) </br>
+
+Istio has made a strict separation between it's own Gateway (`networking.istio.io/v1`) and the Gateway of Gateway API (`gateway.networking.k8s.io/v1`) </br>
 
 This means, their CRDs such as `VirtualService` does not attach to the new Kubernetes Gateway API like `Gateway` and `HTTPRoute`. </br>
 
@@ -149,13 +150,54 @@ Therefore, to use Gateway API featuers, one should use Gateway API and not Istio
 
 [Virtual Services](https://istio.io/latest/docs/reference/config/networking/virtual-service/) are used throughout Istio to manage traffic. </br>
 
-### CORS
-
-As an example, `VirtualService` can be used to deal with CORS (Cross-Origin Resource Sharing), when the browser tries to make an API call to another domain. Like `localhost` calling our DEV environment which is a common challenge for developers. </br>
+To use virtual services we need to enable the mesh in our cluster. </br>
+I will be using the classic side-car mode, so we'll label our `default` namespace with the correct labels so that the Istio control plane will automatically inject sidecar containers into all pods in the namespace 
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/istio/08-virtualservice-cors.yaml
+kubectl label namespace default istio-injection=enabled
+
+# delete all pods to get sidecars added
+kubectl delete pods --all
 ```
 
-🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
+We will also need the Gateway controller that will be managing our Istio Gateways. 
+
+```shell
+
+ISTIOGATEWAY_CHART_VERSION="1.28.1"
+
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+helm repo update
+
+# get versions for the charts
+helm search repo istio/gateway --versions | head
+
+helm install istio-ingress istio/gateway \
+  --version $ISTIOGATEWAY_CHART_VERSION \
+  --namespace istio-system
+
+
+kubectl -n istio-system port-forward svc/istio-ingress 80
+```
+
+### Istio Gateway Ingress
+
+Let's deploy the Istio Gateway
+
+```shell
+kubectl apply -f kubernetes/gateway-api/istio/08-istiogateway.yaml
+```
+
+### Virtual Services
+
+Technically, as this is a Gateway API guide, this following bit would be out of scope. </br> 
+However I wanted to show you the difference by running your thorugh a quick demo of `VirtualService` using Isio Gateway. </br>
+
+As an example, `VirtualService` can be used to deal Traffic in the same way as Gateway API and Ingress </br>
+
+Let's deploy a Virtual service to perform basic traffic routing:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/istio/09-virtualservice.yaml
+```
 
