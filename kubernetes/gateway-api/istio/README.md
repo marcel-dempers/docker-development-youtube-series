@@ -148,19 +148,9 @@ This means, their CRDs such as `VirtualService` does not attach to the new Kuber
 
 Therefore, to use Gateway API featuers, one should use Gateway API and not Istio Gateways. </br>
 
-[Virtual Services](https://istio.io/latest/docs/reference/config/networking/virtual-service/) are used throughout Istio to manage traffic. </br>
+### Installing Classic Istio Gateway
 
-To use virtual services we need to enable the mesh in our cluster. </br>
-I will be using the classic side-car mode, so we'll label our `default` namespace with the correct labels so that the Istio control plane will automatically inject sidecar containers into all pods in the namespace 
-
-```shell
-kubectl label namespace default istio-injection=enabled
-
-# delete all pods to get sidecars added
-kubectl delete pods --all
-```
-
-We will also need the Gateway controller that will be managing our Istio Gateways. 
+To install the Istio gateway, we also use `helm`
 
 ```shell
 
@@ -176,9 +166,24 @@ helm install istio-ingress istio/gateway \
   --version $ISTIOGATEWAY_CHART_VERSION \
   --namespace istio-system
 
-
 kubectl -n istio-system port-forward svc/istio-ingress 80
 ```
+
+### Enable Application Service Mesh
+
+To use virtual services we need to enable the mesh in our cluster. </br>
+I will be using the classic side-car mode, so we'll label our `default` namespace with the correct labels so that the Istio control plane will automatically inject sidecar containers into all pods in the namespace 
+
+[Virtual Services](https://istio.io/latest/docs/reference/config/networking/virtual-service/) are used throughout Istio to manage traffic. </br>
+
+```shell
+kubectl label namespace default istio-injection=enabled
+
+# delete all pods to get sidecars added
+kubectl delete pods --all
+```
+
+We will also need the Gateway controller that will be managing our Istio Gateways. 
 
 ### Istio Gateway Ingress
 
@@ -188,7 +193,7 @@ Let's deploy the Istio Gateway
 kubectl apply -f kubernetes/gateway-api/istio/08-istiogateway.yaml
 ```
 
-### Virtual Services
+### Traffic management using Istio Gateways
 
 Technically, as this is a Gateway API guide, this following bit would be out of scope. </br> 
 However I wanted to show you the difference by running your thorugh a quick demo of `VirtualService` using Isio Gateway. </br>
