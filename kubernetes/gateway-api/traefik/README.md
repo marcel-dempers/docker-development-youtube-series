@@ -1,5 +1,7 @@
 # Introduction to Traefik: Gateway API
 
+<a href="https://youtu.be/MN-k29g97ik" title="traefik"><img src="https://i.ytimg.com/vi/MN-k29g97ik/hqdefault.jpg" width="40%" alt="traefik" /></a>
+
 ## Prerequisites
 
 To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>

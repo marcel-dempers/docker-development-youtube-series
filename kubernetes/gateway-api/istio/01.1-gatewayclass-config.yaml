@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatewayclass-defaults
+  namespace: istio-system
+  labels:
+    gateway.istio.io/defaults-for-class: istio
+data:
+  deployment: |
+    metadata:
+      annotations:
+        gatewayclass-default-setting: test
+    spec:
+      replicas: 2
+  service: |
+    spec:
+      type: ClusterIP

@@ -1,5 +1,7 @@
 # Introduction to Gateway API
 
+<a href="https://youtu.be/q76XVCTDZCY" title="intro"><img src="https://i.ytimg.com/vi/q76XVCTDZCY/hqdefault.jpg" width="40%" alt="intro" /></a>
+
 In this video, we will dive into the features of Gateway API. </br>
 Once you finish this video, click [here]() to deep dive each of the Gateway API controllers. </br>
 
@@ -298,6 +300,6 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 
 | Name | Guide | Video |
 |------|-------|-------|
-| Traefik | [Introduction to Traefik Gateway API](./traefik/README.md)   | #TODO      |
-| Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | #TODO      |
-| Istio | #TODO   | #TODO      |
+| Traefik | [Introduction to Traefik Gateway API](./traefik/README.md)   |  <a href="https://youtu.be/MN-k29g97ik" title="traefik"><img src="https://i.ytimg.com/vi/MN-k29g97ik/hqdefault.jpg" width="30%" alt="traefik" /></a>      |
+| Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | <a href="https://youtu.be/me_5W_Q4ZWg" title="envoy"><img src="https://i.ytimg.com/vi/me_5W_Q4ZWg/hqdefault.jpg" width="30%" alt="envoy" /></a>      |
+| Istio | [Introduction to Istio Gateway API](./istio/README.md)   | #TODO      |
