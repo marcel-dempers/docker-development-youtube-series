@@ -51,7 +51,7 @@ helm search repo istio/istiod --versions | head
 helm install istio-base istio/base \
   --version $BASE_CHART_VERSION \
   --namespace istio-system \
-  --create-namespace
+  --create-namespace \
   --set defaultRevision=default 
 
 helm install istiod istio/istiod \
@@ -146,7 +146,7 @@ Istio has made a strict separation between it's own Gateway (`networking.istio.i
 
 This means, their CRDs such as `VirtualService` does not attach to the new Kubernetes Gateway API like `Gateway` and `HTTPRoute`. </br>
 
-Therefore, to use Gateway API featuers, one should use Gateway API and not Istio Gateways. </br>
+Therefore, to use Gateway API features, one should use Gateway API and not Istio Gateways. </br>
 
 ### Installing Classic Istio Gateway
 

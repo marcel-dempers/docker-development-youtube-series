@@ -1,5 +1,7 @@
 # Introduction to Envoy: Gateway API
 
+<a href="https://youtu.be/me_5W_Q4ZWg" title="envoy"><img src="https://i.ytimg.com/vi/me_5W_Q4ZWg/hqdefault.jpg" width="40%" alt="envoy" /></a>
+
 ## Prerequisites
 
 To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>
