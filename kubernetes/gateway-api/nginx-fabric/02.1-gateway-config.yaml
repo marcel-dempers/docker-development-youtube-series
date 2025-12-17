@@ -1,0 +1,51 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gateway-api
+  namespace: default
+spec:
+  gatewayClassName: nginx-gateway
+  infrastructure:
+    labels:
+      app: nginx-gateway
+  parametersRef:
+    group: gateway.nginx.org
+    kind: NginxProxy
+    name: gateway-api-config
+  # Only Routes from the same namespace are allowed.
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same  #or All or Selector
+    
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: secret-tls
+            namespace: default
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+apiVersion: gateway.nginx.org/v1alpha2
+kind: NginxProxy
+metadata:
+  name: gateway-api-config
+spec:
+  kubernetes:
+    deployment:
+      container:
+        image:
+          pullPolicy: IfNotPresent
+          repository: ghcr.io/nginx/nginx-gateway-fabric/nginx
+          tag: 2.2.2
+      replicas: 4
+    service:
+      externalTrafficPolicy: Local
+      type: ClusterIP
