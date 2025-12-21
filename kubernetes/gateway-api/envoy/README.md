@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>
+To get started, you will need to follow the [Introduction to Gateway API](../README.md) first. </br>
 You'll need an understanding of the Gateway API. </br>
 
 <b>In the introduction guide, you will:</b>
@@ -19,7 +19,7 @@ This will allow us access to the Gateway API so we can go ahead and deploy a Gat
 ## What is Envoy
 
 It's important to take a step back and fully understand and appreciate what Envoy is. </br>
-Envoy is not only a Gateway API, that's just one of it's features. </br>
+Envoy is not only a Gateway API, that's just one of its features. </br>
 Let's take a look at the [Official Site](https://www.envoyproxy.io/) and jump to the documentation. </br>
 Envoy has a separate web page for the Gateway API feature. </br>
 
@@ -62,7 +62,7 @@ Before we install it, let's take a look at the [default-values.yaml](./default-v
 ### Check Installation
 
 Now we should have the Envoy gateway API controller up and running. </br>
-This is not the gateway itself, but the controller that will manage the CRDs we get access to and implements some gateway API CRD's. </br>
+This is not the gateway itself, but the controller that will manage the CRDs we get access to and implement some gateway API CRDs. </br>
 
 ```shell
 # check the controller pods
@@ -120,14 +120,14 @@ Feel free to quickly run through the basic [traffic management table](../README.
 
 ## Gateway API Extensions
 
-Envoy Gateway has it's own extensions on top of the native Gateway API features we've seen so far, using custom CRD's.
+Envoy Gateway has its own extensions on top of the native Gateway API features we've seen so far, using custom CRD's.
 
 ### Client Traffic Policies
 
 #### Connection Limit
 
 Envoy allows us to limit connections to gateways & listeners. </br>
-We can use tools like `hey` to demonstrate connection limit.
+We can use tools like `hey` to demonstrate connection limits.
 
 ```shell
 

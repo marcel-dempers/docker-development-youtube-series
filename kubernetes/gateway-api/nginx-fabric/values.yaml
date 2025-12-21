@@ -1,0 +1,12 @@
+nginx:
+  replicas: 2
+  service:
+    type: ClusterIP
+nginxGateway:
+  gwAPIExperimentalFeatures:
+    enable: true
+  snippetsFilters:
+    enable: true
+  gatewayClassName: nginx-gateway
+  name: nginx-gateway
+  replicas: 2
