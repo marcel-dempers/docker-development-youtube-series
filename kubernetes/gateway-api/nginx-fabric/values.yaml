@@ -4,7 +4,9 @@ nginx:
     type: ClusterIP
 nginxGateway:
   gwAPIExperimentalFeatures:
-    enabled: true
+    enable: true
+  snippetsFilters:
+    enable: true
   gatewayClassName: nginx-gateway
   name: nginx-gateway
   replicas: 2

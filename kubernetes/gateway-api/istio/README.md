@@ -1,5 +1,7 @@
 # Introduction to Istio: Gateway API
 
+<a href="https://youtu.be/du9h71WYToo" title="istio"><img src="https://i.ytimg.com/vi/du9h71WYToo/hqdefault.jpg" width="40%" alt="istio" /></a>
+
 ## Prerequisites
 
 To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>

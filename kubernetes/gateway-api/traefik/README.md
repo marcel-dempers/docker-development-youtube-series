@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>
+To get started, you will need to follow the [Introduction to Gateway API](../README.md) first. </br>
 You'll need an understanding of the Gateway API. </br>
 
 <b>In the introduction guide, you will:</b>

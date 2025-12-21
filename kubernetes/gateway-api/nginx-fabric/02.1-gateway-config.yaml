@@ -8,10 +8,10 @@ spec:
   infrastructure:
     labels:
       app: nginx-gateway
-  parametersRef:
-    group: gateway.nginx.org
-    kind: NginxProxy
-    name: gateway-api-config
+    parametersRef:
+      group: gateway.nginx.org
+      kind: NginxProxy
+      name: gateway-api-config
   # Only Routes from the same namespace are allowed.
   listeners:
     - name: http
@@ -38,13 +38,11 @@ kind: NginxProxy
 metadata:
   name: gateway-api-config
 spec:
+  logging:
+    errorLevel: debug
+    agentLevel: error
   kubernetes:
     deployment:
-      container:
-        image:
-          pullPolicy: IfNotPresent
-          repository: ghcr.io/nginx/nginx-gateway-fabric/nginx
-          tag: 2.2.2
       replicas: 4
     service:
       externalTrafficPolicy: Local

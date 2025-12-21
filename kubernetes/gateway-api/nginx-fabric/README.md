@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-To get started, you will need to follow the the [Introduction to Gateway API](../README.md) first. </br>
+To get started, you will need to follow the [Introduction to Gateway API](../README.md) first. </br>
 You'll need an understanding of the Gateway API. </br>
 
 <b>In the introduction guide, you will:</b>
@@ -71,7 +71,7 @@ The Helm chart allows us to configure many options. Some I find quite important:
   * Default GatewayClass
   * Default Gateways
 
-There are [helm examples](https://github.com/nginx/nginx-gateway-fabric/tree/v2.2.2/examples/helm) on Github maintained by NGINX community. </br>
+There are [helm examples](https://github.com/nginx/nginx-gateway-fabric/tree/v2.2.2/examples/helm) on Github maintained by the NGINX community. </br>
 
 Here is the [helm chart documentation](https://github.com/nginx/nginx-gateway-fabric/blob/v2.2.2/charts/nginx-gateway-fabric/README.md)
 
@@ -85,7 +85,7 @@ We can go ahead and install the controller to start with and use `helm upgrade` 
 Install:
 
 ```shell
-CHART_VERSION="2.2.2"
+CHART_VERSION="2.3.0"
 
 helm show values oci://ghcr.io/nginx/charts/nginx-gateway-fabric > kubernetes/gateway-api/nginx-fabric/default-values.yaml
 
@@ -102,6 +102,7 @@ Upgrade:
 
 ```shell
 helm upgrade ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric \
+  --values kubernetes/gateway-api/nginx-fabric/values.yaml \
   --version $CHART_VERSION \
   --namespace nginx-gateway
 ```
@@ -136,13 +137,20 @@ kubectl logs -l app.kubernetes.io/instance=ngf
 kubectl port-forward svc/gateway-api-nginx-gateway 80
 ```
 
-## HTTP Traffic management
+## Check & Configure the NGINX Dataplane
 
-Feel free to quickly run through the basic [traffic management table](../README.md#traffic-management-features--http-routes) for using `HTTPRoute` routing for traffic. </br>
+We can configure our NGINX Gateway, using the `spec.infrastructure.parametersRef` and point a Gateway to a `NginxProxy` resource. We can attach this config to a `Gateway` or `GatewayClass` </br>
+This allows us to control specific gateways or all gateways globally
 
-<i>Note: HTTPRoute features are not specific to this controller and should be available to any other gateway API controller that you choose.</i>
+Let's create a configuration to set the number of replicas on our Gateway deployment and set our service to `ClusterIP` since we don't have a load balancer. </br>
 
-## Check NGINX Dataplane Configuration
+Apply changes:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/nginx-fabric/02.1-gateway-config.yaml
+```
+
+In addition - 
 
 When we define `HTTPRoute`'s for our traffic, The NGINX control plane detects those and works with the data plane pods to get an `nginx.conf` for the desired traffic rules. </br>
 
@@ -157,9 +165,58 @@ pod=gateway-api-nginx-gateway-5899b6cd6f-dpkbh
 kubectl exec -it -n default $pod -- nginx -T
 ```
 
+## HTTP Traffic management
+
+Feel free to quickly run through the basic [traffic management table](../README.md#traffic-management-features--http-routes) for using `HTTPRoute` routing for traffic. </br>
+
+<i>Note: HTTPRoute features are not specific to this controller and should be available to any other gateway API controller that you choose.</i>
+
 ## Policy APIs
 
-Kubernetes Gateway API provides [policy attachement](https://gateway-api.sigs.k8s.io/reference/policy-attachment/) that allows us to augment or add configuration to exising resources </br>
-
+Kubernetes Gateway API provides [policy attachment](https://gateway-api.sigs.k8s.io/reference/policy-attachment/) that allows us to augment or add configuration to existing resources </br>
 
 ### Client Settings Policies
+
+`ClientSettingsPolicy` is an NGINX Fabric CRD that allows us to customize how our Gateway behaves with client connections. </br>
+We can set things like Keep Alive , Timeout settings and HTTP Body sizes. </br>
+This CRD uses the above-mentioned policy attachment API for Gateway API. </br>
+
+Ensure the policy is accepted 
+
+```shell
+kubectl apply -f kubernetes/gateway-api/nginx-fabric/08-clientsettings-keepalive.yaml
+
+# check 
+kubectl describe clientsettingspolicies gateway-client-settings
+```
+
+Make  more than 5 requests and notice every one re-using the connection except for the last:
+
+```shell
+# make 6 requests
+curl -v http://example-app.com/api/go \
+  http://example-app.com/api/go \
+  http://example-app.com/api/go \
+  http://example-app.com/api/go \
+  http://example-app.com/api/go \
+  http://example-app.com/api/go 
+
+# note connection re-use 
+* Re-using existing connection with host example-app.com
+```
+
+### SnippetsFilter API
+
+If you have used the NGINX Ingress controller, you may recall "custom snippets" , "server snippets" or "location snippets" </br>
+`SnippetsFilter` is an API that allows NGINX Gateway Fabric to expose some of NGINX raw configuration for tweaking. </br>
+
+Similar to NGINX Ingress, the NGINX proxy in Gateway Fabric also generates NGINX configuration files as demonstrated earlier. `SnippetsFilter` allows us to insert our own NGINX configuration into these files. </br>
+
+This feature is enabled in our [values.yaml](./values.yaml) file. </br>
+
+```shell
+kubectl apply -f kubernetes/gateway-api/nginx-fabric/09-snippetsfilter.yaml
+
+# check 
+kubectl describe SnippetsFilter custom-snippet
+```
