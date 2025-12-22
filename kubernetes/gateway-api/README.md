@@ -304,4 +304,4 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 | Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | <a href="https://youtu.be/me_5W_Q4ZWg" title="envoy"><img src="https://i.ytimg.com/vi/me_5W_Q4ZWg/hqdefault.jpg" width="30%" alt="envoy" /></a>      |
 | Istio | [Introduction to Istio Gateway API](./istio/README.md)   | <a href="https://youtu.be/du9h71WYToo" title="envoy"><img src="https://i.ytimg.com/vi/du9h71WYToo/hqdefault.jpg" width="30%" alt="envoy" /></a>     |
 | NGINX Fabric | [Introduction to NGINX Fabric Gateway API](./nginx-fabric/README.md)   | #TODO      |
-| Cillium | [Introduction to Cillium Gateway API](./cillium/README.md)   | #TODO      |
+| Cilium | [Introduction to Cilium Gateway API](./cilium/README.md)   | #TODO      |

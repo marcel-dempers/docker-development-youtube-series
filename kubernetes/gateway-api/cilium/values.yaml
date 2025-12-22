@@ -1,0 +1,5 @@
+kubeProxyReplacement: true
+gatewayAPI:
+  enabled: true
+  gatewayClass:
+    create: false
