@@ -2,4 +2,11 @@ kubeProxyReplacement: true
 gatewayAPI:
   enabled: true
   gatewayClass:
-    create: false
+    create: "false"
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+nodePort:
+  enabled: true

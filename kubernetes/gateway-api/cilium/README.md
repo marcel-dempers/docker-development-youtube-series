@@ -66,7 +66,7 @@ helm show values cilium/cilium > kubernetes/gateway-api/cilium/default-values.ya
 helm upgrade --install cilium cilium/cilium \
   --version $CHART_VERSION \
   --namespace kube-system \
-  --values kubernetes/gateway-api/cilium/values.yaml \
+  --values kubernetes/gateway-api/cilium/values.yaml
 ```
 
 Check our installation
@@ -82,8 +82,12 @@ gatewayapi-control-plane   Ready    control-plane   38m   v1.34.0
 gatewayapi-worker          Ready    <none>          37m   v1.34.0
 ```
 
+We can also check the Cilium Operator logs to ensure we are smooth sailing:
+```shell
+kubectl -n kube-system logs -l app.kubernetes.io/name=cilium-operator
+```
 
-<b>In the introduction guide, you will:</b>
+<b>In the [introduction guide](../README.md), you will:</b>
 
 * Deploy example apps to our cluster
 * Have Domains for our traffic
@@ -97,34 +101,20 @@ This will allow us access to the Gateway API so we can go ahead and deploy a Gat
 kubectl apply -f kubernetes/gateway-api/cilium/01-gatewayclass.yaml
 ```
 
+The `CiliumGatewayClassConfig` CRD for Cilium allows us to customize the Gateway class. </br>
+
+This allows us to change the deployment and services for gateways that use this class. </br> In our case, we can set the `service.type = NodePort`
+
+
+```shell
+kubectl apply -f kubernetes/gateway-api/cilium/01.1-gatewayclass-config.yaml
+```
+
 ## Install a Cilium Gateway
 
 ```shell
 kubectl apply -f kubernetes/gateway-api/cilium/02-gateway.yaml
 ```
-
-Let's start with the [Official Documentation](https://cilium.io)
-
-## Cilium: Gateway API controller
-
-#TODO
-
-### Configuration
-
-Most of the Gateway API controllers are installed using `helm`. </br>
-
-#TODO values.yaml
-
-* Access logs - fields and format
-* Ports to use for incoming traffic
-* Infrastructure annotations \ labels
-* Control Gateway API
-  * Default CRDs
-  * Default GatewayClass
-  * Default Gateways
-
-It's always good to get a grip on the [default helm values]()
-
 
 ## HTTP Traffic management
 
