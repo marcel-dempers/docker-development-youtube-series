@@ -1,5 +1,10 @@
 # Introduction to NGINX Ingress Controller
 
+Please note that this NGINX Ingress is now deprecated. </br>
+Use [Gateway API](../../../gateway-api/README.md) or another Ingress implementation instead </br>
+
+You can follow the [migration guide here](../../../gateway-api/nginx-ingress/README.md) too </br>
+
 ## Create a kubernetes cluster
 
 In this guide we we''ll need a Kubernetes cluster for testing. Let's create one using [kind](https://kind.sigs.k8s.io/) </br>
