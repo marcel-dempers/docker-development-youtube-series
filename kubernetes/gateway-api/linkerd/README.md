@@ -102,6 +102,12 @@ kubectl -n linkerd get pods
 # check the controller pod logs 
 kubectl -n linkerd logs -l app.kubernetes.io/instance=linkerd-gateway
 
+#use the linkerd CLI to check the install
+export LINKERD2_VERSION=edge-25.12.3
+curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install-edge | sh
+
+linkerd check
+
 ```
 
 ## Install an Linkerd Gateway Class
