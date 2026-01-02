@@ -305,3 +305,4 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 | Istio | [Introduction to Istio Gateway API](./istio/README.md)   | <a href="https://youtu.be/du9h71WYToo" title="envoy"><img src="https://i.ytimg.com/vi/du9h71WYToo/hqdefault.jpg" width="30%" alt="envoy" /></a>     |
 | NGINX Fabric | [Introduction to NGINX Fabric Gateway API](./nginx-fabric/README.md)   | <a href="https://youtu.be/zbAb2e_Q_Y0" title="nginx"><img src="https://i.ytimg.com/vi/zbAb2e_Q_Y0/hqdefault.jpg" width="30%" alt="nginx" /></a>       |
 | Cilium | [Introduction to Cilium Gateway API](./cilium/README.md)   | #TODO      |
+| Linkerd | [Introduction to Linkerd Gateway API](./linkerd/README.md)   | #TODO      |
