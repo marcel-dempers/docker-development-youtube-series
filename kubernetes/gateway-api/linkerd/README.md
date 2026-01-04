@@ -22,7 +22,7 @@ This will allow us access to the Gateway API so we can go ahead and deploy a Gat
 
 #TODO
 
-## Linkerd: Gateway API controller
+## Linkerd: Gateway API
 
 Linkerd provides Gateway API support included within its single installation. </br>
 Unlike some other gateways, that provide Gateway API support through a separate `helm` chart, Linkerd is all one single simple install. </br>
@@ -96,11 +96,8 @@ Now we should have the Envoy gateway API controller up and running. </br>
 This is not the gateway itself, but the controller that will manage the CRDs we get access to and implement some gateway API CRDs. </br>
 
 ```shell
-# check the controller pods
+# check the control plane pods
 kubectl -n linkerd get pods
-
-# check the controller pod logs 
-kubectl -n linkerd logs -l app.kubernetes.io/instance=linkerd-gateway
 
 #use the linkerd CLI to check the install
 export LINKERD2_VERSION=edge-25.12.3
@@ -132,7 +129,7 @@ kubectl -n linkerd get pods
 kubectl -n linkerd get svc
 ```
 
-### Gateway Configuration
+## Gateway Configuration
 
 #TODO : gateway and class configuration and overrides
 
@@ -145,3 +142,15 @@ Feel free to quickly run through the basic [traffic management table](../README.
 ## Gateway API Extensions
 
 #TODO: custom extensions & policies
+
+#TODO: custom request routing 
+
+## Mesh our Services
+
+To add our services to the Linkerd mesh, we need to annotate each deployment
+
+```shell
+kubectl get deploy go-deploy -o yaml | linkerd inject - | kubectl apply -f -
+kubectl get deploy python-deploy -o yaml | linkerd inject - | kubectl apply -f -
+kubectl get deploy web-app -o yaml | linkerd inject - | kubectl apply -f -
+```
