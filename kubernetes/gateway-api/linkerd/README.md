@@ -20,7 +20,31 @@ This will allow us access to the Gateway API so we can go ahead and deploy a Gat
 
 ## What is Linkerd
 
-#TODO
+[Linkerd](https://linkerd.io) is a service mesh technology for Kubernetes that has [gateway api support](https://linkerd.io/2.19/features/gateway-api/) </br>
+Linkerd is the first service mesh to achieve CNCF graduation status and is highly matured. </br>
+
+In a distributed system with service-to-service communication, a service mesh uses various methods to intercept all inbound and outbound communication to and from a given service. </br>
+
+So when a service makes an outbound call or has an inbound network call, the mesh is aware of it. </br>
+
+Doing so, a service mesh provides many features:
+
+* <b>observability</b>:  monitor network calls (metrics \ traces)
+* <b>traffic</b> management: traffic routing features
+* <b>resillience</b>: automatic retry, circuit breaker, rate limiting etc
+* <b>security</b>: mutual TLS, authentication, policies etc
+
+Each service mesh is different in terms of how it achieves this. Some meshes use side-cars to intercept and proxy traffic that go in and out of pods. Others use node level proxies and even eBPF to proxy at kernel level. </br>
+
+Linkerd uses the sidecar approach with their proxy written in Rust. </br>
+
+There are a few things that make Linkerd very different to other Gateway APIs we looked at. </br>
+
+Linkerd is a big player in the [The GAMMA Initiative](https://gateway-api.sigs.k8s.io/mesh/gamma/) for Gateway API. </br>
+
+Linkerd does not focus on north/south traffic and therefore we will use an alternative gateway API implementation for that. </br>
+
+Linkerd's focus is more about mesh traffic, which is east\west. </br>
 
 ## Linkerd: Gateway API
 
@@ -106,6 +130,8 @@ curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install-edge | sh
 linkerd check
 
 ```
+
+## Mesh Routing
 
 ## Install an Linkerd Gateway Class
 
