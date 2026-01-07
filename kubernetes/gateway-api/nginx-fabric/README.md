@@ -1,6 +1,6 @@
 # Introduction to NGINX Gateway Fabric: Gateway API
 
-<a href="https://youtu.be/xxxxxxxx" title="nginx-fabric"><img src="https://i.ytimg.com/vi/xxxxxxxx/hqdefault.jpg" width="40%" alt="nginx-fabric" /></a>
+<a href="https://youtu.be/zbAb2e_Q_Y0" title="nginx-fabric"><img src="https://i.ytimg.com/vi/zbAb2e_Q_Y0/hqdefault.jpg" width="40%" alt="nginx-fabric" /></a>
 
 ## Prerequisites
 
