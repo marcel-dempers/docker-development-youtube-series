@@ -1,9 +1,7 @@
 # Ingress-NGINX Migration to Gateway API
 
+<a href="https://youtu.be/7CaDvoKO9wo" title="nginx-ingress-migration"><img src="https://i.ytimg.com/vi/7CaDvoKO9wo/hqdefault.jpg" width="40%" alt="nginx-ingress-migration" /></a>
 
-<a href="https://youtu.be/xxxx" title="nginx-ingress"><img src="https://i.ytimg.com/vi/xxxx/hqdefault.jpg" width="40%" alt="nginx-ingress" /></a>
-
-#TODO
 
 ### Ingress Class
 
@@ -45,6 +43,7 @@ audit_fields=(
   "REWRITE:.metadata.annotations.nginx\.ingress\.kubernetes\.io/rewrite-target"
   "SNIPPET:.metadata.annotations.nginx\.ingress\.kubernetes\.io/configuration-snippet"
   "AUTH:.metadata.annotations.nginx\.ingress\.kubernetes\.io/auth-type"
+  "PathType:.spec.rules[*].http.paths[*].pathType"
   "TLS:.spec.tls[*].secretName"
 )
 
