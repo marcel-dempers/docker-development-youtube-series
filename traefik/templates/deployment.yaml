@@ -1,0 +1,66 @@
+{{/* check helm version */}}
+{{- if (semverCompare "<v3.9.0" (.Capabilities.HelmVersion.Version | default "v3.0.0")) -}}
+    {{- fail "ERROR: Helm >= 3.9.0 is required" -}}
+{{- end -}}
+
+{{- if and .Values.deployment.enabled (eq .Values.deployment.kind "Deployment") -}}
+  {{- if gt (int .Values.deployment.replicas) 1 -}}
+    {{- with .Values.additionalArguments -}}
+      {{- range . -}}
+        {{- if contains ".acme." . -}}
+          {{- fail (printf "You can not enable acme if you set more than one traefik replica") -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if eq (default .Chart.AppVersion .Values.image.tag) "latest" }}
+    {{- fail "\n\n ERROR: latest tag should not be used" }}
+  {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
+  labels:
+  {{- include "traefik.labels" . | nindent 4 }}
+  {{- with .Values.deployment.labels }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  annotations:
+  {{- if and .Values.providers.file.enabled (not .Values.providers.file.watch) }}
+    checksum/traefik-dynamic-conf: {{ include (print $.Template.BasePath "/provider-file-cm.yaml") . | sha256sum }}
+  {{- end }}
+  {{- with .Values.deployment.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ default 1 .Values.deployment.replicas }}
+  {{- else if and
+    .Values.autoscaling.scaleTargetRef
+    (not (and
+      (eq .Values.autoscaling.scaleTargetRef.apiVersion "apps/v1")
+      (eq .Values.autoscaling.scaleTargetRef.kind "Deployment")
+    ))
+  }}
+  replicas: {{ default 0 .Values.deployment.replicas }}
+  {{- end }}
+  {{- if ne .Values.deployment.revisionHistoryLimit nil }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "traefik.labelselector" . | nindent 6 }}
+  {{- with .Values.updateStrategy }}
+  strategy:
+    type: {{ .type }}
+    {{- if (eq .type "RollingUpdate") }}
+    rollingUpdate:
+      maxUnavailable: {{ .rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .rollingUpdate.maxSurge }}
+    {{- end }}
+  {{- end }}
+  minReadySeconds: {{ .Values.deployment.minReadySeconds }}
+  template: {{ template "traefik.podTemplate" . }}
+{{- end -}}

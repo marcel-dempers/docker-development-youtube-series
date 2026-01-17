@@ -1,0 +1,223 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.1
+  name: apiportalauths.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: APIPortalAuth
+    listKind: APIPortalAuthList
+    plural: apiportalauths
+    singular: apiportalauth
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIPortalAuth defines the authentication configuration for an
+          APIPortal.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: The desired behavior of this APIPortalAuth.
+            properties:
+              ldap:
+                description: LDAP configures the LDAP authentication.
+                properties:
+                  attribute:
+                    default: cn
+                    description: |-
+                      Attribute is the LDAP object attribute used to form a bind DN when sending bind queries.
+                      The bind DN is formed as <Attribute>=<Username>,<BaseDN>.
+                    type: string
+                  attributes:
+                    description: Attributes configures LDAP attribute mappings for
+                      user attributes.
+                    properties:
+                      company:
+                        description: Company is the LDAP attribute for user company.
+                        type: string
+                      email:
+                        description: Email is the LDAP attribute for user email.
+                        type: string
+                      firstname:
+                        description: Firstname is the LDAP attribute for user first
+                          name.
+                        type: string
+                      lastname:
+                        description: Lastname is the LDAP attribute for user last
+                          name.
+                        type: string
+                      userId:
+                        description: UserID is the LDAP attribute for user ID mapping.
+                        type: string
+                    type: object
+                  baseDn:
+                    description: BaseDN is the base domain name that should be used
+                      for bind and search queries.
+                    type: string
+                  bindDn:
+                    description: |-
+                      BindDN is the domain name to bind to in order to authenticate to the LDAP server when running in search mode.
+                      If empty, an anonymous bind will be done.
+                    type: string
+                  bindPasswordSecretName:
+                    description: |-
+                      BindPasswordSecretName is the name of the Kubernetes Secret containing the password for the bind DN.
+                      The secret must contain a key named 'password'.
+                    maxLength: 253
+                    type: string
+                  certificateAuthority:
+                    description: |-
+                      CertificateAuthority is a PEM-encoded certificate to use to establish a connection with the LDAP server if the
+                      connection uses TLS but that the certificate was signed by a custom Certificate Authority.
+                    type: string
+                  groups:
+                    description: Groups configures group extraction.
+                    properties:
+                      memberOfAttribute:
+                        default: memberOf
+                        description: MemberOfAttribute is the LDAP attribute containing
+                          group memberships (e.g., "memberOf").
+                        type: string
+                    type: object
+                  insecureSkipVerify:
+                    description: InsecureSkipVerify controls whether the server's
+                      certificate chain and host name is verified.
+                    type: boolean
+                  searchFilter:
+                    description: |-
+                      SearchFilter is used to filter LDAP search queries.
+                      Example: (&(objectClass=inetOrgPerson)(gidNumber=500)(uid=%s))
+                      %s can be used as a placeholder for the username.
+                    type: string
+                  startTls:
+                    description: StartTLS instructs the middleware to issue a StartTLS
+                      request when initializing the connection with the LDAP server.
+                    type: boolean
+                  syncedAttributes:
+                    description: SyncedAttributes are the user attributes to synchronize
+                      with Hub platform.
+                    items:
+                      enum:
+                      - groups
+                      - userId
+                      - firstname
+                      - lastname
+                      - email
+                      - company
+                      type: string
+                    maxItems: 6
+                    type: array
+                  url:
+                    description: URL is the URL of the LDAP server, including the
+                      protocol (ldap or ldaps) and the port.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid LDAP URL
+                      rule: isURL(self) && (self.startsWith('ldap://') || self.startsWith('ldaps://'))
+                required:
+                - baseDn
+                - url
+                type: object
+              oidc:
+                description: OIDC configures the OIDC authentication.
+                properties:
+                  claims:
+                    description: Claims configures JWT claim mappings for user attributes.
+                    properties:
+                      company:
+                        description: Company is the JWT claim for user company.
+                        type: string
+                      email:
+                        description: Email is the JWT claim for user email.
+                        type: string
+                      firstname:
+                        description: Firstname is the JWT claim for user first name.
+                        type: string
+                      groups:
+                        description: Groups is the JWT claim for user groups. This
+                          field is required for authorization.
+                        type: string
+                      lastname:
+                        description: Lastname is the JWT claim for user last name.
+                        type: string
+                      userId:
+                        description: UserID is the JWT claim for user ID mapping.
+                        type: string
+                    required:
+                    - groups
+                    type: object
+                  issuerUrl:
+                    description: IssuerURL is the OIDC provider issuer URL.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                  scopes:
+                    description: Scopes is a list of OAuth2 scopes.
+                    items:
+                      type: string
+                    type: array
+                  secretName:
+                    description: SecretName is the name of the Kubernetes Secret containing
+                      clientId and clientSecret keys.
+                    maxLength: 253
+                    type: string
+                  syncedAttributes:
+                    description: SyncedAttributes are the user attributes to synchronize
+                      with Hub platform.
+                    items:
+                      enum:
+                      - groups
+                      - userId
+                      - firstname
+                      - lastname
+                      - email
+                      - company
+                      type: string
+                    maxItems: 6
+                    type: array
+                required:
+                - claims
+                - issuerUrl
+                - secretName
+                type: object
+            type: object
+            x-kubernetes-validations:
+            - message: exactly one of oidc or ldap must be specified
+              rule: '[has(self.oidc), has(self.ldap)].filter(x, x).size() == 1'
+          status:
+            description: The current status of this APIPortalAuth.
+            properties:
+              hash:
+                description: Hash is a hash representing the APIPortalAuth.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true

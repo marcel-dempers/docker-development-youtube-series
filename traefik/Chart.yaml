@@ -1,0 +1,30 @@
+annotations:
+  artifacthub.io/changes: "- \"tests: update certificatesResolvers with Proxy v3.6
+    options\"\n- \"fix: add missing flag arg\"\n- \"fix(doc): :books: comment grammar
+    in values.yaml\"\n- \"feat: knative provider\"\n- \"feat(deps): update traefik
+    docker tag to v3.6.0\"\n- \"feat(deps): update traefik docker tag to v3.5.4\"\n-
+    \"feat(CRDs): update for Traefik Proxy v3.6 and Gateway API v1.4.0\"\n- \"feat(CRDs):
+    update Traefik Hub to v1.23.1\"\n- \"docs: \U0001F4DA fix comment grammar in values\"\n-
+    \"chore(release): \U0001F680 publish traefik 37.3.0 and 1.12.0\"\n"
+apiVersion: v2
+appVersion: v3.6.0
+description: A Traefik based Kubernetes ingress controller
+home: https://traefik.io/
+icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
+keywords:
+- traefik
+- ingress
+- networking
+kubeVersion: '>=1.22.0-0'
+maintainers:
+- email: michel.loiseleur@traefik.io
+  name: mloiseleur
+- email: remi.buisson@traefik.io
+  name: darkweaver87
+- name: jnoordsij
+name: traefik
+sources:
+- https://github.com/traefik/traefik-helm-chart
+- https://github.com/traefik/traefik
+type: application
+version: 37.3.0

@@ -1,0 +1,240 @@
+{{- $version := include "traefik.proxyVersion" $ }}
+{{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
+{{- $knativeNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.knative.namespaces -}}
+{{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces)) -}}
+
+{{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
+{{- range $allNamespaces }}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "traefik.fullname" $ }}
+  namespace: {{ . }}
+  labels:
+    {{- include "traefik.labels" $ | nindent 4 }}
+rules:
+  {{- if (semverCompare "<v3.1.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  {{- else }}
+  - apiGroups:
+      - ""
+    resources:
+      {{- if and $.Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version) }}
+      - configmaps
+      {{- end }}
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+  {{- end }}
+  {{- if (semverCompare ">=v3.5.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+  {{- end }}
+  # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    {{- if gt (len $.Values.rbac.secretResourceNames) 0 }}
+    resourceNames: {{ $.Values.rbac.secretResourceNames }}
+    {{- end }}
+    verbs:
+      - get
+      - list
+      - watch
+{{- if (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) }}
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+{{- end -}}
+{{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+      - serverstransports
+      - serverstransporttcps
+    verbs:
+      - get
+      - list
+      - watch
+{{- end -}}
+{{- if (and (has . $knativeNamespaces) $.Values.providers.knative.enabled) }}
+  - apiGroups:
+      - networking.internal.knative.dev
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.internal.knative.dev
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+{{- end }}
+{{- if $.Values.podSecurityPolicy.enabled }}
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - {{ template "traefik.fullname" $ }}
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+{{- end -}}
+{{- if (and (has . $hubNamespaces) $.Values.hub.token) }}
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - aiservices
+    verbs:
+      - get
+      - list
+      - watch
+  {{- if $.Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - apiauths
+      - apiportals
+      - apiportalauths
+      - apis
+      - apiversions
+      - apibundles
+      - apiplans
+      - apicatalogitems
+      - apiaccesses
+      - managedsubscriptions
+      - managedapplications
+    verbs:
+      - get
+      - list
+      - watch
+      {{- if not $.Values.hub.offline }}
+      - create
+      - update
+      - patch
+      - delete
+      {{- end }}
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
+{{- end }}
+{{- end -}}
+{{- end -}}

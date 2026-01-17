@@ -1,0 +1,35 @@
+{{- if .Values.autoscaling.enabled }}
+
+{{- if not .Values.autoscaling.maxReplicas }}
+  {{- fail "ERROR: maxReplicas is required on HPA" }}
+{{- end }}
+
+{{- if semverCompare ">=v1.23.0-0" .Capabilities.KubeVersion.Version }}
+apiVersion: autoscaling/v2
+{{- else }}
+apiVersion: autoscaling/v2beta2
+{{- end }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: {{ .Values.autoscaling.scaleTargetRef.apiVersion }}
+    kind: {{ .Values.autoscaling.scaleTargetRef.kind }}
+    name: {{ tpl .Values.autoscaling.scaleTargetRef.name . }}
+{{- if .Values.autoscaling.minReplicas }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+{{- end }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+{{- if .Values.autoscaling.metrics }}
+  metrics:
+{{ toYaml .Values.autoscaling.metrics | indent 4 }}
+{{- end }}
+{{- if .Values.autoscaling.behavior }}
+  behavior:
+{{ toYaml .Values.autoscaling.behavior | indent 4 }}
+{{- end }}
+{{- end }}

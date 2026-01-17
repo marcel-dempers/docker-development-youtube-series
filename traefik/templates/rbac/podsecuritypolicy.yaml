@@ -1,0 +1,68 @@
+{{- if .Values.podSecurityPolicy.enabled }}
+{{- if semverCompare ">=v1.25.0-0" .Capabilities.KubeVersion.Version }}
+  {{- fail "ERROR: PodSecurityPolicy has been removed in Kubernetes v1.25+" }}
+{{- end }}
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: runtime/default
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
+  name: {{ template "traefik.fullname" . }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+{{- if not .Values.securityContext.runAsNonRoot }}
+  allowedCapabilities:
+    - NET_BIND_SERVICE
+{{- end }}
+  hostNetwork: {{ .Values.hostNetwork }}
+  hostIPC: false
+  hostPID: false
+  fsGroup:
+{{- if .Values.securityContext.runAsNonRoot }}
+    ranges:
+    - max: 65535
+      min: 1
+    rule: MustRunAs
+{{- else }}
+    rule: RunAsAny
+{{- end }}
+{{- if .Values.hostNetwork }}
+  hostPorts:
+  - max: 65535
+    min: 1
+{{- end }}
+  readOnlyRootFilesystem: true
+  runAsUser:
+{{- if .Values.securityContext.runAsNonRoot }}
+    rule: MustRunAsNonRoot
+{{- else }}
+    rule: RunAsAny
+{{- end }}
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+{{- if .Values.securityContext.runAsNonRoot }}
+    ranges:
+    - max: 65535
+      min: 1
+    rule: MustRunAs
+{{- else }}
+    rule: RunAsAny
+{{- end }}
+  volumes:
+  - configMap
+  - downwardAPI
+  - secret
+  - emptyDir
+  - projected
+{{- if .Values.persistence.enabled }}
+  - persistentVolumeClaim
+{{- end -}}
+{{- end -}}

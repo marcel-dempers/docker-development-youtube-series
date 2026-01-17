@@ -1,0 +1,62 @@
+{{- if and (.Values.gateway).enabled (.Values.providers.kubernetesGateway).enabled }}
+  {{- if not .Values.gateway.listeners }}
+    {{- fail "ERROR: gateway must have at least one listener or should be disabled" }}
+  {{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ default "traefik-gateway" .Values.gateway.name }}
+  namespace: {{ default ( include "traefik.namespace" . ) .Values.gateway.namespace }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+  {{- with .Values.gateway.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
+  {{- with .Values.gateway.infrastructure }}
+  infrastructure:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+  listeners:
+    {{- range $name, $config := .Values.gateway.listeners }}
+    - name: {{ $name }}
+      {{ if not .port }}
+        {{- fail "ERROR: port needs to be specified" }}
+      {{- end -}}
+      {{ $found := false }}
+      {{- range $portName, $portConfig := $.Values.ports -}}
+        {{- if eq $portConfig.port $config.port -}}
+          {{ $found = true }}
+        {{- end -}}
+      {{- end -}}
+      {{ if not $found }}
+        {{- fail (printf "ERROR: port %0.f is not declared in ports" .port ) }}
+      {{- end -}}
+      port: {{ .port }}
+      protocol: {{ .protocol }}
+      {{- with .hostname }}
+      hostname: {{ . | toYaml }}
+      {{- end }}
+      {{- with .namespacePolicy }}
+      allowedRoutes:
+        namespaces:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{ if and (eq .protocol  "HTTPS") (not .certificateRefs) }}
+        {{- fail "ERROR: certificateRefs needs to be specified using HTTPS" }}
+      {{- end }}
+      {{ if or .certificateRefs .mode }}
+      tls:
+        {{ with .mode }}
+        mode: {{ . }}
+        {{- end }}
+        {{ with .certificateRefs }}
+        certificateRefs:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+{{- end }}

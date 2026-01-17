@@ -1,0 +1,144 @@
+{{- $version := include "traefik.proxyVersion" $ }}
+{{- if (ne $version "experimental-v3.0") }}
+  {{- if (semverCompare "<v3.0.0-0" $version) }}
+    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.certResolvers }}
+  {{- fail "ERROR: certResolvers setting has been removed. See v33.0.0 Changelog." }}
+{{- end }}
+
+{{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
+  {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
+{{- end }}
+
+{{- if and (.Values.providers.kubernetesGateway).enabled (and (semverCompare "<v3.1.0-rc3" $version) (not .Values.experimental.kubernetesGateway.enabled)) }}
+  {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
+{{- end }}
+
+{{- if and (.Values.providers.knative).enabled (not .Values.experimental.knative) }}
+  {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
+{{- end }}
+
+{{- if .Values.rbac.namespaced }}
+  {{- if .Values.providers.kubernetesGateway.enabled }}
+    {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
+  {{- end }}
+  {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) }}
+    {{- fail "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider." }}
+  {{- end }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.2.0-0" $version) (.Values.experimental.fastProxy.enabled)}}
+  {{- fail "ERROR: fastProxy is an experimental feature only available for traefik >= v3.2.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+  {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.6.0-0" $version) (.Values.experimental.knative)}}
+  {{- fail "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<3.2.0-0" $version) (.Values.providers.kubernetesGateway.nativeLBByDefault)}}
+  {{- fail "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0" }}
+{{- end }}
+
+{{- if and (semverCompare "<3.5.0-0" $version) (.Values.providers.kubernetesIngress.strictPrefixMatching)}}
+  {{- fail "ERROR: strictPrefixMatching is a feature only available for traefik >= v3.5.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<3.5.2-0" $version) (eq .Values.logs.access.format "genericCLF")}}
+  {{- fail "ERROR: genericCLF is an accesslog format option only available for traefik >= v3.5.2." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.2.0-0" $version) (.Values.metrics.otlp.serviceName)}}
+  {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.5.3-0" $version) (.Values.metrics.otlp.resourceAttributes)}}
+  {{- fail "ERROR: resourceAttributes with otlp on metrics is a feature only available for traefik >= v3.5.3." }}
+{{- end }}
+
+{{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
+  {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.general.otlp.enabled)}}
+  {{- fail "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.access.otlp.enabled)}}
+  {{- fail "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.1.0-0" $version) .Values.tracing.safeQueryParams }}
+  {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
+{{- end }}
+
+{{- range $portName, $config := .Values.ports }}
+  {{- if and (semverCompare "<v3.3.0-0" $version) (or (ne $config.observability.accessLogs nil) (ne $config.observability.metrics nil) (ne $config.observability.tracing nil) (ne $config.observability.tracingVerbosity nil)) }}
+    {{ fail "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."}}
+  {{- end }}
+  {{- if and (semverCompare "<v3.5.0-0" $version) (ne $config.observability.traceVerbosity nil) }}
+    {{ fail "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."}}
+  {{- end }}
+{{- end }}
+
+
+{{- if $.Values.hub.token -}}
+  {{ $hubVersion := $.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag }}
+  {{ $hubVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $hubVersion) }}
+  {{ if not $hubVersion }}
+    {{ fail "When using Traefik Hub image tag needs to be specified !" }}
+  {{- end -}}
+
+  {{ $hubVersion = (split "@" (default "v3" $hubVersion))._0 }}
+
+  {{/* Consider non semver versions as latest one  */}}
+  {{- if not (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $hubVersion)) -}}
+    {{ $hubVersion = "v3.99" }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.9.0" $hubVersion) .Values.hub.tracing.additionalTraceHeaders.enabled }}
+    {{ fail "ERROR: additionalTraceHeaders is a feature only available for traefik-hub >= v3.9.0."}}
+  {{- end }}
+
+  {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}
+    {{ fail "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."}}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.6.0" $hubVersion) .Values.hub.providers.consulCatalogEnterprise.enabled }}
+    {{ fail "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."}}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.0" $hubVersion) .Values.hub.providers.microcks.enabled }}
+    {{ fail "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."}}
+  {{- end }}
+
+  {{- if and (and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced)) (semverCompare "<v3.16.0" $hubVersion) }}
+    {{- fail "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs" -}}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.offline }}
+    {{ fail "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."}}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.mcpgateway.enabled }}
+    {{ fail "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."}}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.pluginRegistry.sources }}
+    {{ fail "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."}}
+  {{- end }}
+
+  {{- with .Values.hub.pluginRegistry.sources }}
+    {{- range $pluginName, $pluginConf := . }}
+      {{- if not (hasKey $.Values.experimental.plugins $pluginName) }}
+         {{ fail (printf "ERROR: pluginRegistry source %s is not used in exprimental.plugins." $pluginName) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}

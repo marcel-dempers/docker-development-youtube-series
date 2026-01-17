@@ -1,0 +1,11 @@
+{{- if ge (len .Values.hub.token) 65 }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: traefik-hub-license
+  namespace: {{ template "traefik.namespace" . }}
+type: Opaque
+data:
+  token: {{ .Values.hub.token | b64enc }}
+{{- end }}

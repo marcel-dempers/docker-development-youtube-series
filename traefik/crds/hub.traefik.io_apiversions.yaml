@@ -1,0 +1,249 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.1
+  name: apiversions.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: APIVersion
+    listKind: APIVersionList
+    plural: apiversions
+    singular: apiversion
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.title
+      name: Title
+      type: string
+    - jsonPath: .spec.release
+      name: Release
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIVersion defines a version of an API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: The desired behavior of this APIVersion.
+            properties:
+              cors:
+                description: Cors defines the Cross-Origin Resource Sharing configuration.
+                properties:
+                  addVaryHeader:
+                    description: AddVaryHeader defines whether the Vary header is
+                      automatically added/updated when the AllowOriginsList is set.
+                    type: boolean
+                  allowCredentials:
+                    description: AllowCredentials defines whether the request can
+                      include user credentials.
+                    type: boolean
+                  allowHeadersList:
+                    description: AllowHeadersList defines the Access-Control-Request-Headers
+                      values sent in preflight response.
+                    items:
+                      type: string
+                    type: array
+                  allowMethodsList:
+                    description: AllowMethodsList defines the Access-Control-Request-Method
+                      values sent in preflight response.
+                    items:
+                      type: string
+                    type: array
+                  allowOriginListRegex:
+                    description: AllowOriginListRegex is a list of allowable origins
+                      written following the Regular Expression syntax (https://golang.org/pkg/regexp/).
+                    items:
+                      type: string
+                    type: array
+                  allowOriginsList:
+                    description: AllowOriginsList is a list of allowable origins.
+                      Can also be a wildcard origin "*".
+                    items:
+                      type: string
+                    type: array
+                  exposeHeadersList:
+                    description: ExposeHeadersList defines the Access-Control-Expose-Headers
+                      values sent in preflight response.
+                    items:
+                      type: string
+                    type: array
+                  maxAge:
+                    description: MaxAge defines the time that a preflight request
+                      may be cached.
+                    format: int64
+                    type: integer
+                type: object
+              description:
+                description: Description explains what the APIVersion does.
+                type: string
+              openApiSpec:
+                description: OpenAPISpec defines the API contract as an OpenAPI specification.
+                properties:
+                  operationSets:
+                    description: OperationSets defines the sets of operations to be
+                      referenced for granular filtering in APICatalogItems or ManagedSubscriptions.
+                    items:
+                      description: |-
+                        OperationSet gives a name to a set of matching OpenAPI operations.
+                        This set of operations can then be referenced for granular filtering in APICatalogItems or ManagedSubscriptions.
+                      properties:
+                        matchers:
+                          description: Matchers defines a list of alternative rules
+                            for matching OpenAPI operations.
+                          items:
+                            description: OperationMatcher defines criteria for matching
+                              an OpenAPI operation.
+                            minProperties: 1
+                            properties:
+                              methods:
+                                description: Methods specifies the HTTP methods to
+                                  be included for selection.
+                                items:
+                                  type: string
+                                maxItems: 10
+                                type: array
+                              path:
+                                description: Path specifies the exact path of the
+                                  operations to select.
+                                maxLength: 255
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must start with a '/'
+                                  rule: self.startsWith('/')
+                                - message: cannot contains '../'
+                                  rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                              pathPrefix:
+                                description: PathPrefix specifies the path prefix
+                                  of the operations to select.
+                                maxLength: 255
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must start with a '/'
+                                  rule: self.startsWith('/')
+                                - message: cannot contains '../'
+                                  rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                              pathRegex:
+                                description: PathRegex specifies a regular expression
+                                  pattern for matching operations based on their paths.
+                                type: string
+                            type: object
+                            x-kubernetes-validations:
+                            - message: path, pathPrefix and pathRegex are mutually
+                                exclusive
+                              rule: '[has(self.path), has(self.pathPrefix), has(self.pathRegex)].filter(x,
+                                x).size() <= 1'
+                          maxItems: 100
+                          minItems: 1
+                          type: array
+                        name:
+                          description: Name is the name of the OperationSet to reference
+                            in APICatalogItems or ManagedSubscriptions.
+                          maxLength: 253
+                          type: string
+                      required:
+                      - matchers
+                      - name
+                      type: object
+                    maxItems: 100
+                    type: array
+                  override:
+                    description: Override holds data used to override OpenAPI specification.
+                    properties:
+                      servers:
+                        items:
+                          properties:
+                            url:
+                              type: string
+                              x-kubernetes-validations:
+                              - message: must be a valid URL
+                                rule: isURL(self)
+                          required:
+                          - url
+                          type: object
+                        maxItems: 100
+                        minItems: 1
+                        type: array
+                    required:
+                    - servers
+                    type: object
+                  path:
+                    description: |-
+                      Path specifies the endpoint path within the Kubernetes Service where the OpenAPI specification can be obtained.
+                      The Service queried is determined by the associated Ingress, IngressRoute, or HTTPRoute resource to which the API is attached.
+                      It's important to note that this option is incompatible if the Ingress or IngressRoute specifies multiple backend services.
+                      The Path must be accessible via a GET request method and should serve a YAML or JSON document containing the OpenAPI specification.
+                    maxLength: 255
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must start with a '/'
+                      rule: self.startsWith('/')
+                    - message: cannot contains '../'
+                      rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                  url:
+                    description: |-
+                      URL is a Traefik Hub agent accessible URL for obtaining the OpenAPI specification.
+                      The URL must be accessible via a GET request method and should serve a YAML or JSON document containing the OpenAPI specification.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                  validateRequestMethodAndPath:
+                    description: |-
+                      ValidateRequestMethodAndPath validates that the path and method matches an operation defined in the OpenAPI specification.
+                      This option overrides the default behavior configured in the static configuration.
+                    type: boolean
+                type: object
+                x-kubernetes-validations:
+                - message: path or url must be defined
+                  rule: has(self.path) || has(self.url)
+              release:
+                description: |-
+                  Release is the version number of the API.
+                  This value must follow the SemVer format: https://semver.org/
+                maxLength: 100
+                type: string
+                x-kubernetes-validations:
+                - message: must be a valid semver version
+                  rule: self.matches(r"""^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$""")
+              title:
+                description: Title is the public facing name of the APIVersion.
+                type: string
+            required:
+            - release
+            type: object
+          status:
+            description: The current status of this APIVersion.
+            properties:
+              hash:
+                description: Hash is a hash representing the APIVersion.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources: {}

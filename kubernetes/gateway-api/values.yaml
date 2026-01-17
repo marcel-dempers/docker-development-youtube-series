@@ -10,9 +10,13 @@ ports:
 
 # we enable gateway-api features
 providers:
+  
   kubernetesGateway:
     enabled: true
     experimentalChannel: false
+
+  kubernetesCRD:
+    enabled: false
 
 # we disable gateway-api defaults because we want to provide our own
 gatewayClass:
@@ -21,3 +25,4 @@ gatewayClass:
 # we disable gateway-api defaults because we want to provide our own
 gateway:
   enabled: false
+

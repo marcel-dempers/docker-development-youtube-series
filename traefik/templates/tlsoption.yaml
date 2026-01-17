@@ -1,0 +1,46 @@
+{{- range $name, $config := .Values.tlsOptions }}
+apiVersion: traefik.io/v1alpha1
+kind: TLSOption
+metadata:
+  name: {{ $name }}
+  namespace: {{ template "traefik.namespace" $ }}
+  labels:
+    {{- include "traefik.labels" $ | nindent 4 }}
+    {{- with $config.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- with $config.alpnProtocols }}
+  alpnProtocols:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $config.cipherSuites }}
+  cipherSuites:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $config.clientAuth }}
+  clientAuth:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $config.curvePreferences }}
+  curvePreferences:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $config.disableSessionTickets }}
+    {{- $version := include "traefik.proxyVersion" $ }}
+    {{- if semverCompare "<v3.4.0-0" $version }}
+      {{- fail "ERROR: disableSessionTickets is a feature only available for traefik >= v3.4.0." }}
+    {{- end }}
+  disableSessionTickets: {{ . }}
+  {{- end }}
+  {{- with $config.maxVersion }}
+  maxVersion: {{ . }}
+  {{- end }}
+  {{- with $config.minVersion }}
+  minVersion: {{ . }}
+  {{- end }}
+  {{- with $config.sniStrict }}
+  sniStrict: {{ . }}
+  {{- end }}
+---
+{{- end -}}

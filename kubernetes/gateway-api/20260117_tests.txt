@@ -1,0 +1,43 @@
+while installing traefik (helm install traefik...) these errors appeared:
+      Apply failed with 2 conflicts: conflicts with "kubectl": - .metadata.annotations.gateway.networking.k8s.io/channel - .spec.versions conflict occurred while applying object /grpcroutes.gateway.networking.k8s.io apiextensions.k8s.io/v1, Kind=CustomResourceDefinition: Apply failed with 2 conflicts: conflicts with "kubectl":
+
+To inspect the gaetaway api CRDs already installed:
+kubectl get crd gateways.gateway.networking.k8s.io -o yaml > gateway-crd.yaml
+
+
+To pull the traefik helm chart:
+helm pull traefik/traefik --version $CHART_VERSION --untar
+
+I had to install traefik without applying the CRDs included in the chart, because I already have Gateway API CRDs installed in my cluster (by another API Gateway).
+
+--skip-crds for avoiding to download all the traefik resources (i got a gaetaway api CDRs custom)
+helm install traefik traefik/traefik `
+  --version $CHART_VERSION `
+  --values kubernetes/gateway-api/values.yaml `
+  --skip-crds `
+  --namespace traefik `
+  --create-namespace
+
+But traefik was still trying to access its own Gateway API CRDs, giving me errors.
+To read logs: kubectl logs -n traefik traefik-666bcd55b9-qt727 (podname)
+"Failed to watch" err="failed to list *v1alpha1.ServersTransportTCP: the server could not find the requested resource (get serverstransporttcps.traefik.io)" logger="UnhandledError" reflector="k8s.io/client-go@v0.34.1/tools/cache/reflector.go:290" type="*v1alpha1.ServersTransportTCP"
+E0117 11:40:03.030113       1 reflector.go:205] "Failed to watch" err="failed to list *v1alpha1.TraefikService: the server could not find the requested resource (get traefikservices.traefik.io)" logger="UnhandledError" reflector="k8s.io/client-go@v0.34.1/tools/cache/reflector.go:290" type="*v1alpha1.TraefikService"    
+E0117 11:40:03.030137       1 reflector.go:205] "Failed to watch" err="failed to list *v1alpha1.ServersTransport: the server could not find the requested resource (get serverstransports.traefik.io)" logger="UnhandledError" reflector="k8s.io/client-go@v0.34.1/tools/cache/reflector.go:290" type="*v1alpha1.ServersTransport"
+E0117 11:40:03.030148       1 reflector.go:205] "Failed to watch" err="failed to list *v1alpha1.TLSStore: the server could not find the requested resource (get tlsstores.traefik.io)" logger="UnhandledError" reflector="k8s.io/client-go@v0.34.1/tools/cache/reflector.go:290" type="*v1alpha1.TLSStore"
+
+
+To fix this i fixedthe kubernetesCRD installation in the values.yaml file of traefik :
+providers:
+  ...
+  kubernetesCRD:
+    enabled: false  
+helm upgrade traefik traefik/traefik `
+  --version $CHART_VERSION `
+  --values kubernetes/gateway-api/values.yaml `
+  --skip-crds `
+  --namespace traefik
+
+after upgrade:
+- Delete the traefik pod to force re-creation: kubectl delete pod -n traefik <podname>
+- port forwarding again: kubectl port-forward -n traefik svc/traefik 8080:80
+- check the logs again: kubectl logs -n traefik <podname>

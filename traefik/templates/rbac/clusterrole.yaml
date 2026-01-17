@@ -1,0 +1,302 @@
+{{- $version := include "traefik.proxyVersion" $ }}
+{{- if and .Values.rbac.enabled (not .Values.rbac.namespaced) }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "traefik.clusterRoleName" . }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    {{- range .Values.rbac.aggregateTo }}
+    rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
+    {{- end }}
+rules:
+  {{- if (semverCompare "<v3.1.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+    {{- if $.Values.hub.token }}
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+    {{- end }}
+  {{- else }}
+  - apiGroups:
+      - ""
+    resources:
+      {{- if and .Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version) }}
+      - configmaps
+      {{- end }}
+      - nodes
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+  {{- end }}
+  {{- if (semverCompare ">=v3.5.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+  {{- end }}
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    {{- with .Values.rbac.secretResourceNames }}
+    resourceNames: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    verbs:
+      - get
+      - list
+      - watch
+    {{- if and .Values.hub.token }}
+      - update
+      - create
+      - delete
+      - deletecollection
+    {{- end }}
+  {{- if .Values.podSecurityPolicy.enabled }}
+  - apiGroups:
+      - policy
+    resourceNames:
+      - {{ template "traefik.fullname" . }}
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+  {{- end -}}
+  {{- if .Values.providers.kubernetesIngress.enabled }}
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  {{- end -}}
+  {{- if .Values.providers.kubernetesCRD.enabled }}
+   {{- if not .Values.providers.kubernetesIngress.enabled }}
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+   {{- end }}
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end -}}
+  {{- if (.Values.providers.kubernetesGateway).enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    {{- if (semverCompare "<v3.1.0-0" $version) }}
+      - endpoints
+    {{- end }}
+      - secrets
+    {{- if semverCompare ">=v3.2.0-0" $version }}
+      - configmaps
+    {{- end }}
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies
+      {{- end }}
+      - gatewayclasses
+      - gateways
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - grpcroutes
+      {{- end }}
+      - httproutes
+      - referencegrants
+      - tcproutes
+      - tlsroutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies/status
+      {{- end }}
+      - gatewayclasses/status
+      - gateways/status
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - grpcroutes/status
+      {{- end }}
+      - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
+    verbs:
+      - update
+  {{- end }}
+  {{- if (.Values.providers.knative).enabled }}
+  - apiGroups:
+      - networking.internal.knative.dev
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.internal.knative.dev
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  {{- end }}
+  {{- if .Values.hub.token }}
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - aiservices
+    verbs:
+      - list
+      - watch
+      - get
+    {{- if or (semverCompare ">=v3.1.0-0" $version) .Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+    verbs:
+      - list
+      - watch
+    {{- end }}
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    {{- if .Values.hub.apimanagement.enabled }}
+      - pods
+    {{- end }}
+    verbs:
+      - get
+      - list
+    {{- if .Values.hub.apimanagement.enabled }}
+      - watch
+    {{- end }}
+    {{- if .Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+      - apiauths
+      - apiportals
+      - apiportalauths
+      - apiratelimits
+      - apis
+      - apiversions
+      - apibundles
+      - apiplans
+      - apicatalogitems
+      - managedsubscriptions
+      - managedapplications
+    verbs:
+      - get
+      - list
+      - watch
+      {{- if not .Values.hub.offline }}
+      - create
+      - update
+      - patch
+      - delete
+      {{- end }}
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+      {{- if (semverCompare "<v3.1.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - list
+      - watch
+      {{- end -}}
+    {{- end -}}
+  {{- end }}
+{{- end }}

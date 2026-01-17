@@ -1,0 +1,106 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.1
+  name: managedapplications.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: ManagedApplication
+    listKind: ManagedApplicationList
+    plural: managedapplications
+    singular: managedapplication
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ManagedApplication represents a managed application.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ManagedApplicationSpec describes the ManagedApplication.
+            properties:
+              apiKeys:
+                description: APIKeys references the API keys used to authenticate
+                  the application when calling APIs.
+                items:
+                  properties:
+                    secretName:
+                      description: SecretName references the name of the secret containing
+                        the API key.
+                      maxLength: 253
+                      type: string
+                    suspended:
+                      type: boolean
+                    title:
+                      type: string
+                    value:
+                      description: Value is the API key value.
+                      maxLength: 4096
+                      type: string
+                  type: object
+                  x-kubernetes-validations:
+                  - message: secretName and value are mutually exclusive
+                    rule: '[has(self.secretName), has(self.value)].filter(x, x).size()
+                      <= 1'
+                maxItems: 100
+                type: array
+              appId:
+                description: |-
+                  AppID is the identifier of the ManagedApplication.
+                  It should be unique.
+                maxLength: 253
+                type: string
+              notes:
+                description: Notes contains notes about application.
+                type: string
+              owner:
+                description: |-
+                  Owner represents the owner of the ManagedApplication.
+                  It should be:
+                  - `sub` when using OIDC
+                  - `externalID` when using external IDP
+                maxLength: 253
+                type: string
+            required:
+            - appId
+            - owner
+            type: object
+          status:
+            description: The current status of this ManagedApplication.
+            properties:
+              apiKeyVersions:
+                additionalProperties:
+                  type: string
+                type: object
+              hash:
+                description: Hash is a hash representing the ManagedApplication.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true

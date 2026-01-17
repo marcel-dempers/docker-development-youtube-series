@@ -1,0 +1,33 @@
+{{- if .Values.metrics.prometheus }}
+{{- if .Values.metrics.prometheus.service }}
+{{- if (.Values.metrics.prometheus.service).enabled -}}
+
+{{- $fullname := include "traefik.fullname" . }}
+{{- if ge (len $fullname) 50 }}
+  {{- fail "ERROR: Cannot create a metrics service when name contains more than 50 characters" }}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "traefik.service-name" (dict "root" . "name" "metrics") }}
+  namespace: {{ template "traefik.namespace" . }}
+  {{- template "traefik.metrics-service-metadata" . }}
+  annotations:
+  {{- with .Values.metrics.prometheus.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "traefik.labelselector" . | nindent 4 }}
+  ports:
+  - port: {{ .Values.ports.metrics.port }}
+    name: metrics
+    targetPort: metrics
+    protocol: TCP
+    {{- if .Values.ports.metrics.nodePort }}
+    nodePort: {{ .Values.ports.metrics.nodePort }}
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
