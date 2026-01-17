@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: videos-v2-route
+  namespace: default
+
+spec:
+  parentRefs:
+  - name: videos-api
+    kind: Service
+    group: ""
+  rules:
+  - matches:
+    backendRefs:
+    - name: videos-api
+      port: 10010
+      weight: 90
+    - name: videos-api-v2
+      port: 8080
+      weight: 10
+---
