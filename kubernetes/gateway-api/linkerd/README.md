@@ -1,8 +1,6 @@
 # Introduction to Linkerd: Gateway API
 
-<a href="https://youtu.be/xxxxxx" title="linkerd"><img src="https://i.ytimg.com/vi/xxxx/hqdefault.jpg" width="40%" alt="linkerd" /></a>
-
-#TODO
+<a href="https://youtu.be/B9gKwJdWW7A" title="linkerd"><img src="https://i.ytimg.com/vi/B9gKwJdWW7A/hqdefault.jpg" width="40%" alt="linkerd" /></a>
 
 ## Prerequisites
 

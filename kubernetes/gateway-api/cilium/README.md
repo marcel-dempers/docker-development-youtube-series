@@ -55,7 +55,7 @@ We created our own [values.yaml](./values.yaml) which allows us to enable Gatewa
 Install:
 
 ```shell
-CHART_VERSION="1.18.5"
+CHART_VERSION="1.18.6"
 helm repo add cilium https://helm.cilium.io
 helm repo update
 helm search repo cilium --versions
