@@ -1,0 +1,45 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: go-route
+  namespace: default
+
+spec:
+  parentRefs:
+  - name: gateway-api
+    sectionName: http
+    kind: Gateway
+
+  hostnames:
+  - example-app.com
+
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api/go 
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    backendRefs:
+    - name: go-svc
+      port: 5000
+      weight: 1
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: TrafficPolicy
+metadata:
+  name: basic-auth
+  namespace: default
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: go-route
+  basicAuth:
+    users:
+      # Generated with: htpasswd -nbs admin password123
+      - "admin:{SHA}y/2sYAj5yrQIN4TL0YdPdmGNKpc="

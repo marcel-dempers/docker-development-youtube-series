@@ -1,0 +1,131 @@
+# -- Set a list of image pull secrets for Kubernetes to use when pulling container images from your own private registry instead of the default kgateway registry.
+imagePullSecrets: []
+
+# -- Add a name to the default Helm base release, which is 'kgateway'. If you set 'nameOverride: "foo", the name of the resources that the Helm release creates become 'kgateway-foo', such as the deployment, service, and service account for the kgateway control plane in the kgateway-system namespace.
+nameOverride: ""
+
+# -- Override the full name of resources created by the Helm chart, which is 'kgateway'. If you set 'fullnameOverride: "foo", the full name of the resources that the Helm release creates become 'foo', such as the deployment, service, and service account for the kgateway control plane in the kgateway-system namespace.
+fullnameOverride: ""
+
+# -- Configure the service account for the deployment.
+serviceAccount:
+  # -- Specify whether a service account should be created.
+  create: true
+  # -- Add annotations to the service account.
+  annotations: {}
+  # -- Set the name of the service account to use. If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+# -- Add annotations to the kgateway deployment.
+deploymentAnnotations: {}
+
+# -- Add annotations to the kgateway pods.
+podAnnotations:
+  prometheus.io/scrape: "true"
+
+# -- Set the pod-level security context. For example, 'fsGroup: 2000' sets the filesystem group to 2000.
+podSecurityContext: {}
+
+# -- Set the container-level security context, such as 'runAsNonRoot: true'.
+securityContext: {}
+
+# -- Configure resource requests and limits for the container, such as 'limits.cpu: 100m' or 'requests.memory: 128Mi'.
+resources: {}
+
+# -- Set node selector labels for pod scheduling, such as 'kubernetes.io/arch: amd64'.
+nodeSelector: {}
+
+# -- Set tolerations for pod scheduling, such as 'key: "nvidia.com/gpu"'.
+tolerations: []
+
+# -- Set affinity rules for pod scheduling, such as 'nodeAffinity:'.
+affinity: {}
+
+# -- Configure the kgateway control plane deployment.
+controller:
+  # -- Set the number of controller pod replicas.
+  replicaCount: 1
+  # -- Set the log level for the controller.
+  logLevel: info
+  # -- Configure the controller container image.
+  image:
+    # -- Set the image registry for the controller.
+    registry: ""
+    # -- Set the image repository for the controller.
+    repository: kgateway
+    # -- Set the image pull policy for the controller.
+    pullPolicy: ""
+    # -- Set the image tag for the controller.
+    tag: ""
+  # -- Configure the controller service.
+  service:
+    # -- Set the service type for the controller.
+    type: ClusterIP
+    # -- Set the service ports for gRPC and health endpoints.
+    ports:
+      grpc: 9977
+      agwGrpc: 9978
+      health: 9093
+      metrics: 9092
+  # -- Add extra environment variables to the controller container.
+  extraEnv: {}
+  # -- Configure TLS settings for the xDS gRPC servers.
+  xds:
+    tls:
+      # -- Enable TLS encryption for xDS communication. When enabled, both the main xDS server (port 9977) and agent gateway xDS server (port 9978) will use TLS. When TLS is enabled, you must create a Secret named 'kgateway-xds-cert' in the kgateway installation namespace. The Secret must be of type 'kubernetes.io/tls' with 'tls.crt', 'tls.key', and 'ca.crt' data fields present.
+      enabled: false
+  # -- Change the rollout strategy from the Kubernetes default of a RollingUpdate with 25% maxUnavailable, 25% maxSurge.
+  # E.g., to recreate pods, minimizing resources for the rollout but causing downtime:
+  # strategy:
+  #   type: Recreate
+  # E.g., to roll out as a RollingUpdate but with non-default parameters:
+  # strategy:
+  #   type: RollingUpdate
+  #   rollingUpdate:
+  #     maxSurge: 100%
+  strategy: {}
+
+# -- Configure the default container image for the components that Helm deploys. You can override these settings for each particular component in that component's section, such as 'controller.image' for the kgateway control plane. If you use your own private registry, make sure to include the imagePullSecrets.
+image:
+  # -- Set the default image registry.
+  registry: cr.kgateway.dev/kgateway-dev
+  # -- Set the default image tag.
+  tag: ""
+  # -- Set the default image pull policy.
+  pullPolicy: IfNotPresent
+
+# -- Configure the integration with the Gateway API Inference Extension project, which lets you use kgateway to route to AI inference workloads like LLMs that run locally in your Kubernetes cluster. Documentation for Inference Extension can be found here: https://kgateway.dev/docs/integrations/inference-extension/
+inferenceExtension:
+  # -- Enable Inference Extension. If enabled, agentgateway.enabled should also be set to true. Enabling inference extension without agentgateway is deprecated in v2.1 and will not be supported in v2.2.
+  enabled: false
+  # -- Enable automatic provisioning for Inference Extension. Deprecated: this is deprecated in v2.1 and will be removed in v2.2.
+  autoProvision: false
+
+# -- List of namespace selectors (OR'ed): each entry can use 'matchLabels' or 'matchExpressions' (AND'ed within each entry if used together). Kgateway includes the selected namespaces in config discovery. For more information, see the docs https://kgateway.dev/docs/operations/install/#namespace-discovery.
+discoveryNamespaceSelectors: []
+
+# -- Enable the integration with Agent Gateway, which lets you use kgateway to help manage agent connectivity across MCP servers, A2A agents, and REST APIs.
+agentgateway:
+  enabled: false
+
+# -- Policy merging settings. Currently, TrafficPolicy's extAuth, extProc, and transformation policies support deep merging.
+# E.g., to enable deep merging of extProc policy in TrafficPolicy:
+# policyMerge:
+#   trafficPolicy:
+#     extProc: DeepMerge
+policyMerge: {}
+
+# -- Enable the waypoint integration. This enables kgateway to translate istio waypoints and use kgateway as a waypoint in an Istio Ambient service mesh setup..
+waypoint:
+  enabled: false
+
+# -- Configure validation behavior for route and policy safety checks in the control plane.
+#    This setting determines how invalid configuration is handled to prevent security bypasses
+#    and to maintain multi-tenant isolation.
+validation:
+  # -- Validation level. Accepted values: "standard" or "strict" (case-insensitive).
+  #    Standard replaces invalid routes with a direct 500 response and continues applying valid configuration.
+  #    Strict adds xDS preflight validation and blocks snapshots that would NACK in Envoy.
+  #    Default is "standard".
+  level: standard
+
