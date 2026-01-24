@@ -39,7 +39,8 @@ spec:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: go-route
-  basicAuth:
-    users:
+  extAuth:
+    basicAuth:
+      users:
       # Generated with: htpasswd -nbs admin password123
       - "admin:{SHA}y/2sYAj5yrQIN4TL0YdPdmGNKpc="

@@ -1,0 +1,48 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: gateway-config
+  namespace: default
+spec:
+  kube: 
+    service:
+      type: ClusterIP
+      extraLabels: 
+        gateway: custom
+    podTemplate: 
+      extraLabels:
+        gateway: custom
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gateway-api
+  namespace: default
+spec:
+  gatewayClassName: kgateway
+  infrastructure:
+    parametersRef:
+      name: gateway-config
+      group: gateway.kgateway.dev
+      kind: GatewayParameters
+
+  # Only Routes from the same namespace are allowed.
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same  #or All or Selector
+    
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: secret-tls
+            namespace: default
+      allowedRoutes:
+        namespaces:
+          from: Same

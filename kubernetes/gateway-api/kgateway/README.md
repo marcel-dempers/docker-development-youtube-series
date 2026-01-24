@@ -29,15 +29,15 @@ In this guide we will turn on the Gateway API feature in kgateway and use that s
 Most of the Gateway API controllers are installed using `helm`. </br>
 Before we install it, let's take a look at the [values.yaml](./values.yaml)
 
-Traefik allows us to configure many options. Some I find quite important:
+kgateway has a section on [Gateway Customization](https://kgateway.dev/docs/envoy/main/setup/) where we can adjust gateway parameters. </br>
 
-* Access logs - fields and format
-* Ports to use for incoming traffic
-* Infrastructure annotations \ labels
-* Control Gateway API
-  * Default CRDs
-  * Default GatewayClass
-  * Default Gateways
+Gateway API allows us to inject parameters using the `infrastructure.parametersRef` field </br>
+
+We can customize our gateway:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/kgateway/02-gateway-config.yaml
+```
 
 
 ### Installation 
@@ -135,22 +135,5 @@ We can also add HTTP basic authentication to allow users to access secured resou
 The Basic Auth TrafficPolicy points to a secret which supports Kubernetes basic auth secret type. </br>
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/traefik/09-middleware-basicauth.yaml
-```
-
-### Headers
-
-Traefik allows us to manipulate headers too using Middleware component called `headers` </br>
-We can use this to handle scenarios like CORS (Cross-Origin Resource Sharing)
-
-Let's access our web app directly over `localhost` which makes a call to `example-app.com` and should be blocked by CORS. </br>
-
-```shell
-kubectl port-forward svc/web-app 8000:80
-```
-
-Once we apply the Middleware update to our HTTPRoute, we can perform cross origin API calls:
-
-```shell
-kubectl apply -f kubernetes/gateway-api/traefik/10-middleware-headers.yaml
+kubectl apply -f kubernetes/gateway-api/kgateway/02-trafficpolicy-basicauth.yaml
 ```
