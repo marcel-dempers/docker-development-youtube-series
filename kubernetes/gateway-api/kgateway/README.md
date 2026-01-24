@@ -39,11 +39,6 @@ Traefik allows us to configure many options. Some I find quite important:
   * Default GatewayClass
   * Default Gateways
 
-It's always good to get a grip on the [default helm values](https://github.dev/traefik/traefik-helm-chart/blob/master/traefik/values.yaml)
-
-The values file is used to customise Traefik, underlying pods, deployments and services as well as turning features on and off. </br>
-
-We can go ahead and install the controller to start with and use `helm upgrade` to make changes as we need to. </br>
 
 ### Installation 
 
@@ -89,7 +84,7 @@ kubectl -n kgateway-system logs -l app.kubernetes.io/name=kgateway
 
 ## Install a kgateway Gateway Class
 
-The `helm` chart will create a `GatewayClass` for us. </br>
+The `helm` chart will create a `GatewayClass` for us as per [docs](https://kgateway.dev/docs/envoy/latest/setup/default/#gatewayclass). </br>
 
 ```shell
 kubectl get gc kgateway -o yaml
