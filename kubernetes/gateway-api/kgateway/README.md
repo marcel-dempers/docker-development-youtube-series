@@ -24,22 +24,6 @@ Let's start with the [Official Documentation](https://kgateway.dev/docs/envoy/la
 kgateway is feature rich when it comes to L7 HTTP routing. </br>
 In this guide we will turn on the Gateway API feature in kgateway and use that specifically. </br>
 
-### Configuration
-
-Most of the Gateway API controllers are installed using `helm`. </br>
-Before we install it, let's take a look at the [values.yaml](./values.yaml)
-
-kgateway has a section on [Gateway Customization](https://kgateway.dev/docs/envoy/main/setup/) where we can adjust gateway parameters. </br>
-
-Gateway API allows us to inject parameters using the `infrastructure.parametersRef` field </br>
-
-We can customize our gateway:
-
-```shell
-kubectl apply -f kubernetes/gateway-api/kgateway/02-gateway-config.yaml
-```
-
-
 ### Installation 
 
 To get the version you want, you can use the kgateway [Github Release page](https://github.com/kgateway-dev/kgateway/releases/tag/v2.1.2). </br>
@@ -103,20 +87,33 @@ kubectl get svc
 kubectl -n default port-forward svc/gateway-api 80
 ```
 
+### Configuration
+
+Most of the Gateway API controllers are installed using `helm`. </br>
+Before we install it, let's take a look at the [values.yaml](./values.yaml)
+
+kgateway has a section on [Gateway Customization](https://kgateway.dev/docs/envoy/main/setup/) where we can adjust gateway parameters. </br>
+
+Gateway API allows us to inject parameters using the `infrastructure.parametersRef` field </br>
+
+We can customize our gateway:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/kgateway/02-gateway-config.yaml
+```
+
 ## HTTP Traffic management
 
 Feel free to quickly run through the basic [traffic management table](../README.md#traffic-management-features--http-routes) for using `HTTPRoute` routing for traffic. </br>
 
 <i>Note: HTTPRoute features are not specific to this controller and should be available to any other gateway API controller that you choose.</i>
 
-## TrafficPolicy
+## Policies: TrafficPolicy
 
-kgateway uses `TrafficPolicy` as their custom CRD to perform traffic management actions that are not supported by native Gateway API. </br>
+kgateway uses `TrafficPolicy` as their custom CRD to apply traffic policies to certain HTTPRoutes or all HTTPRoutes that a Gateway serves. </br>
 
 There are many [TrafficPolicy Features](https://kgateway.dev/docs/envoy/main/reference/api/#trafficpolicy) available. 
-
 The cool thing here is that these TrafficPolicies are now pluggable into Gateway API HTTPRoutes. </br>
-
 In `HTTPRoute` objects, under `filters`, we can add extensions using something like:
 
 ```yaml
@@ -128,12 +125,31 @@ filters:
     name: cors-feature
 ```
 
-### Basic Auth
+### TrafficPolicy Example
 
-We can also add HTTP basic authentication to allow users to access secured resources protected by username and passwords. </br>
-
-The Basic Auth TrafficPolicy points to a secret which supports Kubernetes basic auth secret type. </br>
+Example of a Traffic Policy supporting CORS </br>
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/kgateway/02-trafficpolicy-basicauth.yaml
+kubectl apply -f kubernetes/gateway-api/kgateway/03-trafficpolicy-cors.yaml
 ```
+
+## Policies: HTTPListenerPolicy
+
+This is a special CRD for attaching policies to listeners on gateways. </br>
+We can use this to set custom access log formats and various features of the gateway listener.
+
+The following changes our log format to JSON
+```shell
+kubectl apply -f kubernetes/gateway-api/kgateway/04-gateway-accesslogs.yaml
+
+# see log format
+kubectl logs -l app.kubernetes.io/name=gateway-api
+```
+
+## Policies: BackendConfigPolicy
+
+[BackendConfigPolicy](https://kgateway.dev/docs/envoy/latest/about/policies/backendconfigpolicy/) allows us to configure connection settings for a backend like a Kubernetes Service
+
+## AgentGateway
+
+One thing that sets kgateway apart from the other gateway API's is its integration with [Agent Gateway](https://kgateway.dev/docs/agentgateway/latest/)

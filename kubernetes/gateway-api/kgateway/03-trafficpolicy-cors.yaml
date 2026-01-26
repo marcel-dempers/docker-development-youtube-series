@@ -19,6 +19,11 @@ spec:
         type: PathPrefix
         value: /api/go 
     filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.kgateway.dev
+        kind: TrafficPolicy
+        name: cors-feature
     - type: URLRewrite
       urlRewrite:
         path:
@@ -32,15 +37,23 @@ spec:
 apiVersion: gateway.kgateway.dev/v1alpha1
 kind: TrafficPolicy
 metadata:
-  name: basic-auth
+  name: cors-feature
   namespace: default
 spec:
-  targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: go-route
-  extAuth:
-    basicAuth:
-      users:
-      # Generated with: htpasswd -nbs admin password123
-      - "admin:{SHA}y/2sYAj5yrQIN4TL0YdPdmGNKpc="
+  cors:
+    allowCredentials: true
+    allowHeaders:
+      - "Origin"
+      - "Authorization"
+      - "Content-Type"             
+    allowMethods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"               
+    allowOrigins:
+      - "http://example-app.com"
+      - "http://localhost:8000"
+    exposeHeaders:
+    - "Origin"
+    - "X-TrafficPolicy-Header"
+    maxAge: 86400
