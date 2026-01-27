@@ -7,10 +7,10 @@ spec:
   ingressClassName: traefik
   tls:
   - hosts:
-    - marcel.guru
+    - test.marceldempers.dev
     secretName: example-app-tls
   rules:
-  - host: marcel.guru
+  - host: test.marceldempers.dev
     http:
       paths:
       - path: /

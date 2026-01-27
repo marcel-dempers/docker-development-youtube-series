@@ -111,8 +111,9 @@ curl ifconfig.co
 I can log into my DNS provider and point my DNS A record to my IP.<br/>
 Also setup my router to allow 80 and 443 to come to my PC <br/>
 
-If you are running in the cloud, your Ingress controller and Cloud provider will give you a
+<i>Note: If you are running in the cloud, your Ingress controller or Gateway API and Cloud provider will give you a
 public IP and you can point your DNS to that accordingly.
+</i>
 
 ## Option 1: Using an Ingress Controller
 
@@ -124,33 +125,41 @@ CHART_VERSION="37.3.0"
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 
+helm show values traefik/traefik > kubernetes/cert-manager/traefik-default-values.yaml
+
 helm install traefik traefik/traefik \
   --version $CHART_VERSION \
   --namespace traefik \
+  --set service.type=NodePort \
+  --set ports.web.exposedPort=30911 \
+  --set ports.websecure.exposedPort=30787 \
   --create-namespace
-```
 
+# check install 
+kubectl -n traefik get pods
+```
 
 ## Create Let's Encrypt Issuer for our cluster
 
 We create a `ClusterIssuer` that allows us to issue certs in any namespace
 
-```
-kubectl apply -f cert-issuer-nginx-ingress.yaml
+```shell
+kubectl apply -f kubernetes/cert-manager/issuer-ingress.yaml
 
 # check the issuer
-kubectl describe clusterissuer letsencrypt-cluster-issuer
+kubectl describe clusterissuer letsencrypt-issuer
 
 ```
 
 ## Deploy a pod that uses SSL
 
-```
-kubectl apply -f .\kubernetes\deployments\
-kubectl apply -f .\kubernetes\services\
+```shell
+kubectl apply -f kubernetes/deployments/
+kubectl apply -f kubernetes/services/
+
 kubectl get pods
 # deploy an ingress route
-kubectl apply -f .\kubernetes\cert-manager\ingress.yaml
+kubectl apply -f kubernetes/cert-manager/ingress.yaml
 
 ```
 
