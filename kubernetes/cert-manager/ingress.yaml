@@ -8,7 +8,7 @@ spec:
   tls:
   - hosts:
     - test.marceldempers.dev
-    secretName: example-app-tls
+    secretName: secret-tls
   rules:
   - host: test.marceldempers.dev
     http:

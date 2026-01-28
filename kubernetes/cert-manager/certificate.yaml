@@ -5,8 +5,8 @@ metadata:
   namespace: default
 spec:
   dnsNames:
-    - marcel.guru
-  secretName: example-app-tls
+    - test.marceldempers.dev
+  secretName: secret-tls
   issuerRef:
-    name: letsencrypt-cluster-issuer
+    name: letsencrypt-issuer-ingress
     kind: ClusterIssuer

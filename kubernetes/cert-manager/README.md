@@ -46,7 +46,8 @@ helm install \
   --version ${CHART_VERSION} \
   --namespace cert-manager \
   --create-namespace \
-  --set crds.enabled=true
+  --set crds.enabled=true \
+  --set config.enableGatewayAPI=true
 ```
 
 ## Cert Manager Resources
@@ -68,7 +69,7 @@ service/cert-manager-webhook      ClusterIP   10.96.223.22    <none>        443/
 NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/cert-manager              1/1     1            1           6m57s
 deployment.apps/cert-manager-cainjector   1/1     1            1           6m57s
-deployment.apps/cert-manager-webhook      1/1     1            1           6m57s
+deployment.apps/cert-manager-webhook      1/1     1           1           6m57s
 
 NAME                                                 DESIRED   CURRENT   READY   AGE
 replicaset.apps/cert-manager-75bb65b7b9              1         1         1       6m57s
@@ -115,6 +116,16 @@ Also setup my router to allow 80 and 443 to come to my PC <br/>
 public IP and you can point your DNS to that accordingly.
 </i>
 
+
+## Deploy pods that require SSL\TLS
+
+```shell
+kubectl apply -f kubernetes/deployments/
+kubectl apply -f kubernetes/services/
+
+kubectl get pods
+```
+
 ## Option 1: Using an Ingress Controller
 
 Let's deploy an Ingress controller: <br/>
@@ -137,9 +148,18 @@ helm install traefik traefik/traefik \
 
 # check install 
 kubectl -n traefik get pods
+
+# get our service IP
+kubectl -n traefik get svc
+
+# deploy an ingress route that needs TLS for our example app
+kubectl apply -f kubernetes/cert-manager/ingress.yaml
+
+# curl over HTTP 
+curl http://test.marceldempers.dev
 ```
 
-## Create Let's Encrypt Issuer for our cluster
+### Create an Ingress Let's Encrypt Issuer
 
 We create a `ClusterIssuer` that allows us to issue certs in any namespace
 
@@ -151,29 +171,51 @@ kubectl describe clusterissuer letsencrypt-issuer
 
 ```
 
-## Deploy a pod that uses SSL
+## Issue Certificate
 
 ```shell
-kubectl apply -f kubernetes/deployments/
-kubectl apply -f kubernetes/services/
+kubectl apply -f kubernetes/cert-manager/certificate.yaml
 
-kubectl get pods
-# deploy an ingress route
-kubectl apply -f kubernetes/cert-manager/ingress.yaml
-
-```
-
-## Issue Certificate 
-
-```
-kubectl apply -f certificate.yaml
-
-# check the cert has been issued 
-
+# check the cert issue status
 kubectl describe certificate example-app
+
+# you can track and diagnose the ordering request process
+kubectl get CertificateRequest
+#note:  you can use kubectl describe on the resource too
 
 # TLS created as a secret
 kubectl get secrets
 NAME                  TYPE                                  DATA   AGE
 example-app-tls       kubernetes.io/tls                     2      84m
+
+# test TLS 
+curl https://test.marceldempers.dev
+Hello World!
+
+# cleanup
+kubectl delete certificate example-app
+kubectl delete clusterissuer letsencrypt-issuer-ingress
+kubectl delete secret example-app-tls 
+```
+
+## Option 2: Using a Gateway API 
+
+To use this option, we will need a Gateway API enabled cluster. This means you need the Gateway API CRD's installed. </br>
+See our [Introduction to Gateway API guide](../gateway-api/README.md)
+
+Also, `cert-manager` needs to have `config.enableGatewayAPI=true` enabled. 
+
+### Create a Gateway Class 
+
+```shell
+ kubectl apply -f kubernetes/gateway-api/traefik/01-gatewayclass.yaml 
+```
+
+### Create a Gateway 
+
+We can use our Gateway from our [Traefik Gateway API Guide](../gateway-api/traefik/README.md)
+
+```shell 
+kubectl apply -f kubernetes/gateway-api/traefik/02-gateway.yaml
+
 ```
