@@ -116,6 +116,17 @@ kubectl apply -f kubernetes/gateway-api/cilium/01.1-gatewayclass-config.yaml
 kubectl apply -f kubernetes/gateway-api/cilium/02-gateway.yaml
 ```
 
+## Install the Cilium CLI
+
+```
+CILIUM_CLI_VERSION=v0.19.0
+CLI_ARCH=amd64
+curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+tar xzvf cilium-linux-${CLI_ARCH}.tar.gz -C /usr/local/bin
+rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+```
+
 ## HTTP Traffic management
 
 Feel free to quickly run through the basic [traffic management table](../README.md#traffic-management-features--http-routes) for using `HTTPRoute` routing for traffic. </br>
