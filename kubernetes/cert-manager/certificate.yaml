@@ -8,5 +8,5 @@ spec:
     - test.marceldempers.dev
   secretName: secret-tls
   issuerRef:
-    name: letsencrypt-issuer-ingress
+    name: letsencrypt-issuer
     kind: ClusterIssuer

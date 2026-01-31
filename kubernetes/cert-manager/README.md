@@ -161,7 +161,7 @@ curl http://test.marceldempers.dev
 
 ### Create an Ingress Let's Encrypt Issuer
 
-We create a `ClusterIssuer` that allows us to issue certs in any namespace
+We create a `ClusterIssuer` for Ingress that allows us to issue certs in any namespace
 
 ```shell
 kubectl apply -f kubernetes/cert-manager/issuer-ingress.yaml
@@ -186,7 +186,7 @@ kubectl get CertificateRequest
 # TLS created as a secret
 kubectl get secrets
 NAME                  TYPE                                  DATA   AGE
-example-app-tls       kubernetes.io/tls                     2      84m
+secret-tls       kubernetes.io/tls                     2      1m
 
 # test TLS 
 curl https://test.marceldempers.dev
@@ -194,16 +194,18 @@ Hello World!
 
 # cleanup
 kubectl delete certificate example-app
-kubectl delete clusterissuer letsencrypt-issuer-ingress
-kubectl delete secret example-app-tls 
+kubectl delete clusterissuer letsencrypt-issuer
+kubectl delete secret secret-tls
 ```
 
 ## Option 2: Using a Gateway API 
 
 To use this option, we will need a Gateway API enabled cluster. This means you need the Gateway API CRD's installed. </br>
-See our [Introduction to Gateway API guide](../gateway-api/README.md)
 
-Also, `cert-manager` needs to have `config.enableGatewayAPI=true` enabled. 
+See our [Introduction to Gateway API guide](../gateway-api/README.md)
+At the bottom of the guide, there is a matrix of many other Gateway APIs to choose from. </br>
+
+<i> Note: `cert-manager` needs to have `config.enableGatewayAPI=true` enabled.  </i>
 
 ### Create a Gateway Class 
 
@@ -218,4 +220,44 @@ We can use our Gateway from our [Traefik Gateway API Guide](../gateway-api/traef
 ```shell 
 kubectl apply -f kubernetes/gateway-api/traefik/02-gateway.yaml
 
+```
+
+### Create a Gateway API Let's Encrypt Issuer
+
+We create a `ClusterIssuer` for Ingress that allows us to issue certs in any namespace
+
+```shell
+kubectl apply -f kubernetes/cert-manager/issuer-gatewayapi.yaml
+
+# check the issuer
+kubectl describe clusterissuer letsencrypt-issuer
+
+```
+
+## Issue Certificate
+
+```shell
+kubectl apply -f kubernetes/cert-manager/certificate.yaml
+
+# check the cert issue status
+kubectl describe certificate example-app
+
+# you can track and diagnose the ordering request process
+kubectl get CertificateRequest
+#note:  you can use kubectl describe on the resource too
+
+# TLS created as a secret
+kubectl get secrets
+NAME                  TYPE                                  DATA   AGE
+secret-tls       kubernetes.io/tls                     2      1m
+
+# test TLS 
+kubectl apply -f kubernetes/cert-manager/httproute.yaml
+curl https://test.marceldempers.dev
+Hello World!
+
+# cleanup
+kubectl delete certificate example-app
+kubectl delete clusterissuer letsencrypt-issuer
+kubectl delete secret secret-tls
 ```
