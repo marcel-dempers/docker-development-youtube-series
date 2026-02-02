@@ -171,7 +171,7 @@ kubectl describe clusterissuer letsencrypt-issuer
 
 ```
 
-## Issue Certificate
+### Issue Certificate
 
 ```shell
 kubectl apply -f kubernetes/cert-manager/certificate.yaml
@@ -234,7 +234,7 @@ kubectl describe clusterissuer letsencrypt-issuer
 
 ```
 
-## Issue Certificate
+### Issue Certificate
 
 ```shell
 kubectl apply -f kubernetes/cert-manager/certificate.yaml
