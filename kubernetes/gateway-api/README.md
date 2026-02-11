@@ -296,7 +296,7 @@ For example, cloud load balancers etc.
 
 We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels) to do so. This will set annotations or labels on any infrastructure that gets created. </br>
 
-## Gateway API Controllers Guides
+## Gateway API Controller Guides
 
 | Name | Guide | Video |
 |------|-------|-------|
@@ -305,5 +305,6 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 | Istio | [Introduction to Istio Gateway API](./istio/README.md)   | <a href="https://youtu.be/du9h71WYToo" title="envoy"><img src="https://i.ytimg.com/vi/du9h71WYToo/hqdefault.jpg" width="30%" alt="envoy" /></a>     |
 | NGINX Fabric | [Introduction to NGINX Fabric Gateway API](./nginx-fabric/README.md)   | <a href="https://youtu.be/zbAb2e_Q_Y0" title="nginx"><img src="https://i.ytimg.com/vi/zbAb2e_Q_Y0/hqdefault.jpg" width="30%" alt="nginx" /></a>       |
 | Cilium | [Introduction to Cilium Gateway API](./cilium/README.md)   | #TODO      |
-| kgateway | [Introduction to kgateway (a.k.a Gloo Gateway)](./kgateway/README.md)   | #TODO      |
+| kgateway | [Introduction to kgateway (a.k.a Gloo Gateway)](./kgateway/README.md) | <a href="https://youtu.be/4VTD5Z9YUu0" title="envoy"><img src="https://i.ytimg.com/vi/4VTD5Z9YUu0/hqdefault.jpg" width="30%" alt="envoy" /></a> |
+| HAProxy | [Introduction to HAProxy & Gateway API](./haproxy/README.md) | #TODO |
 | Linkerd | [Introduction to Linkerd Gateway API](./linkerd/README.md)   | <a href="https://youtu.be/B9gKwJdWW7A" title="nginx"><img src="https://i.ytimg.com/vi/B9gKwJdWW7A/hqdefault.jpg" width="30%" alt="nginx" /></a>
