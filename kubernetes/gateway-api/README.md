@@ -306,5 +306,5 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 | NGINX Fabric | [Introduction to NGINX Fabric Gateway API](./nginx-fabric/README.md)   | <a href="https://youtu.be/zbAb2e_Q_Y0" title="nginx"><img src="https://i.ytimg.com/vi/zbAb2e_Q_Y0/hqdefault.jpg" width="30%" alt="nginx" /></a>       |
 | Cilium | [Introduction to Cilium Gateway API](./cilium/README.md)   | #TODO      |
 | kgateway | [Introduction to kgateway (a.k.a Gloo Gateway)](./kgateway/README.md) | <a href="https://youtu.be/4VTD5Z9YUu0" title="envoy"><img src="https://i.ytimg.com/vi/4VTD5Z9YUu0/hqdefault.jpg" width="30%" alt="envoy" /></a> |
-| HAProxy | [Introduction to HAProxy & Gateway API](./haproxy/README.md) | #TODO |
+| HAProxy | [Introduction to HAProxy & Gateway API](./haproxy/README.md) | <a href="https://youtu.be/5clOvqDh-zA" title="haproxy"><img src="https://i.ytimg.com/vi/5clOvqDh-zA/hqdefault.jpg" width="30%" alt="haproxy" /></a> |
 | Linkerd | [Introduction to Linkerd Gateway API](./linkerd/README.md)   | <a href="https://youtu.be/B9gKwJdWW7A" title="nginx"><img src="https://i.ytimg.com/vi/B9gKwJdWW7A/hqdefault.jpg" width="30%" alt="nginx" /></a>

@@ -1,14 +1,14 @@
 # Introduction to HAProxy: Gateway API
 
 #TODO
-<a href="https://youtu.be/xxxxxxxx" title="haproxy"><img src="https://i.ytimg.com/vi/xxxxxxxxx/hqdefault.jpg" width="40%" alt="haproxy" /></a>
+<a href="https://youtu.be/5clOvqDh-zA" title="haproxy"><img src="https://i.ytimg.com/vi/5clOvqDh-zA/hqdefault.jpg" width="40%" alt="haproxy" /></a>
 
 ## Prerequisites
 
 To get started, you will need to follow the [Introduction to Gateway API](../README.md) first. </br>
 You'll need an understanding of the Gateway API. </br>
 
-<i><b>Impportant Note: According to testing and [HAProxy documentation](https://www.haproxy.com/documentation/kubernetes-ingress/gateway-api/enable-gateway-api/#deploy-gateway-api-resources), it currently only supports version v0.5.1</b></i>
+<i><b>Important Note: According to testing and [HAProxy documentation](https://www.haproxy.com/documentation/kubernetes-ingress/gateway-api/enable-gateway-api/#deploy-gateway-api-resources), it currently only supports version v0.5.1</b></i>
 <i>Tried `GatewayClass` with `gateway.networking.k8s.io/v1` and does not work</i>
 
 <b>In the introduction guide, you will:</b>
