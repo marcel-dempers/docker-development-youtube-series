@@ -1,6 +1,5 @@
 # Introduction to HAProxy: Gateway API
 
-#TODO
 <a href="https://youtu.be/5clOvqDh-zA" title="haproxy"><img src="https://i.ytimg.com/vi/5clOvqDh-zA/hqdefault.jpg" width="40%" alt="haproxy" /></a>
 
 ## Prerequisites
