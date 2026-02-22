@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: Gateway
+metadata:
+  name: gateway-api
+  namespace: default
+spec:
+  gatewayClassName: haproxy
+  
+  # Only Routes from the same namespace are allowed.
+  listeners:
+    - name: tcp-listener
+      protocol: TCP
+      port: 5000
+      allowedRoutes:
+        namespaces:
+          from: Same  #or All or Selector

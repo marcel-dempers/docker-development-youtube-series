@@ -1,0 +1,10 @@
+controller:
+  kubernetesGateway:
+    enabled: true
+    gatewayControllerName: haproxy.org/gateway-controller
+  service:
+    tcpPorts:
+      - name: tcp-listener
+        protocol: TCP
+        port: 5000
+        targetPort: 5000  
