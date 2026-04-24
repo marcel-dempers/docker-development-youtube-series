@@ -80,7 +80,8 @@ Three image types are available:
 
 ## Running llama.cpp
 
-Example 1: Linux (Intel GPU):
+Example 1: Linux (CPU or integrated graphics): </br>
+Using `--device /dev/dri` for integrated Graphics
 
 ```shell
 docker run -it \
@@ -137,14 +138,36 @@ Linux (CPU):
 
 ```shell
 export LLAMA_ARG_HOST=0.0.0.0
-./llama-server -m /models/gemma-4-E4B-it-Q4_K_M.gguf --port 8080 -ngl 0 --jinja -c 8192 --parallel 1
+./llama-server -m /models/gemma-4-E4B-it-Q4_K_M.gguf \
+  --port 8080 \
+  -ngl 0 \
+  --jinja \
+  -c 8192 \
+  --parallel 1 \
+  --temperature 1.0 \
+  --top-p 0.95 \
+  --top-k 64
 ```
 
 WSL with NVIDIA GPU:
 
 ```shell
 export LLAMA_ARG_HOST=0.0.0.0
-./llama-server -m /models/gemma-4-26B-A4B-it-Q4_K_M.gguf --port 8080 -ngl 99 --jinja -c 65536 --parallel 1 --temp 1.0
+
+# gemma-4-31B-it-Q4_K_M.gguf
+# gemma-4-26B-A4B-it-Q4_K_M.gguf
+# gemma-4-E2B-it-Q8_0.gguf
+# gemma-4-E4B-it-Q4_K_M.gguf
+
+./llama-server -m /models/gemma-4-26B-A4B-it-Q4_K_M.gguf \
+  --port 8080 \
+  -ngl 99 \
+  --jinja \
+  -c 65536 \
+  --parallel 1 \
+  --temperature 1.0 \
+  --top-p  0.95 \
+  --top-k 64
 ```
 
 Key flags:
@@ -155,7 +178,7 @@ Key flags:
 | `-c 65536` | Context window size in tokens |
 | `--parallel 1` | 1 concurrent request slot — correct for single-user use |
 | `--jinja` | Enables Jinja2 chat templates for proper instruction-tuned model formatting |
-| `--temp` | Default sampling temperature (0.0 = deterministic, 1.0 = creative) |
+| `--temperature` | Default sampling temperature (0.0 = deterministic, 1.0 = creative) |
 
 ## Model Interaction via OpenCode
 
