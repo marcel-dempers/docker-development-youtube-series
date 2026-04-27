@@ -159,11 +159,11 @@ export LLAMA_ARG_HOST=0.0.0.0
 # gemma-4-E2B-it-Q8_0.gguf
 # gemma-4-E4B-it-Q4_K_M.gguf
 
-./llama-server -m /models/gemma-4-26B-A4B-it-Q4_K_M.gguf \
+./llama-server -m /models/gemma-4-E2B-it-Q8_0.gguf \
   --port 8080 \
   -ngl 99 \
   --jinja \
-  -c 65536 \
+  -c 131072 \
   --parallel 1 \
   --temperature 1.0 \
   --top-p  0.95 \
