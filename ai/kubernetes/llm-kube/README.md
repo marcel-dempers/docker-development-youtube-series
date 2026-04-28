@@ -119,14 +119,9 @@ curl -X POST http://localhost:8080/v1/chat/completions \
   }'
 ```
 
-The response format is identical to the OpenAI API — making this a drop-in replacement for any OpenAI-compatible client or SDK.
-
-<i>Note: CPU inference in kind will produce around 5–15 tokens per second for the E2B model. This is sufficient for a demo. A real node with GPU acceleration delivers 10–17x faster throughput.</i>
-
 ## OpenAI-Compatible Integration
 
-Because LLMKube exposes the standard OpenAI `/v1` API, it works with any OpenAI-compatible tooling. </br>
-The example below connects [Opencode](https://opencode.ai) to the local service — the same pattern used when connecting directly to a llama-server:
+The example below connects [Opencode](https://opencode.ai) to the local service
 
 ```json
 {
