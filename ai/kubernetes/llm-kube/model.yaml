@@ -1,0 +1,17 @@
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: gemma-e2b
+spec:
+  #source: https://huggingface.co/ggml-org/gemma-4-E2B-it-GGUF/blob/main/gemma-4-E2B-it-Q8_0.gguf
+  source: https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+  format: gguf
+  #quantization: Q8_0
+  #hardware:
+  #  accelerator: cuda
+  #  gpu:
+  #    enabled: true
+  #    count: 1
+  resources:
+    cpu: "1"
+    memory: "1Gi"
