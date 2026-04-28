@@ -152,27 +152,3 @@ The example below connects [Opencode](https://opencode.ai) to the local service 
 }
 ```
 
-The key difference from running llama.cpp manually — previously we managed `llama-server` ourselves inside Docker. </br>
-Now Kubernetes manages it: if the pod crashes it restarts automatically, and scaling to more replicas is a single `kubectl patch`. </br>
-
-## My Thoughts
-
-LLMKube is the natural next step after running llama.cpp manually — the same inference engine, now with full Kubernetes lifecycle management. </br>
-
-**Pros:**
-
-* Declarative — the YAML is the source of truth, consistent with everything else in your cluster
-* The operator handles restarts, health checks, and scaling with no manual intervention
-* Model caching means you download once and redeploy instantly
-* The same CRDs work across NVIDIA GPU, Apple Metal, and CPU — just change the `accelerator` field
-
-**Cons:**
-
-* Early-stage project — v0.7.x; expect API changes before a stable 1.0
-* CPU inference in kind is slow — this is a learning environment, not a production setup
-* GPU support requires a real node with the NVIDIA device plugin configured correctly
-
-**Verdict:** </br>
-For teams self-hosting LLMs internally, this is the right abstraction — consistent, observable, and scalable. </br>
-For a solo developer on a laptop, llama.cpp or Ollama remain simpler. </br>
-The [Metal Agent](https://github.com/defilantech/LLMKube/blob/main/deployment/macos/README.md) — which lets you run inference natively on Apple Silicon while orchestrating it from a Linux Kubernetes cluster — is genuinely novel and worth watching as the project matures. </br>
