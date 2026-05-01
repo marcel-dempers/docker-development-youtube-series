@@ -33,7 +33,7 @@ helm repo add llmkube https://defilantech.github.io/LLMKube
 helm repo update
 
 helm search repo llmkube --versions
-CHART_VERSION="0.7.2"
+CHART_VERSION="0.7.5"
 
 helm install llmkube llmkube/llmkube \
   --namespace llmkube-system \
@@ -41,13 +41,13 @@ helm install llmkube llmkube/llmkube \
   --create-namespace
 ```
 
-Check installation
+Check installation:
 
 ```shell
 kubectl get pods -n llmkube-system
 ```
 
-Two new CRDs — `Model` and `InferenceService` — are now available in the cluster: 
+Two new CRDs `Model` and `InferenceService` are now available in the cluster: 
 
 ```shell
 kubectl get crds | grep llmkube
@@ -56,10 +56,6 @@ models.inference.llmkube.dev
 ```
 
 ## The CRDs
-
-LLMKube introduces two custom resources that work together. </br>
-`Model` describes **what** to run — where to get the model file, its format, and the hardware to target. </br>
-`InferenceService` describes **how** to run it — which model to reference, replica count, resource limits, and how to expose the endpoint. </br>
 
 ### Model
 
@@ -70,14 +66,9 @@ kubectl apply -f ai/kubernetes/llm-kube/model.yaml
 
 # Check the Model
 kubectl get model
+kubectl describe model
+
 ```
-
-Key fields:
-
-* `source` — direct URL to the GGUF file on Hugging Face; the operator downloads and caches it
-* `format: gguf` — the GGUF binary format used by llama.cpp (covered in the [Introduction to llama.cpp](../../openai/README.md) guide)
-* `quantization` — the compression level applied to the model weights; `Q8_0` is near-lossless quality
-* `accelerator` — `cpu`, `cuda` (NVIDIA), or `metal` (Apple Silicon); for this kind demo use `cpu`
 
 ### InferenceService
 
@@ -87,15 +78,8 @@ kubectl apply -f ai/kubernetes/llm-kube/inference.yaml
 
 # Check the InferenceService
 kubectl get inferenceservices
-
+kubectl describe inferenceservices
 ```
-
-Key fields:
-
-* `runtime: llamacpp` — the inference backend; LLMKube also supports `vllm` and `tgi`
-* `modelRef` — links this service to the `Model` resource above; the operator watches both and reconciles state
-* `replicas` — horizontal scaling is a single field change
-* `memory` — rule of thumb: GGUF file size × 1.2 for headroom
 
 ## Testing the Inference API
 
