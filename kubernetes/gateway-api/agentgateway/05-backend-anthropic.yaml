@@ -1,0 +1,13 @@
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: anthropic
+spec:
+  ai:
+    provider:
+      anthropic:
+        model: claude-sonnet-4-20250514
+  policies:
+    auth:
+      secretRef:
+        name: anthropic-secret

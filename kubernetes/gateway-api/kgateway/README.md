@@ -1,7 +1,6 @@
 # Introduction to kgateway: Gateway API
 
-#TODO 
-<a href="https://youtu.be/xxxxx" title="kgateway"><img src="https://i.ytimg.com/vi/xxxxx/hqdefault.jpg" width="40%" alt="kgateway" /></a>
+<a href="https://youtu.be/4VTD5Z9YUu0" title="kgateway"><img src="https://i.ytimg.com/vi/4VTD5Z9YUu0/hqdefault.jpg" width="40%" alt="kgateway" /></a>
 
 ## Prerequisites
 
