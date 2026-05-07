@@ -13,8 +13,6 @@ You'll need an understanding of the Gateway API. </br>
 * Create a local Kubernetes cluster
 * Install the Gateway API CRDs
 * Example models, either in cluster or external (OpenAI, Anthropic, Gemini)
-* Have Domains for our traffic
-* Have TLS certificates
 
 This will allow us access to the Gateway API so we can go ahead and deploy a Gateway API controller to use. </br
 

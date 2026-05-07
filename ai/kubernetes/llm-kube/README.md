@@ -1,6 +1,6 @@
 # Introduction to LLMKube
 
-<!-- #TODO: YouTube link -->
+<a href="https://youtu.be/xdMtc8jm88Q" title="llmkube"><img src="https://i.ytimg.com/vi/xdMtc8jm88Q/hqdefault.jpg" width="40%" alt="video" /></a>
 
 Website: [LLMKube](https://llmkube.com) </br>
 

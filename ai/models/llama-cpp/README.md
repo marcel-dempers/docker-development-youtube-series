@@ -1,6 +1,6 @@
 # Introduction to llama.cpp
 
-<!-- #TODO: YouTube link -->
+<a href="https://youtu.be/ZR9S9zXm4ZU" title="llamacpp"><img src="https://i.ytimg.com/vi/ZR9S9zXm4ZU/hqdefault.jpg" width="40%" alt="llamacpp" /></a>
 
 In this guide, we will learn how to run large language models locally using llama.cpp </br>
 

@@ -201,7 +201,7 @@ rules:
       - get
       - list
       - watch
-  # TODO(Jintao Zhang)
+
   # Once we release a new version of the controller,
   # we will be able to remove the configmap related permissions
   # We have used the Lease API for selection

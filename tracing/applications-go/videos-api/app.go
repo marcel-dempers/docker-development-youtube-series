@@ -17,7 +17,6 @@ import (
 	"github.com/opentracing/opentracing-go/ext"
 )
 
-//TODO : https://opentracing.io/guides/golang/quick-start/
 // docker run --rm -it -p 6831:6831/udp -p 16686:16686 -p 14269:14269  --net tracing --name jaeger jaegertracing/all-in-one:latest
 
 const serviceName = "videos-api"
