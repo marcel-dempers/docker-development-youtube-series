@@ -1,6 +1,8 @@
 # Introduction to Agent Gateway: LLM Gateway
 
-<!-- #TODO: YouTube link -->
+<!-- #TODO: YouTube link LLM Gateway -->
+
+<!-- #TODO: YouTube link MCP Gateway -->
 
 [Official Site](https://agentgateway.dev) | [GitHub](https://github.com/agentgateway/agentgateway) | [Documentation](https://agentgateway.dev/docs/kubernetes/latest/)
 
@@ -83,16 +85,21 @@ kubectl get svc
 kubectl get gateway
 
 # port forward for access
-kubectl -n default port-forward svc/agentgateway 80
+kubectl -n default port-forward svc/agentgateway 8080:80
 ```
 
-## Configuring an LLM Backend
+## Features
+
+* Route to [LLM Models](#feature-llm-routing)
+* Route to [MCP Servers](#feature-mcp-routing)
+
+### Feature: LLM Routing
 
 AgentGateway introduces CRD `AgentgatewayBackend`. </br>
 `AgentgatewayBackend` is an LLM provider as a routable backend.</br>
 
 
-### LLM Backend
+#### Create an LLM Backend: Gemini
 
 If your LLM Provider needs an API key, we need a Kubernetes secret for it:
 
@@ -117,13 +124,13 @@ Create the LLM backend: </br>
 Instead of an HTTPRoute routing to an upstream backend `service`, it uses an `AgentgatewayBackend`
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/agentgateway/02-backend-gemini.yaml
+kubectl apply -f kubernetes/gateway-api/agentgateway/llm/gemini/02-backend-gemini.yaml
 ```
 
 Route traffic from the Gateway to the backend using a standard `HTTPRoute`:
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/agentgateway/03-httproute.yaml
+kubectl apply -f kubernetes/gateway-api/agentgateway/llm/03-httproute.yaml
 ```
 
 Test our HTTPRoute:
@@ -140,7 +147,7 @@ curl "localhost:8080/v1/chat/completions" \
 We can route by path as well. This means one domain and route to provider by path
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/agentgateway/04-httproute-gemini.yaml
+kubectl apply -f kubernetes/gateway-api/agentgateway/llm/04-httproute-gemini.yaml
 ```
 
 ```shell
@@ -152,7 +159,7 @@ curl "localhost:8080/ai/gemini/v1/chat/completions" \
   }' | jq
 ```
 
-### Anthropic Backend
+#### Create an LLM Backend: Anthropic
 
 The same pattern works for any supported provider.</br>
 
@@ -171,11 +178,11 @@ EOF
 ```
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/agentgateway/05-backend-anthropic.yaml
+kubectl apply -f kubernetes/gateway-api/agentgateway/llm/anthropic/05-backend-anthropic.yaml
 ```
 
 ```shell
-kubectl apply -f kubernetes/gateway-api/agentgateway/06-httproute-anthropic.yaml
+kubectl apply -f kubernetes/gateway-api/agentgateway/llm/06-httproute-anthropic.yaml
 ```
 
 Route to Anthropic Claude:
@@ -193,4 +200,6 @@ Now we have implemented LLM routing by path using `HTTPRoute`:
 
 `localhost:8080/ai/gemini` --> `gemini flash` </br>
 `localhost:8080/ai/claude` --> `claude sonnet` </br>
+
+### Feature: MCP Routing
 
