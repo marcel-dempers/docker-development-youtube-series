@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mcp-k8s-viewer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mcp-k8s-viewer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+- kind: ServiceAccount
+  name: mcp-k8s-viewer
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-k8s
+  template:
+    metadata:
+      labels:
+        app: mcp-k8s
+    spec:
+      serviceAccountName: mcp-k8s-viewer
+      containers:
+      - name: mcp-server
+        image: ghcr.io/containers/kubernetes-mcp-server:latest
+        args:
+        - --port=8080
+        - --cluster-provider=in-cluster
+        - --read-only
+        - --stateless
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 12
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-k8s
+  labels:
+    app: mcp-k8s
+spec:
+  selector:
+    app: mcp-k8s
+  ports:
+  - port: 8080
+    targetPort: 8080
+    appProtocol: agentgateway.dev/mcp

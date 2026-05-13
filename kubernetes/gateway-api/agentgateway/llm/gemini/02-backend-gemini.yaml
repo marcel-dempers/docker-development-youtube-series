@@ -1,0 +1,13 @@
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: gemini
+spec:
+  ai:
+    provider:
+      gemini:
+        model: gemini-2.5-flash
+  policies:
+    auth:
+      secretRef:
+        name: gemini-secret

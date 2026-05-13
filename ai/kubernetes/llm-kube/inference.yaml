@@ -1,0 +1,15 @@
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: gemma-e2b-service
+spec:
+  runtime: llamacpp
+  modelRef: gemma-e2b
+  replicas: 1
+  endpoint:
+    port: 8080
+    path: /v1/chat/completions
+    type: ClusterIP
+  resources:
+    cpu: "2"
+    memory: "3Gi"
