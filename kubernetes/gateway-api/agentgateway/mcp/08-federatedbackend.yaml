@@ -1,0 +1,17 @@
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: mcp-federated
+spec:
+  mcp:
+    targets:
+    - name: mcp-k8s
+      selector:
+        services:
+          matchLabels:
+            app: mcp-k8s
+    - name: mcp-github                                                                                                                                                                    
+      selector:                                                                                                                                                                           
+        services:                                                                                                                                                                         
+          matchLabels:                                                                                                                                                                    
+            app: mcp-github

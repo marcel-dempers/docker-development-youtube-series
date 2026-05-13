@@ -1,4 +1,4 @@
-# Introduction to Agent Gateway: LLM Gateway
+# Introduction to Agent Gateway
 
 <!-- #TODO: YouTube link LLM Gateway -->
 
@@ -203,3 +203,144 @@ Now we have implemented LLM routing by path using `HTTPRoute`:
 
 ### Feature: MCP Routing
 
+To route to MCP servers, we will need some example MCP servers setup. </br>
+In this example we will use a Kubernetes MCP and setup a read-only `ServiceAccount` so it can read our cluster. </br>
+
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/kubernetes/02-mcp.yaml
+
+# check mcp server
+kubectl get pods
+kubectl get sa
+kubectl get service
+```
+
+This MCP server will serve traffic on `/mcp` </br>
+Let's create a backend and an `HTTPRoute` for that. </br>
+
+#### Create an MCP Backend: Kubernetes
+
+Instead of an HTTPRoute routing to an upstream backend `service`, it uses an `AgentgatewayBackend` </br>
+Create the MCP backend: </br>
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/kubernetes/03-mcp-backend.yaml
+
+# check the backend
+kubectl get agentgatewaybackend
+kubectl describe agentgatewaybackend
+```
+
+Route traffic from the Gateway to the backend using a standard `HTTPRoute`:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/04-httproute.yaml
+```
+
+#### Test our MCP Backend: Kubernetes
+
+Initialize session to get a `mcp-session-id` from the response:
+
+```shell
+curl -s -i http://localhost:8080/ai/mcps/kubernetes/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}'
+
+
+```
+
+MCP Tool call to list namespaces in our cluster: 
+```shell
+MCP_SESSION_ID=''
+
+curl -s http://localhost:8080/ai/mcps/kubernetes/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Mcp-Session-Id: ${MCP_SESSION_ID}" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"namespaces_list","arguments":{}},"id":3}'
+```
+
+#### Create an MCP Backend: Github
+
+To showcase routing to and federating different MCPs under different or the same endpoints, we will create another MCP server. We have use Github MCP
+
+```shell
+
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/github/05-mcp.yaml
+
+# check mcp server
+kubectl get pods
+kubectl get sa
+kubectl get service
+```
+
+Then we create a backend to route to:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/github/06-mcp-backend.yaml
+
+# check the backend
+kubectl get agentgatewaybackend
+kubectl describe agentgatewaybackend
+```
+
+Route traffic from the Gateway to the backend using a standard `HTTPRoute`:
+
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/07-httproute.yaml
+```
+
+#### Test our MCP Backend: Github
+
+Initialize session to get a `mcp-session-id` from the response:
+
+```shell
+curl -s -i http://localhost:8080/ai/mcps/github/mcp \
+       -H "Content-Type: application/json" \
+       -H "Accept: application/json, text/event-stream" \
+       -H "Authorization: Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" \
+       -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}'
+```
+
+MCP Tool call to search repositories: 
+```shell
+MCP_SESSION_ID=''
+
+```shell
+curl -s http://localhost:8080/ai/mcps/github/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" \
+  -H "Mcp-Session-Id: ${MCP_SESSION_ID}" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"search_repositories","arguments":{"query":"kubernetes gateway-api","sort":"stars","perPage":5}},"id":3}'
+```
+
+Now we have implemented LLM routing by path using `HTTPRoute`:
+
+`localhost:8080/ai/mcps/kubernetes` --> `kubernetes MCP service` </br>
+`localhost:8080/ai/mcps/github` --> `Github MCP service` </br>
+
+#### Federate our MCPs under one endpoint 
+
+To federate endpoints we have to define an `AgentGatewayBackend` that combines our MCPs 
+
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/08-federatedbackend.yaml
+```
+
+Deploy an `HTTPRoute` to our single federated endpoint: 
+
+```shell
+kubectl apply -f kubernetes/gateway-api/agentgateway/mcp/09-httproute.yaml
+```
+
+Get session ID: 
+```shell
+curl -s -i http://localhost:8080/ai/mcps/mcp \
+       -H "Content-Type: application/json" \
+       -H "Accept: application/json, text/event-stream" \
+       -H "Authorization: Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" \
+       -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}'
+```
+
+Now we can proceed to call tools under the single endpoint for both Kubernetes and Github MCP. 

@@ -1,0 +1,34 @@
+apiVersion: apps/v1                                                                                                                                                                       
+kind: Deployment                                                                                                                                                                          
+metadata:                                                                                                                                                                                 
+  name: mcp-github                                                                                                                                                                        
+spec:                                                                                                                                                                                     
+  replicas: 1                                                                                                                                                                             
+  selector:                                                                                                                                                                               
+    matchLabels:                                                                                                                                                                          
+      app: mcp-github                                                                                                                                                                     
+  template:                                                                                                                                                                               
+    metadata:                                                                                                                                                                             
+      labels:                                                                                                                                                                             
+        app: mcp-github
+    spec:
+      containers:
+      - name: mcp-server
+        image: ghcr.io/github/github-mcp-server                                                                                       
+        args: ["http", "--port", "8080", "--read-only", "--toolsets", "repos,issues,pull_requests"]
+        ports:                                                                                                                                                                            
+        - containerPort: 8080                                                                                                                                           
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-github
+  labels:
+    app: mcp-github
+spec:
+  selector:
+    app: mcp-github
+  ports:
+  - port: 8080
+    targetPort: 8080
+    appProtocol: agentgateway.dev/mcp
