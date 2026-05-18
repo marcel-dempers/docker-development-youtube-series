@@ -7,7 +7,7 @@ spec:
     - name: agentgateway
   rules:
     - backendRefs:
-        - name: mcp-backend
+        - name: mcp-backend-kubernetes
           group: agentgateway.dev
           kind: AgentgatewayBackend
       matches:
