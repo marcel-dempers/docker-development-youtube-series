@@ -315,7 +315,7 @@ curl -s http://localhost:8080/ai/mcps/github/mcp \
   -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"search_repositories","arguments":{"query":"kubernetes gateway-api","sort":"stars","perPage":5}},"id":3}'
 ```
 
-Now we have implemented LLM routing by path using `HTTPRoute`:
+Now we have implemented MCP routing by path using `HTTPRoute`:
 
 `localhost:8080/ai/mcps/kubernetes` --> `kubernetes MCP service` </br>
 `localhost:8080/ai/mcps/github` --> `Github MCP service` </br>
