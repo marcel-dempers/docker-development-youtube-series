@@ -1,8 +1,8 @@
 # Introduction to Agent Gateway
 
-<!-- #TODO: YouTube link LLM Gateway -->
-
-<!-- #TODO: YouTube link MCP Gateway -->
+|   |   |
+|---|---|
+|<a href="https://youtu.be/QZUZCz1Q1Vs" title="llmgateway"><img src="https://i.ytimg.com/vi/QZUZCz1Q1Vs/hqdefault.jpg" width="40%" alt="llmgateway" /></a>   | <a href="https://youtu.be/_EfxYSpo2mo" title="mcpgateway"><img src="https://i.ytimg.com/vi/_EfxYSpo2mo/hqdefault.jpg" width="40%" alt="mcpgateway" /></a>  |
 
 [Official Site](https://agentgateway.dev) | [GitHub](https://github.com/agentgateway/agentgateway) | [Documentation](https://agentgateway.dev/docs/kubernetes/latest/)
 
