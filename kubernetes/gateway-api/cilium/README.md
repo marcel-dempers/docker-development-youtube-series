@@ -55,7 +55,7 @@ We created our own [values.yaml](./values.yaml) which allows us to enable Gatewa
 Install:
 
 ```shell
-CHART_VERSION="1.18.6"
+CHART_VERSION="1.19.4"
 helm repo add cilium https://helm.cilium.io
 helm repo update
 helm search repo cilium --versions
@@ -85,6 +85,8 @@ gatewayapi-worker          Ready    <none>          37m   v1.34.0
 We can also check the Cilium Operator logs to ensure we are smooth sailing:
 ```shell
 kubectl -n kube-system logs -l app.kubernetes.io/name=cilium-operator
+kubectl -n kube-system logs -l app.kubernetes.io/name=cilium-envoy
+kubectl -n kube-system logs -l app.kubernetes.io/name=cilium-agent
 ```
 
 <b>In the [introduction guide](../README.md), you will:</b>
@@ -114,6 +116,23 @@ kubectl apply -f kubernetes/gateway-api/cilium/01.1-gatewayclass-config.yaml
 
 ```shell
 kubectl apply -f kubernetes/gateway-api/cilium/02-gateway.yaml
+```
+
+### Demo notes on NodePort service
+
+#### Patch the NodePort service 
+
+In `kind`, we don't have a load balancer service, so we'll use a `NodePort` service for demo purpose. </br>
+Cilium creates a NodePort service for the gateway automatically. 
+In Kubernetes this NodePort service will have automatically generated ports which won't match our configuration. </br>
+Therefore, we need to pin the NodePorts to match the `extraPortMappings` in `kind.yaml` (30080 for HTTP, 30443 for HTTPS):
+
+```shell
+SVC=$(kubectl get svc -n default -l gateway.networking.k8s.io/gateway-name=gateway-api -o name)
+kubectl patch -n default $SVC --type='json' -p='[
+  {"op":"replace","path":"/spec/ports/0/nodePort","value":30080},
+  {"op":"replace","path":"/spec/ports/1/nodePort","value":30443}
+]'
 ```
 
 ## Install the Cilium CLI

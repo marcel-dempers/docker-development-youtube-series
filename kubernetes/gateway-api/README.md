@@ -31,7 +31,7 @@ For now, we can grab it from the [Gateway API SIGS Guide](https://gateway-api.si
 <i><b>Important Note: </b>At the time of recording this guide, we'd like to look at as many features as possible, hence the `experimental` install is used.</i> </br>
 
 ```shell
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/experimental-install.yaml
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
 ```
 
 This will install (Stable Channel):
