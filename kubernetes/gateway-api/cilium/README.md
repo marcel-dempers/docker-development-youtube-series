@@ -5,7 +5,8 @@
 
 ## Prerequisites
 
-This guide will assume you have a basic understanding of the Gateway API. If it's your first time using Gateway API, please see the [Introduction to Gateway API guide](../README.md) first </br>
+This guide will assume you have a basic understanding of the Gateway API. </br>
+If it's your first time using Gateway API, please see the [Introduction to Gateway API guide](../README.md) first </br>
 
 This guide has a slight twist from the other Gateway APIs. </br>
 It's because Cilium is a network CNI for Kubernetes.</br>
@@ -78,8 +79,8 @@ kubectl -n kube-system get pods
 # nodes should be Ready once above is Running
 kubectl get nodes
 NAME                       STATUS   ROLES           AGE   VERSION
-gatewayapi-control-plane   Ready    control-plane   38m   v1.34.0
-gatewayapi-worker          Ready    <none>          37m   v1.34.0
+gatewayapi-control-plane   Ready    control-plane   18m   v1.34.0
+gatewayapi-worker          Ready    <none>          18m   v1.34.0
 ```
 
 We can also check the Cilium Operator logs to ensure we are smooth sailing:
