@@ -31,7 +31,7 @@ For this guide, we will use 2.1.2. </br>
 Install:
 
 ```shell
-CHART_VERSION="v2.1.2"
+CHART_VERSION="v2.3.3"
 
 helm show chart oci://cr.kgateway.dev/kgateway-dev/charts/kgateway --version $CHART_VERSION
 helm show chart oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds --version $CHART_VERSION

@@ -16,7 +16,8 @@ def catch_all(subpath):
         "received_path": received_path,
         "raw_path_info": request.path,
         "query_string": request.query_string.decode('utf-8'),
-        "status_code": status_code
+        "status_code": status_code,
+        "headers": dict(request.headers)
     }
     
     # Returns a clean JSON payload and the explicit HTTP status code

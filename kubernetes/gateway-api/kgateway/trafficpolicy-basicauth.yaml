@@ -1,0 +1,40 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: TrafficPolicy
+metadata:
+  name: basic-auth
+  namespace: default
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: gateway-api
+  basicAuth:
+    secretRef:
+      name: basic-auth-users
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: TrafficPolicy
+metadata:
+  name: python-route-remote-user
+  namespace: default
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: python-route
+  transformation:
+    request:
+      set:
+        - name: x-remote-user
+          value: '{{ replace_with_string(base64_decode(substring(request_header("Authorization"), 6, 1000)), ":.*", "") }}'
+      remove:
+        - Authorization
+
+# apk add apache2-utils
+# htpasswd -nbs alice mysecretpassword
+
+# kubectl create secret generic basic-auth-users \
+#  --from-literal=.htpasswd="alice:{SHA}CM2SM2eJAAllfquBJ1M3m9syHus=" \
+#  -n default
+
+# curl -vi http://example-app.com/api/python   -H "host: example-app.com"   -u alice:mysecretpassword
