@@ -8,7 +8,86 @@ In this video, we will dive into the features of OpenClaw. </br>
 
 [Documentation](https://openclaw.ai/)
 
-## We need a Kubernetes cluster
+## Source Code
+
+```shell
+git clone --depth 1 https://github.com/openclaw/openclaw.git /tmp/openclaw
+```
+
+## Docker 
+
+View docker setup scripts:
+
+```shell
+tree /tmp/openclaw/scripts/docker/
+/tmp/openclaw/scripts/docker/
+├── cleanup-smoke
+│   ├── Dockerfile
+│   └── run.sh
+├── install-sh-common
+│   ├── cli-verify.sh
+│   └── version-parse.sh
+├── install-sh-e2e
+│   ├── Dockerfile
+│   └── run.sh
+├── install-sh-nonroot
+│   ├── Dockerfile
+│   └── run.sh
+├── install-sh-smoke
+│   ├── Dockerfile
+│   └── run.sh
+├── sandbox
+│   ├── Dockerfile
+│   ├── Dockerfile.browser
+│   └── Dockerfile.common
+├── setup.sh
+└── shared-image-artifact.sh
+```
+
+After cloning the code, we can run setup according to the docs. </br>
+Use a pre-built image to avoid having to build it ourselves:
+
+```shell
+export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
+./scripts/docker/setup.sh
+```
+
+Build our [dockerfile](./dockerfile): 
+
+```shell
+docker build . -t aimvector/openclaw
+
+mkdir ~/.openclaw
+docker run -it --it \
+  --name openclaw \
+  -v $PWD:/work \
+  -v ~/.openclaw:/home/openclaw/.openclaw \
+  -w /work \
+  --net host \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  aimvector/openclaw
+```
+
+We can run the onboard manually to generate an `openclaw.json` configuration file:
+
+```
+openclaw onboard
+```
+
+Start OpenClaw: 
+
+```shell
+openclaw gateway run --bind lan
+```
+
+Check the containers state in the volume
+
+```shell
+tree ~/.openclaw
+```
+
+
+## Kubernetes
 
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
@@ -22,12 +101,6 @@ Test our cluster and makes sure `kubectl` is configured for it:
 kubectl get nodes
 NAME                     STATUS   ROLES           AGE     VERSION
 openclaw-control-plane   Ready    control-plane   2m30s   v1.36.1
-```
-
-## Source Code
-
-```shell
-git clone --depth 1 https://github.com/openclaw/openclaw.git /tmp/openclaw
 ```
 
 View kubernetes deployment scripts:
@@ -68,7 +141,8 @@ export GEMINI_API_KEY="xxxxxxx"
 export DISCORD_BOT_TOKEN="xxxxxxx"
 ```
 
-I'll be modifying the `deployment.yaml` to add my channel token `DISCORD_BOT_TOKEN` 
+I'll be modifying the `deployment.yaml` to add my channel token `DISCORD_BOT_TOKEN`. </br>
+Note that we can reference this ENV variable in our `openclaw.json` configuration. </br>
 
 ```yaml
 - name: DISCORD_BOT_TOKEN
@@ -77,23 +151,6 @@ I'll be modifying the `deployment.yaml` to add my channel token `DISCORD_BOT_TOK
       name: openclaw-secrets
       key: DISCORD_BOT_TOKEN
       optional: false
-```
-
-My `openclaw.json` has a reference to that token for my discord channel
-
-```json
-"channels": {
-    "discord": {
-      "enabled": true,
-      "token": {
-        "source": "env",
-        "provider": "default",
-        "id": "DISCORD_BOT_TOKEN"
-      },
-      "groupPolicy": "allowlist",
-      "guilds": {}
-    }
-  }
 ```
 
 Create the secret:
@@ -106,6 +163,10 @@ kubectl create secret generic openclaw-secrets -n openclaw \
   --from-literal DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
 
 ```
+
+## Configure OpenClaw
+
+We've configured our openclaw instance in our [Configmap.yaml](./kubernetes/configmap.yaml)
 
 ## Deploy Openclaw
 

@@ -20,7 +20,10 @@ data:
       },
       "agents": {
         "defaults": {
-          "workspace": "~/.openclaw/workspace"
+          "workspace": "~/.openclaw/workspace",
+          "model": {
+            "primary": "google/gemini-3.1-pro-preview"
+          }
         },
         "list": [
           {
@@ -32,6 +35,7 @@ data:
       },
       "cron": { "enabled": false },
       "plugins": {
+        "allow": ["discord"],
         "entries": {
           "google": {
             "enabled": true
