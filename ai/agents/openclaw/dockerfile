@@ -3,31 +3,21 @@ FROM ubuntu:latest
 # Install necessary packages
 RUN apt-get update && apt-get install -y curl bash git tree
 
+# Install Node.js 24 globally via nodesource
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+    && apt-get install -y nodejs
+
 # Create non-root user
 RUN usermod -l openclaw -d /home/openclaw -m ubuntu \
     && groupmod -n openclaw ubuntu
 
-# Install NVM and Node.js for the openclaw user
-ENV NVM_DIR=/home/openclaw/.nvm
-ENV BASH_ENV=/home/openclaw/.bash_env
-
-RUN mkdir -p "${NVM_DIR}" \
-    && touch "${BASH_ENV}" \
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | PROFILE="${BASH_ENV}" bash \
-    && chown -R openclaw:openclaw "${NVM_DIR}" "${BASH_ENV}"
-
-RUN bash -c "source ${BASH_ENV} && nvm install 24"
-RUN echo ". ${BASH_ENV}" >> /home/openclaw/.bashrc
-
 # Install Openclaw without onboarding
 RUN su -c "curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard" openclaw
 
-ENV PATH="/home/openclaw/.local/bin:$PATH"
+ENV PATH="/home/openclaw/.npm-global/bin:/home/openclaw/.local/bin:$PATH"
 
 # Switch to non-root user
 USER openclaw
 WORKDIR /home/openclaw
 
-ENTRYPOINT ["/bin/bash"]
-
-# docker build . -t aimvector/openclaw
+ENTRYPOINT ["openclaw", "gateway", "run", "--bind", "lan"]

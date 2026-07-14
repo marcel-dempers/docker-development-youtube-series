@@ -52,14 +52,46 @@ export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
 ./scripts/docker/setup.sh
 ```
 
-Build our [dockerfile](./dockerfile): 
+Build our own custom [dockerfile](./dockerfile): 
 
 ```shell
 docker build . -t aimvector/openclaw
+```
 
+### Least privileges
+
+Linux containers run with a default set of capabilities, which are fine-grained privileges that are subsets of what `root` can do. `--cap-drop ALL` removes every single one, leaving the container with zero elevated privileges.
+
+| Capability | Allows |
+|---|---|
+| `CAP_NET_BIND_SERVICE` | Bind to ports < 1024 |
+| `CAP_NET_RAW` | Raw sockets, packet sniffing |
+| `CAP_SYS_ADMIN` | Mount filesystems and many other things |
+| `CAP_CHOWN` | Change file ownership |
+| `CAP_KILL` | Send signals to any process |
+
+In our dockerfile, we also run our container as a non-root unprivileged user. </br>
+
+### Secrets (environment)
+
+We set our secrets in environment variables and inject those into the container :
+
+```shell
+export OPENCLAW_GATEWAY_TOKEN="$(openssl rand -hex 32)"
+export GEMINI_API_KEY="xxxxxxx"
+export DISCORD_BOT_TOKEN="xxxxxxx"
+```
+
+Run our container:
+
+```shell
 mkdir ~/.openclaw
-docker run -it --it \
+docker run -it --rm \
   --name openclaw \
+  -e OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN} \
+  -e GEMINI_API_KEY=${GEMINI_API_KEY} \
+  -e DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN} \
+  --cap-drop ALL \
   -v $PWD:/work \
   -v ~/.openclaw:/home/openclaw/.openclaw \
   -w /work \
@@ -68,10 +100,21 @@ docker run -it --it \
   aimvector/openclaw
 ```
 
+### Configration
+
+When our container starts for the first time, it fails because we do not have an `openclaw.json` configuration file. </br>
+We can tweak our `--entrypoint bash` to get into the container and run the `openclaw onboard` process to get a configuration. </br>
+
 We can run the onboard manually to generate an `openclaw.json` configuration file:
 
+```shell
+openclaw onboard --classic
 ```
-openclaw onboard
+
+We can use our pre-existing configuration file: </br>
+(Note: you may have to remove all openclaw json backups to prevent the gateway from rolling back configuration file changes)
+```shell
+cp openclaw.json ~/.openclaw/openclaw.json
 ```
 
 Start OpenClaw: 
@@ -79,13 +122,6 @@ Start OpenClaw:
 ```shell
 openclaw gateway run --bind lan
 ```
-
-Check the containers state in the volume
-
-```shell
-tree ~/.openclaw
-```
-
 
 ## Kubernetes
 
