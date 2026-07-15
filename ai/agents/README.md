@@ -1,6 +1,6 @@
 # Introduction to Agents
 
-<!-- #TODO: YouTube link Agents -->
+<a href="https://youtu.be/k3lS_wRNruA" title="agents"><img src="https://i.ytimg.com/vi/k3lS_wRNruA/hqdefault.jpg" width="40%" alt="agents" /></a>
 
 In this video guide we discuss what an AI agent is from a DevOps, SRE & Platform Engineering perspective. </br>
 

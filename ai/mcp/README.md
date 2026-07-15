@@ -1,6 +1,6 @@
 # Introduction to MCP
 
-<!-- #TODO: YouTube link MCP -->
+<a href="https://youtu.be/OKIyGSUgOD0" title="mcp"><img src="https://i.ytimg.com/vi/OKIyGSUgOD0/hqdefault.jpg" width="40%" alt="mcp" /></a>
 
 ## Running an MCP
 

@@ -1,7 +1,6 @@
 # Introduction to Cilium: Gateway API
 
-#TODO
-<a href="https://youtu.be/xxxxx" title="xxxxx"><img src="https://i.ytimg.com/vi/xxxxx/hqdefault.jpg" width="40%" alt="xxxxx" /></a>
+<a href="https://youtu.be/q4bucRkDOm8" title="cilium"><img src="https://i.ytimg.com/vi/q4bucRkDOm8/hqdefault.jpg" width="40%" alt="cilium" /></a>
 
 ## Prerequisites
 
