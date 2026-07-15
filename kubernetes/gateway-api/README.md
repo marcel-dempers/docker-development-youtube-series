@@ -302,9 +302,9 @@ We can use [Infrastructure Labels](https://kubernetes.io/blog/2023/11/28/gateway
 |------|-------|-------|
 | Traefik | [Introduction to Traefik Gateway API](./traefik/README.md)   |  <a href="https://youtu.be/MN-k29g97ik" title="traefik"><img src="https://i.ytimg.com/vi/MN-k29g97ik/hqdefault.jpg" width="30%" alt="traefik" /></a>      |
 | Envoy | [Introduction to Envoy Gateway API](./envoy/README.md)   | <a href="https://youtu.be/me_5W_Q4ZWg" title="envoy"><img src="https://i.ytimg.com/vi/me_5W_Q4ZWg/hqdefault.jpg" width="30%" alt="envoy" /></a>      |
-| Istio | [Introduction to Istio Gateway API](./istio/README.md)   | <a href="https://youtu.be/du9h71WYToo" title="envoy"><img src="https://i.ytimg.com/vi/du9h71WYToo/hqdefault.jpg" width="30%" alt="envoy" /></a>     |
+| Istio | [Introduction to Istio Gateway API](./istio/README.md)   | <a href="https://youtu.be/du9h71WYToo" title="istio"><img src="https://i.ytimg.com/vi/du9h71WYToo/hqdefault.jpg" width="30%" alt="istio" /></a>     |
 | NGINX Fabric | [Introduction to NGINX Fabric Gateway API](./nginx-fabric/README.md)   | <a href="https://youtu.be/zbAb2e_Q_Y0" title="nginx"><img src="https://i.ytimg.com/vi/zbAb2e_Q_Y0/hqdefault.jpg" width="30%" alt="nginx" /></a>       |
-| Cilium | [Introduction to Cilium Gateway API](./cilium/README.md)   | #TODO      |
-| kgateway | [Introduction to kgateway (a.k.a Gloo Gateway)](./kgateway/README.md) | <a href="https://youtu.be/4VTD5Z9YUu0" title="envoy"><img src="https://i.ytimg.com/vi/4VTD5Z9YUu0/hqdefault.jpg" width="30%" alt="envoy" /></a> |
+| Cilium | [Introduction to Cilium Gateway API](./cilium/README.md)   | <a href="https://youtu.be/q4bucRkDOm8" title="cilium"><img src="https://i.ytimg.com/vi/q4bucRkDOm8/hqdefault.jpg" width="30%" alt="cilium" /></a>      |
+| kgateway | [Introduction to kgateway (a.k.a Gloo Gateway)](./kgateway/README.md) | <a href="https://youtu.be/4VTD5Z9YUu0" title="kgateway"><img src="https://i.ytimg.com/vi/4VTD5Z9YUu0/hqdefault.jpg" width="30%" alt="kgateway" /></a> |
 | HAProxy | [Introduction to HAProxy & Gateway API](./haproxy/README.md) | <a href="https://youtu.be/5clOvqDh-zA" title="haproxy"><img src="https://i.ytimg.com/vi/5clOvqDh-zA/hqdefault.jpg" width="30%" alt="haproxy" /></a> |
-| Linkerd | [Introduction to Linkerd Gateway API](./linkerd/README.md)   | <a href="https://youtu.be/B9gKwJdWW7A" title="nginx"><img src="https://i.ytimg.com/vi/B9gKwJdWW7A/hqdefault.jpg" width="30%" alt="nginx" /></a>
+| Linkerd | [Introduction to Linkerd Gateway API](./linkerd/README.md)   | <a href="https://youtu.be/B9gKwJdWW7A" title="linkerd"><img src="https://i.ytimg.com/vi/B9gKwJdWW7A/hqdefault.jpg" width="30%" alt="linkerd" /></a>

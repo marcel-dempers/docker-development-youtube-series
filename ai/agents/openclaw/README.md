@@ -1,6 +1,14 @@
 # Introduction to OpenClaw
 
-<!-- #TODO 
+<!-- #TODO intro
+#<a href="https://youtu.be/xxxxxx" title="openclaw"><img src="https://i.ytimg.com/vi/xxxxxxx/hqdefault.jpg" width="40%" alt="openclaw" /></a>
+-->
+
+<!-- #TODO docker
+#<a href="https://youtu.be/xxxxxx" title="openclaw"><img src="https://i.ytimg.com/vi/xxxxxxx/hqdefault.jpg" width="40%" alt="openclaw" /></a>
+-->
+
+<!-- #TODO kubernetes
 #<a href="https://youtu.be/xxxxxx" title="openclaw"><img src="https://i.ytimg.com/vi/xxxxxxx/hqdefault.jpg" width="40%" alt="openclaw" /></a>
 -->
 
@@ -80,6 +88,7 @@ We set our secrets in environment variables and inject those into the container 
 export OPENCLAW_GATEWAY_TOKEN="$(openssl rand -hex 32)"
 export GEMINI_API_KEY="xxxxxxx"
 export DISCORD_BOT_TOKEN="xxxxxxx"
+export GITHUB_TOKEN="xxxxxxx"
 ```
 
 Run our container:
@@ -91,6 +100,7 @@ docker run -it --rm \
   -e OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN} \
   -e GEMINI_API_KEY=${GEMINI_API_KEY} \
   -e DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN} \
+  -e GITHUB_TOKEN=${GITHUB_TOKEN} \
   --cap-drop ALL \
   -v $PWD:/work \
   -v ~/.openclaw:/home/openclaw/.openclaw \

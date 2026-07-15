@@ -16,6 +16,13 @@ RUN su -c "curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard" 
 
 ENV PATH="/home/openclaw/.npm-global/bin:/home/openclaw/.local/bin:$PATH"
 
+# Install optional tools
+# Github CLI
+RUN curl -fsSL https://github.com/cli/cli/releases/download/v2.96.0/gh_2.96.0_linux_amd64.tar.gz -o gh_2.96.0_linux_amd64.tar.gz \
+    && tar -xzf gh_2.96.0_linux_amd64.tar.gz \
+    && mv gh_2.96.0_linux_amd64/bin/gh /usr/local/bin/gh \
+    && rm -rf gh_2.96.0_linux_amd64 gh_2.96.0_linux_amd64.tar.gz
+
 # Switch to non-root user
 USER openclaw
 WORKDIR /home/openclaw
