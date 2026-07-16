@@ -69,6 +69,7 @@ You will build the ultimate foundation and be equipped to make more informed dec
   * <i>These numbers are early access guide only and may be reviewed and adjusted based on course feedback</i>
 
 </ul>
+
 ## 📖 Table of Contents 
 
 * [Chapter 1: Source Control & GIT](./chapters/chapter-1-source-control-git/README.md)
@@ -81,20 +82,6 @@ You will build the ultimate foundation and be equipped to make more informed dec
 * 🚧[Chapter 8: Infrastructure as Code ](./chapters/chapter-8-infra-as-code/README.md)
 * 🚧[Chapter 9: Introduction to Cloud ](./chapters/chapter-9-intro-to-cloud/README.md)
 
-## 📖 Where to find the full course
+## 📖 Where to find and explore the full course
 
-The course will have a free summarised and editted version which touches on each topic for you to get started so you can benefit from the roadmap </br>
-
-However, the YouTube videos are in shorter, edited, summarised form. So although you may benefit from the content, if you are a beginner, you may prefer the long form content where I elaborate, provider more in-depth explanations and cover more examples </br>
-The paid course will also provide some bonus content </br>
-
-If you are a beginner, I highly recommend you checkout the full course on your favourite platform below:
-
-* 🚧Coming soon [Udemy ]()
-* 🚧Coming soon [Teachables ]()
-* 🚧Coming soon [Youtube Membership ]()
-* 🚧Coming soon [Patreon ]()
-
-## Explore the Course
-
-![](course.drawio.svg)
+You can explore the course on my [website](https://marceldempers.dev/)
