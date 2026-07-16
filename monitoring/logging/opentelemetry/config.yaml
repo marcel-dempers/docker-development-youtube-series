@@ -1,0 +1,20 @@
+receivers:
+  filelog:
+    include:
+      - /var/lib/docker/containers/*/*.log
+    start_at: end
+    storage: file_storage
+extensions:
+  file_storage:
+    directory: /etc/otelcol-contrib/.data/storage/
+    create_directory: true
+exporters:
+  file:
+    path: /etc/otelcol-contrib/.data/output_logs.log
+service:
+  extensions: [file_storage]
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: []
+      exporters: [file]

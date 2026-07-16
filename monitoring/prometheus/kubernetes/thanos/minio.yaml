@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi # Storage size for MinIO data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-deployment
+  labels:
+    app: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: quay.io/minio/minio:latest
+          imagePullPolicy: IfNotPresent
+          command: ["minio", "server", "/data", "--console-address", ":9001"] # MinIO server command
+          ports:
+            - name: http-api
+              containerPort: 9000
+            - name: http-console
+              containerPort: 9001
+          env:
+            - name: MINIO_ROOT_USER
+              value: thanos
+            - name: MINIO_ROOT_PASSWORD
+              value: supersecretpassword
+          volumeMounts:
+            - name: minio-data-volume
+              mountPath: /data 
+      volumes:
+        - name: minio-data-volume
+          persistentVolumeClaim:
+            claimName: minio-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+  labels:
+    app: minio
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: api
+      protocol: TCP
+      port: 9000
+      targetPort: 9000
+    - name: console
+      protocol: TCP
+      port: 9001
+      targetPort: 9001
+  type: ClusterIP
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-bucket-creator
+  labels:
+    app: minio-init-job
+spec:
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: minio-init-job
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mc-cli
+          image: alpine:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apk add --no-cache curl;
+              curl -LO https://dl.min.io/client/mc/release/linux-amd64/mc \
+              && chmod +x mc \
+              && mv mc /usr/local/bin/
+
+              echo "waiting for minio service..."
+              until curl -sS -f -o /dev/null http://minio-service:9000/minio/health/live; do
+                echo "MinIO not yet ready. Retrying in 2 seconds..."
+                sleep 2
+              done
+              echo "minio ready, proceed with bucket creation..."
+              
+              mc alias set minio http://minio-service:9000 thanos supersecretpassword;
+              mc mb minio/thanos-blocks --ignore-existing;
+              
+              echo "MinIO bucket creation job completed successfully."

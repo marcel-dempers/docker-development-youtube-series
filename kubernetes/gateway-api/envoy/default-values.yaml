@@ -1,0 +1,145 @@
+# Global settings
+global:
+  # If set, these take highest precedence and change both envoyGateway and ratelimit's container registry and pull secrets.
+  # -- Global override for image registry
+  imageRegistry: ""
+  # -- Global override for image pull secrets
+  imagePullSecrets: []
+
+  # If set, these override image-specific values: useful when installing the chart in a private registry environment.
+  # Override image-specific values directly if a global override is not desired.
+  images:
+    envoyGateway:
+      # This is the full image name including the hub, repo, and tag.
+      image: docker.io/envoyproxy/gateway:v1.6.0
+      # Specify image pull policy if default behavior isn't desired.
+      # Default behavior: latest images will be Always else IfNotPresent.
+      pullPolicy: IfNotPresent
+      # List of secrets in the same namespace of the component that can be used to pull images from private repositories.
+      pullSecrets: []
+    ratelimit:
+      # This is the full image name including the hub, repo, and tag.
+      image: "docker.io/envoyproxy/ratelimit:99d85510"
+      # Specify image pull policy if default behavior isn't desired.
+      # Default behavior: latest images will be Always else IfNotPresent.
+      pullPolicy: IfNotPresent
+      # List of secrets in the same namespace of the component that can be used to pull images from private repositories.
+      pullSecrets: []
+
+podDisruptionBudget:
+  minAvailable: 0
+  # maxUnavailable: 1
+
+deployment:
+  annotations: {}
+  envoyGateway:
+    image:
+      # if both this and global.imageRegistry are specified, this has to include both registry and repository explicitly, eg docker.io/envoyproxy/gateway
+      repository: ""
+      tag: ""
+    imagePullPolicy: ""
+    imagePullSecrets: []
+    resources:
+      limits:
+        memory: 1024Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsNonRoot: true
+      runAsGroup: 65532
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+  ports:
+    - name: grpc
+      port: 18000
+      targetPort: 18000
+    - name: ratelimit
+      port: 18001
+      targetPort: 18001
+    - name: wasm
+      port: 18002
+      targetPort: 18002
+    - name: metrics
+      port: 19001
+      targetPort: 19001
+  priorityClassName: null
+  replicas: 1
+  pod:
+    affinity: {}
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '19001'
+    labels: {}
+    topologySpreadConstraints: []
+    tolerations: []
+    nodeSelector: {}
+
+service:
+  # If set to PreferClose, the Envoy fleet will prioritize connecting to the Envoy Gateway pods that are topologically closest to them.
+  trafficDistribution: ""
+  annotations: {}
+  type: "ClusterIP"
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  metrics: []
+  behavior: {}
+
+config:
+# -- EnvoyGateway configuration. Visit https://gateway.envoyproxy.io/docs/api/extension_types/#envoygateway to view all options.
+  envoyGateway:
+    gateway:
+      controllerName: gateway.envoyproxy.io/gatewayclass-controller
+    provider:
+      type: Kubernetes
+    logging:
+      level:
+        default: info
+    extensionApis: {}
+
+createNamespace: false
+
+kubernetesClusterDomain: cluster.local
+
+# -- Certgen is used to generate the certificates required by EnvoyGateway. If you want to construct a custom certificate, you can generate a custom certificate through Cert-Manager before installing EnvoyGateway. Certgen will not overwrite the custom certificate. Please do not manually modify `values.yaml` to disable certgen, it may cause EnvoyGateway OIDC,OAuth2,etc. to not work as expected.
+certgen:
+  job:
+    annotations: {}
+    args: []
+    pod:
+      annotations: {}
+      labels: {}
+    resources: {}
+    affinity: {}
+    tolerations: []
+    nodeSelector: {}
+    ttlSecondsAfterFinished: 30
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsGroup: 65532
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+  rbac:
+    annotations: {}
+    labels: {}
+
+topologyInjector:
+  enabled: true
+  annotations: {}
+

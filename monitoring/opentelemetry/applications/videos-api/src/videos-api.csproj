@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.22" />
+
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0" />
+
+    <!-- Breaks auto Instrumentation if I add these packages -->
+    <!-- <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.10.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
+    <PackageReference Include="OpenTelemetry" Version="1.10.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" /> -->
+  </ItemGroup>
+
+</Project>

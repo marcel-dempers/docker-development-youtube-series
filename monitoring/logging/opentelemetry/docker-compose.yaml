@@ -1,0 +1,8 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    user: "0"
+    volumes:
+    - ./config.yaml:/etc/otelcol-contrib/config.yaml
+    - ./.data:/etc/otelcol-contrib/.data
+    - /var/lib/docker/containers:/var/lib/docker/containers

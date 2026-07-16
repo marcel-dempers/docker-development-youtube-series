@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-01
+spec:
+  evaluationInterval: 30s
+  image: quay.io/prometheus/prometheus:v3.4.1
+  imagePullPolicy: IfNotPresent
+  logFormat: logfmt
+  logLevel: info
+  nodeSelector:
+    kubernetes.io/os: linux
+  replicas: 1
+  retention: 2d # Thanos will now have long term storage
+  scrapeInterval: 30s
+  serviceAccountName: prometheus-applications
+  serviceMonitorNamespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: default
+  serviceMonitorSelector:
+    matchLabels:
+      prometheus-shard: prometheus-01
+  shards: 1
+  version: v3.4.1
+  externalLabels:
+    prometheus: applications
+    prometheus-shard: prometheus-01
+  thanos:
+    baseImage: quay.io/thanos/thanos:v0.38.0
+    objectStorageConfig:
+      name: thanos-secret
+      key: objstore.yml
+  securityContext:
+    fsGroup: 2000
+    runAsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000

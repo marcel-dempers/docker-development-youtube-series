@@ -1,0 +1,23 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 30s
+  # IMPORTANT: Add external labels for Thanos deduplication and identification
+  external_labels:
+    cluster: docker-compose-cluster
+    prometheus_replica: prometheus-01
+
+
+scrape_configs:
+- job_name: my-application
+  dns_sd_configs:
+  - names: ['dotnet-application','nodejs-application','go-application','python-application']
+    type: A
+    port: 5000
+  relabel_configs:
+  - source_labels: [__address__]
+    modulus: 2
+    target_label: __tmp_hash
+    action: hashmod
+  - source_labels: [__tmp_hash]
+    regex: '^1$'
+    action: keep

@@ -1,0 +1,12 @@
+apiVersion: network.azure.upbound.io/v1beta1
+kind: VirtualNetwork
+metadata:
+  name: marcel-test
+  labels:
+    app: marcel-test
+spec:
+  forProvider:
+    addressSpace:
+      - 10.0.0.0/16
+    location: "AustraliaEast"
+    resourceGroupName: marcel-test

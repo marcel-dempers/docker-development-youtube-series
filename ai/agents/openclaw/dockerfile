@@ -1,0 +1,30 @@
+FROM ubuntu:latest
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y curl bash git tree
+
+# Install Node.js 24 globally via nodesource
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+    && apt-get install -y nodejs
+
+# Create non-root user
+RUN usermod -l openclaw -d /home/openclaw -m ubuntu \
+    && groupmod -n openclaw ubuntu
+
+# Install Openclaw without onboarding
+RUN su -c "curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard" openclaw
+
+ENV PATH="/home/openclaw/.npm-global/bin:/home/openclaw/.local/bin:$PATH"
+
+# Install optional tools
+# Github CLI
+RUN curl -fsSL https://github.com/cli/cli/releases/download/v2.96.0/gh_2.96.0_linux_amd64.tar.gz -o gh_2.96.0_linux_amd64.tar.gz \
+    && tar -xzf gh_2.96.0_linux_amd64.tar.gz \
+    && mv gh_2.96.0_linux_amd64/bin/gh /usr/local/bin/gh \
+    && rm -rf gh_2.96.0_linux_amd64 gh_2.96.0_linux_amd64.tar.gz
+
+# Switch to non-root user
+USER openclaw
+WORKDIR /home/openclaw
+
+ENTRYPOINT ["openclaw", "gateway", "run", "--bind", "lan"]

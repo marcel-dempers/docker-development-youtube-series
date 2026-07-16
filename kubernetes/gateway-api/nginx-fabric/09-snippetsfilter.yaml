@@ -1,0 +1,53 @@
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: custom-snippet
+spec:
+  snippets:
+    - context: http
+      value: |
+        limit_req_zone $binary_remote_addr zone=no-delay-rate-limiting-sf:10m rate=1r/s;
+    - context: http.server.location
+      value: |
+        limit_req zone=no-delay-rate-limiting-sf burst=3 nodelay;
+        add_header X-Snippet-Works yes always;
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: go-route
+  namespace: default
+
+spec:
+  parentRefs:
+  - name: gateway-api
+    sectionName: http
+    kind: Gateway
+  - name: gateway-api
+    sectionName: https
+    kind: Gateway
+
+  hostnames:
+  - example-app.com
+
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api/go 
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    - type: ExtensionRef
+      extensionRef:
+            group: gateway.nginx.org
+            kind: SnippetsFilter
+            name: custom-snippet
+    backendRefs:
+    - name: go-svc
+      port: 5000
+      weight: 1

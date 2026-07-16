@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: go-svc-secret
+stringData:
+  client-1: secret123
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: go-route-apikeyauth
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: go-route
+  apiKeyAuth:
+    credentialRefs:
+    - group: ""
+      kind: Secret
+      name: go-svc-secret
+    extractFrom:
+    - headers:
+      - x-api-key

@@ -1,0 +1,40 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+RUN mkdir -p /src/
+COPY ./src/videos-api.csproj /src/videos-api.csproj
+
+WORKDIR /src/
+RUN dotnet restore
+
+COPY ./src/ /src/
+RUN mkdir /out/
+
+RUN dotnet build videos-api.csproj --configuration Debug --no-restore
+RUN dotnet publish videos-api.csproj --output /out --configuration Debug --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /app
+COPY --from=build /out/ /app
+
+RUN useradd worker
+RUN chown worker:worker /app
+USER worker
+
+ENTRYPOINT ["dotnet", "videos-api.dll"]
+
+FROM runtime AS opentelemetry
+
+# Install OpenTelemetry .NET Automatic Instrumentation
+USER root
+ARG OTEL_VERSION=1.11.0
+ADD https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v${OTEL_VERSION}/otel-dotnet-auto-install.sh otel-dotnet-auto-install.sh
+RUN apt-get update && apt-get install -y unzip curl && \
+    OTEL_DOTNET_AUTO_HOME="/otel-dotnet-auto" sh otel-dotnet-auto-install.sh
+
+# Ensure the auto-instrumentation startup hook is initialized first
+ENV DOTNET_STARTUP_HOOKS="/otel-dotnet-auto/net/OpenTelemetry.AutoInstrumentation.StartupHook.dll"
+
+# Ensure 'worker' user has access to OpenTelemetry files by changing ownership
+RUN chown -R worker:worker /otel-dotnet-auto    
+USER worker

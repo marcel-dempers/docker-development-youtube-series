@@ -1,25 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using Prometheus;
 
-namespace work
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(options =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+    options.ListenAnyIP(5000); // Bind to port 5000
+});
+builder.Services.AddControllers();
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5000")
-                .UseStartup<Startup>();
-    }
-}
+var app = builder.Build();
+
+var ProcessedJobCount = Metrics
+	.CreateCounter("dotnet_request_operations_total", "The total number of processed requests");
+
+app.MapGet("/", async (HttpContext context) =>
+{
+  var sw = Stopwatch.StartNew();
+  sw.Stop();
+
+  ProcessedJobCount.Inc();
+  var histogram =
+  Metrics.CreateHistogram(
+    "dotnet_request_duration_seconds",
+    "Histogram for the duration in seconds.",
+    new HistogramConfiguration
+    {
+        Buckets = Histogram.LinearBuckets(start: 1, width: 1, count: 5)
+    });
+
+  histogram.Observe(sw.Elapsed.TotalSeconds);
+
+  var response = "hello world!";
+  await context.Response.WriteAsync(response);
+});
+
+app.UseMetricServer();
+app.Run();

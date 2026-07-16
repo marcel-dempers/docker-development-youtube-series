@@ -1,0 +1,978 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "RED Metrics and correlation between metrics logs and traces for HTTP services instrumented with OpenTelemetry",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "panels": [],
+      "title": "HTTP Metrics",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROMETHEUS"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "right",
+            "cellOptions": {
+              "type": "color-text",
+              "wrapText": false
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 10,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tps"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "reqps"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto",
+                  "wrapText": false
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "requests"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto",
+                  "wrapText": false
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 97
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "success-rate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": 0
+                    },
+                    {
+                      "color": "orange",
+                      "value": 10
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 60
+                    },
+                    {
+                      "color": "green",
+                      "value": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": false,
+                  "mode": "gradient",
+                  "type": "color-background",
+                  "wrapText": false
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "route"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto",
+                  "wrapText": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by(http_route)(rate(http_server_request_duration_seconds_count{job=\"$service_name\",http_route=~\"$http_route\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "tps"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (http_route) (increase(http_server_request_duration_seconds_sum{job=\"$service_name\",http_route=~\"$http_route\"}[$__range])) / sum by(http_route)(increase(http_server_request_duration_seconds_count{job=\"$service_name\",http_route=~\"$http_route\"}[$__range]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "avg-response-time-seconds"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "histogram_quantile(.95,sum(rate(http_server_request_duration_seconds_bucket{job=\"$service_name\",http_route=~\"$http_route\"}[$__range])) by(http_route,le))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "p95"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by(http_route)(increase(http_server_request_duration_seconds_count{job=\"$job\",http_route=~\"$http_route\"}[$__range]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "requests"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by(http_route) (http_server_request_duration_seconds_count{job=\"$job\",http_route=~\"$http_route\",http_response_status_code=~\"2.*\"}) / sum by(http_route) (http_server_request_duration_seconds_count{job=\"$job\",http_route=~\"$http_route\"})*100",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "success-rate"
+        }
+      ],
+      "title": "Performance metrics overview per service during selected time range",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "http_route",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Time 2": "",
+              "Value #avg-response-time-seconds": "average",
+              "Value #p95": "p95",
+              "Value #p99": "p99",
+              "Value #requests": "requests",
+              "Value #success-rate": "success-rate",
+              "Value #tps": "tps",
+              "http_route": "route"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROMETHEUS"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": 300000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "histogram_quantile(.95,sum(rate(http_server_request_duration_seconds_bucket{job=\"$job\",http_route=~\"$http_route\"}[$rateinterval])) by(http_route, le))",
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "P95 per endpoint over $rateinterval interval",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROMETHEUS"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 10,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tps"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "reqps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "requests"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "success-rate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": 0
+                    },
+                    {
+                      "color": "orange",
+                      "value": 10
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 60
+                    },
+                    {
+                      "color": "green",
+                      "value": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "max",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "route"
+            },
+            "properties": []
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 9
+      },
+      "id": 10,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "limit": 3,
+          "values": true
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "histogram_quantile(.95,sum(rate(http_server_request_duration_seconds_bucket{job=\"$job\",http_route=~\"$http_route\"}[$__range])) by(http_route,le))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "p95"
+        }
+      ],
+      "title": "P95 over selected time range",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Time 2": "",
+              "Value #avg-response-time-seconds": "average",
+              "Value #p95": "p95",
+              "Value #p99": "p99",
+              "Value #requests": "requests",
+              "Value #success-rate": "success-rate",
+              "Value #tps": "tps",
+              "http_route": "route"
+            }
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROMETHEUS"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "+Inf"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 5,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 75,
+        "minVizWidth": 16,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "sizing": "manual",
+        "text": {},
+        "valueMode": "text"
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PROMETHEUS"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (le) (increase(http_server_request_duration_seconds_bucket{job=\"$job\",http_route=~\"$http_route\"}[$__range]))",
+          "format": "heatmap",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Response time distribution in seconds over selected time range",
+      "type": "bargauge"
+    }
+  ],
+  "preload": false,
+  "refresh": "30s",
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PROMETHEUS"
+        },
+        "definition": "label_values(http_server_request_duration_seconds_count,job)",
+        "includeAll": false,
+        "name": "service_namespace",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(http_server_request_duration_seconds_count,job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PROMETHEUS"
+        },
+        "definition": "label_values(http_server_request_duration_seconds_count{job=~\"${service_namespace}.*\"},exported_job)",
+        "includeAll": false,
+        "name": "service_name",
+        "options": [],
+        "query": {
+          "qryType": 5,
+          "query": "label_values(http_server_request_duration_seconds_count{job=~\"${service_namespace}.*\"},exported_job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PROMETHEUS"
+        },
+        "definition": "label_values(http_server_request_duration_seconds_count{job=\"${service_namespace}\"},job)",
+        "hide": 2,
+        "includeAll": false,
+        "name": "job",
+        "options": [],
+        "query": {
+          "qryType": 5,
+          "query": "label_values(http_server_request_duration_seconds_count{job=\"${service_namespace}\"},job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PROMETHEUS"
+        },
+        "definition": "label_values(http_server_request_duration_seconds_count{job=\"$job\"},http_route)",
+        "includeAll": true,
+        "multi": true,
+        "name": "http_route",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(http_server_request_duration_seconds_count{job=\"$job\"},http_route)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "auto": true,
+        "auto_count": 20,
+        "auto_min": "2m",
+        "current": {
+          "text": "$__auto",
+          "value": "$__auto"
+        },
+        "name": "rateinterval",
+        "options": [
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "2m",
+            "value": "2m"
+          },
+          {
+            "selected": false,
+            "text": "3m",
+            "value": "3m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          }
+        ],
+        "query": "1m,2m,3m,5m,10m,30m,1h,6h,12h,1d",
+        "refresh": 2,
+        "type": "interval"
+      },
+      {
+        "auto": true,
+        "auto_count": 1,
+        "auto_min": "",
+        "current": {
+          "text": "$__auto",
+          "value": "$__auto"
+        },
+        "name": "predictive_interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "2h",
+            "value": "2h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "2d",
+            "value": "2d"
+          },
+          {
+            "selected": false,
+            "text": "3d",
+            "value": "3d"
+          },
+          {
+            "selected": false,
+            "text": "1w",
+            "value": "1w"
+          }
+        ],
+        "query": "1h,2h,6h,12h,1d,2d,3d,1w",
+        "refresh": 2,
+        "type": "interval"
+      },
+      {
+        "auto": true,
+        "auto_count": 1,
+        "auto_min": "",
+        "current": {
+          "text": "$__auto",
+          "value": "$__auto"
+        },
+        "name": "predictive_offset",
+        "options": [
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "2h",
+            "value": "2h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "2d",
+            "value": "2d"
+          },
+          {
+            "selected": false,
+            "text": "3d",
+            "value": "3d"
+          },
+          {
+            "selected": false,
+            "text": "1w",
+            "value": "1w"
+          }
+        ],
+        "query": "1h,2h,6h,12h,1d,2d,3d,1w",
+        "refresh": 2,
+        "type": "interval"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "OpenTelemetry for HTTP services",
+  "uid": "otel-http",
+  "version": 8
+}

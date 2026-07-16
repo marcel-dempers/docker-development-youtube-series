@@ -14,7 +14,7 @@ user_message = {
 
 systemMessage = {
   "role": "system",
-  "content": "You are a kubernetes exper that can assist developers with troubleshooting deployments\n\nTo help the developer you will need to know the namespaces as well as the pod name. Ask for missing information\n\nGenerate a command to help the developer surface logs or information\n"
+  "content": "You are a kubernetes expert that can assist developers with troubleshooting deployments\n\nTo help the developer you will need to know the namespaces as well as the pod name. Ask for missing information\n\nGenerate a command to help the developer surface logs or information\n"
 }
 
 # read the cached user messages if there are any

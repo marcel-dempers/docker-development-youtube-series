@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deploy
+  labels:
+    app: example-app
+spec:
+  selector:
+    matchLabels:
+      app: example-app
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      annotations:
+        # Detect changes when using Helm:  calculate a hash of the ConfigMap content.
+        # This forces the Deployment to change and pod to rollout when ConfigMap changes.
+        #checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: example-app
+        image: nginx:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: CONFIGURATION_FILENAME
+          valueFrom:
+            configMapKeyRef:
+              name: example-config #name of our configmap object
+              key: config_enabled
+        volumeMounts:
+        - name: config-volume
+          mountPath: /configs/
+      volumes:
+      - name: config-volume
+        configMap:
+          name: example-config #name of our configmap object

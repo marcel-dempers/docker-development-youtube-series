@@ -1,0 +1,17 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: mtls-policy
+  namespace: default
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: gateway-api
+      sectionName: https
+  tls:
+    clientValidation:
+      caCertificateRefs:
+      - kind: "Secret"
+        group: ""
+        name: "secret-tls-ca"

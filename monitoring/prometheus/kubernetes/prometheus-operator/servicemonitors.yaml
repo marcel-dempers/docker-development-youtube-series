@@ -1,0 +1,55 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dotnet-application
+  labels:
+    monitoring: prometheus-applications
+    prometheus-shard: prometheus-00
+spec:
+  selector:
+    matchLabels:
+      app: dotnet-application
+  endpoints:
+  - port: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: go-application
+  labels:
+    monitoring: prometheus-applications
+    prometheus-shard: prometheus-00
+spec:
+  selector:
+    matchLabels:
+      app: go-application
+  endpoints:
+  - port: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nodejs-application
+  labels:
+    monitoring: prometheus-applications
+    prometheus-shard: prometheus-01
+spec:
+  selector:
+    matchLabels:
+      app: nodejs-application
+  endpoints:
+  - port: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: python-application
+  labels:
+    monitoring: prometheus-applications
+    prometheus-shard: prometheus-01
+spec:
+  selector:
+    matchLabels:
+      app: python-application
+  endpoints:
+  - port: http

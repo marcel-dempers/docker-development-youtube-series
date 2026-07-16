@@ -1,0 +1,137 @@
+networks: 
+  tracing:
+    name: tracing
+services:
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib
+    user: "0"
+    volumes:
+    - ./config.yaml:/etc/otelcol-contrib/config.yaml
+    - ./.data:/etc/otelcol-contrib/.data
+    networks:
+    - tracing
+
+  videos-web:
+    container_name: videos-web
+    image: aimvector/service-mesh:videos-web-1.0.0
+    build:
+      context: ./applications/videos-web
+    ports:
+      - 80:80
+    networks:
+    - tracing
+  playlists-api:
+    container_name: playlists-api
+    image: aimvector/service-mesh:playlists-api-1.0.0
+    build:
+      context: ./applications/playlists-api
+    environment:
+    - "ENVIRONMENT=DEBUG"
+    - "REDIS_HOST=playlists-db"
+    - "REDIS_PORT=6379"
+    ports:
+    - 81:10010
+    networks:
+    - tracing
+    volumes:
+    - playlist-api-volume:/shared
+    command: ["sh", "-c", "cp /app/app /shared/app && /shared/app"]
+  playlist-api-otel:
+    image: otel/autoinstrumentation-go
+    privileged: true
+    pid: "host"
+    depends_on:
+    - playlists-api
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+    - OTEL_GO_AUTO_TARGET_EXE=/shared/app
+    - OTEL_SERVICE_NAME="playlist-api"
+    - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+    - OTEL_PROPAGATORS=tracecontext,baggage
+    volumes:
+    - playlist-api-volume:/shared
+    - /proc:/host/proc
+    networks:
+    - tracing
+  playlists-db:
+    container_name: playlists-db
+    image: redis:6.0-alpine
+    command: [ "redis-server" , "--dir", "/var/lib/redis", "--appendonly", "yes"]
+    volumes:
+      - ./applications/playlists-db/appendonly.aof:/var/lib/redis/appendonly.aof
+    networks:
+    - tracing
+  videos-api:
+    container_name: videos-api
+    image: aimvector/service-mesh:videos-api-1.0.0
+    build:
+      context: ./applications/videos-api
+    environment:
+    - "ASPNETCORE_URLS=http://*:10010"
+    - "ENVIRONMENT=DEBUG"
+    - "REDIS_HOST=videos-db"
+    - "REDIS_PORT=6379"
+    - "OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317"
+    - "CORECLR_ENABLE_PROFILING=1"
+    - "CORECLR_PROFILER='{918728DD-259F-4A6A-AC2B-B85E1B658318}'"
+    - "CORECLR_PROFILER_PATH=/otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so"
+    - "DOTNET_ADDITIONAL_DEPS=/otel-dotnet-auto/AdditionalDeps"
+    - "DOTNET_SHARED_STORE=/otel-dotnet-auto/store"
+    - "DOTNET_STARTUP_HOOKS=/otel-dotnet-auto/net/OpenTelemetry.AutoInstrumentation.StartupHook.dll"
+    - "OTEL_DOTNET_AUTO_HOME=/otel-dotnet-auto"
+    - "OTEL_PROPAGATORS=tracecontext,baggage,b3"
+    - "OTEL_TRACES_SAMPLER=parentbased_traceidratio"
+    - "OTEL_TRACES_SAMPLER_ARG=1"
+    - "OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=ManualInstrumentations.*"
+    - "OTEL_DOTNET_AUTO_TRACES_INSTRUMENTATION_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_ASPNETCORE_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_METRICS_INSTRUMENTATION_HTTPCLIENT_ENABLED=true"
+    - "OTEL_DOTNET_AUTO_LOG_DIRECTORY=/tmp"
+    - "OTEL_LOG_LEVEL=error"
+    - "OTEL_EXPORTER_OTLP_PROTOCOL=grpc"
+    ports:
+    - 82:10010
+    networks:
+    - tracing
+  videos-db:
+    container_name: videos-db
+    image: redis:6.0-alpine
+    command: [ "redis-server" , "--dir", "/var/lib/redis", "--appendonly", "yes"]
+    volumes:
+      - ./applications/videos-db/appendonly.aof:/var/lib/redis/appendonly.aof
+    networks:
+    - tracing
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./applications/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/tempo.yaml
+      - ./applications/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+    - tracing
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+    - ./applications/tempo/tempo.yaml:/etc/tempo.yaml
+    networks:
+    - tracing
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+      - "--web.enable-remote-write-receiver"
+    volumes:
+      - ./applications/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    networks:
+    - tracing
+volumes:
+  playlist-api-volume:

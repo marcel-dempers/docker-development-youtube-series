@@ -1,0 +1,47 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+processors:
+  memory_limiter:
+    check_interval: 5s
+    limit_percentage: 90
+    spike_limit_percentage: 20
+  batch:
+    send_batch_max_size: 512
+    send_batch_size: 256
+    timeout: 8s
+exporters:
+  file/traces:
+    path: /etc/otelcol-contrib/.data/output_traces.log
+  file/metrics:
+    path: /etc/otelcol-contrib/.data/output_metrics.log
+  otlp/tempo:
+    endpoint: "http://tempo:4317"
+    tls:
+      insecure: true
+  
+  # Option A: Prometheus to scrape metrics from Otel
+  # prometheus:
+  #   endpoint: "0.0.0.0:9464"
+
+  # Option B: Otel to send metrics  to Prometheus
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+    tls:
+      insecure: true
+      insecure_skip_verify: true
+  debug:
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/tempo, file/traces, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheusremotewrite, file/metrics]

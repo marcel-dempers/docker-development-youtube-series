@@ -1,0 +1,16 @@
+apiVersion: network.azure.upbound.io/v1beta1
+kind: NetworkInterface
+metadata:
+  labels:
+    app: marcel-test
+  name: marcel-test
+spec:
+  forProvider:
+    resourceGroupName: marcel-test
+    ipConfiguration:
+    - name: internal
+      privateIpAddressAllocation: Dynamic
+      subnetIdSelector:
+        matchLabels:
+          app: marcel-test
+    location: "AustraliaEast"

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deploy
+  labels:
+    app: example-app
+  annotations:
+    secret.reloader.stakater.com/auto: "true"
+    configmap.reloader.stakater.com/auto: "true"
+spec:
+  selector:
+    matchLabels:
+      app: example-app
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: example-app
+        image: ubuntu
+        command: ["/bin/bash"]
+        args:
+        - "-c"
+        - |
+          CONFIG=$(cat /configs/config.json);
+          echo $CONFIG
+
+          while true; do
+            echo "Content read at startup: $CONFIG";
+            echo "CONFIGURATION_ENABLED = $CONFIGURATION_ENABLED"
+            sleep 5;
+          done
+        env:
+        - name: CONFIGURATION_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: example-config #name of our configmap object
+              key: config_enabled
+        volumeMounts:
+        - name: config-volume
+          mountPath: /configs/
+      volumes:
+      - name: config-volume
+        configMap:
+          name: example-config #name of our configmap object

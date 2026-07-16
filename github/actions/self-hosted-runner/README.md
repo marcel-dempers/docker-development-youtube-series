@@ -54,7 +54,6 @@ Next steps:
 * Try these steps in the container
 * We will needfew dependencies
 * We download the runner
-* TODO
 
 
 Finally lets test the runner in `docker` 

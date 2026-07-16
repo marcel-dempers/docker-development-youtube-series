@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-deploy
+  labels:
+    app: go-app
+spec:
+  selector:
+    matchLabels:
+      app: go-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: go-app
+    spec:
+      containers:
+      - name: go-app
+        image: aimvector/golang:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: secret-volume
+          mountPath: /secrets/
+        - name: config-volume
+          mountPath: /configs/
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: go-secret
+      - name: config-volume
+        configMap:
+          name: go-config
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: go-secret 
+type: Opaque
+data:
+  secret.json: ewogICAgImFwaV9rZXkiIDogInNvbWVzZWNyZXRnb2VzaGVyZSIKfQo=
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-config
+data:
+  config.json: |
+    {
+      "environment" : "dev"
+    }
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: go-svc
+spec:
+  selector:
+    app: go-app
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP

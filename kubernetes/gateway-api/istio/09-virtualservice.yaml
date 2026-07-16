@@ -1,0 +1,41 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: go-route
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/go
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: go-svc
+        port:
+          number: 5000
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: python-route
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/python
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: python-svc
+        port:
+          number: 5000

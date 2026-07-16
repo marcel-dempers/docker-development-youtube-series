@@ -1,0 +1,21 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: go-route-cors
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: go-route
+  cors:
+    allowOrigins:
+    - "http://localhost:8000"
+    allowMethods:
+    - GET
+    - POST
+    allowHeaders:
+    - "x-header-1"
+    - "x-header-2"
+    exposeHeaders:
+    - "x-header-3"
+    - "x-header-4"

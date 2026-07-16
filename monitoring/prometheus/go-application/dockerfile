@@ -1,4 +1,4 @@
-FROM golang:1.22.5-alpine as builder
+FROM golang:1.24-alpine AS builder
 
 # installing git
 RUN apk update && apk upgrade && \
@@ -7,14 +7,13 @@ RUN apk update && apk upgrade && \
 # setting working directory
 WORKDIR /go/src/app
 
-
 COPY / /go/src/app/
 # installing dependencies
 RUN go mod download
 
 RUN go build -o myapp
 
-FROM alpine:3.10
+FROM alpine:3.21
 
 RUN apk update && apk upgrade && \
     apk add --no-cache openssh curl ca-certificates

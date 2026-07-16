@@ -6,19 +6,19 @@ To run any of the commands, please ensure you open a terminal and navigate to th
 ## Start Prometheus, Grafana & Dashboards
 
 ```
-docker-compose up -d prometheus
-docker-compose up -d grafana
-docker-compose up -d grafana-dashboards
+docker compose up -d prometheus
+docker compose up -d grafana
+docker compose up -d grafana-dashboards
 ```
 
 
 ## Start the example app you prefer
 
 ```
-docker-compose up -d --build go-application
-docker-compose up -d --build python-application
-docker-compose up -d --build dotnet-application
-docker-compose up -d --build nodejs-application
+docker compose up -d --build go-application
+docker compose up -d --build python-application
+docker compose up -d --build dotnet-application
+docker compose up -d --build nodejs-application
 ```
 
 ## Generate some requests by opening the application in the browser

@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: ThanosQuery
+    type: prometheus
+    uid: thanosquery
+    access: proxy
+    url: http://thanos-query:19090 # Point to Thanos Query service
+    isDefault: true
+    version: 1
+    editable: true
+    basicAuth: false
+    # Additional settings if needed
+    # jsonData:
+    #   httpMethod: GET

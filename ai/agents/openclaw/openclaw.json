@@ -1,0 +1,56 @@
+{
+  "gateway": {
+    "mode": "local",
+    "bind": "loopback",
+    "port": 18789,
+    "auth": {
+      "mode": "token"
+    },
+    "controlUi": {
+      "enabled": true
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "~/.openclaw/workspace",
+      "model": {
+        "primary": "google/gemini-3.1-pro-preview"
+      }
+    },
+    "list": [
+      {
+        "id": "default",
+        "name": "OpenClaw Assistant",
+        "workspace": "~/.openclaw/workspace"
+      }
+    ]
+  },
+  "cron": {
+    "enabled": false
+  },
+  "plugins": {
+    "allow": [
+      "discord"
+    ],
+    "entries": {
+      "google": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      }
+    }
+  },
+  "channels": {
+    "discord": {
+      "enabled": true,
+      "token": {
+        "source": "env",
+        "provider": "default",
+        "id": "DISCORD_BOT_TOKEN"
+      },
+      "groupPolicy": "allowlist",
+      "guilds": {}
+    }
+  }
+}

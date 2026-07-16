@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videos-api
+  labels:
+    app: videos-api
+spec:
+  selector:
+    matchLabels:
+      app: videos-api
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-dotnet: 'true'
+      labels:
+        app: videos-api
+        newrelicEnabled: "true"
+    spec:
+      containers:
+      - name: videos-api
+        image: aimvector/service-mesh:videos-api-1.0.0
+        imagePullPolicy : IfNotPresent
+        ports:
+        - containerPort: 10010
+        env:
+        - name: "ASPNETCORE_URLS"
+          value: "http://*:10010"
+        - name: "ENVIRONMENT"
+          value: "DEBUG"
+        - name: "REDIS_HOST"
+          value: "videos-db"
+        - name: "REDIS_PORT"
+          value: "6379"
+        - name: "FLAKY"
+          value: "false"
+        # - name: "OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES"
+        #   value: "ManualInstrumentations.*"
+        # - name: "OTEL_DOTNET_AUTO_TRACES_INSTRUMENTATION_ENABLED"
+        #   value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: videos-api
+  labels:
+    app: videos-api
+spec:
+  type: ClusterIP
+  selector:
+    app: videos-api
+  ports:
+    - protocol: TCP
+      name: http
+      port: 10010
+      targetPort: 10010
+---
+
+

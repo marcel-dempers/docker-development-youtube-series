@@ -1,0 +1,45 @@
+networks:
+  prometheus:
+    name: prometheus
+    driver: bridge
+    external: true
+services:
+  prometheus-00:
+      container_name: prometheus-00
+      image: prom/prometheus:v3.3.0
+      ports: 
+        - "9090:9090"
+      command: 
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.external-url=http://prometheus-00:9090'
+      - '--web.route-prefix=/'
+      # Important for Thanos integration: disable internal Prometheus compaction
+      - '--storage.tsdb.min-block-duration=2h'
+      - '--storage.tsdb.max-block-duration=2h'
+      volumes:
+        - ./prometheus-00.yaml:/etc/prometheus/prometheus.yaml
+        - prometheus_00:/prometheus
+      networks:
+        - prometheus
+  prometheus-01:
+      container_name: prometheus-01
+      image: prom/prometheus:v3.3.0
+      ports: 
+        - "9091:9090"
+      command: 
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.external-url=http://prometheus-01:9090'
+      - '--web.route-prefix=/'
+      # Important for Thanos integration: disable internal Prometheus compaction
+      - '--storage.tsdb.min-block-duration=2h'
+      - '--storage.tsdb.max-block-duration=2h'
+      volumes:
+        - ./prometheus-01.yaml:/etc/prometheus/prometheus.yaml
+        - prometheus_01:/prometheus
+      networks:
+        - prometheus
+volumes:
+  prometheus_00:
+  prometheus_01:

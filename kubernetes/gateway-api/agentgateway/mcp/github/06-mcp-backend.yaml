@@ -1,0 +1,12 @@
+apiVersion: agentgateway.dev/v1alpha1                                                                                                                                                     
+kind: AgentgatewayBackend                                                                                                                                                                 
+metadata:                                                                                                                                                                                 
+  name: mcp-backend-github                                                                                                                                                                
+spec:                                                                                                                                                                                     
+  mcp:                                                                                                                                                                                    
+    targets:                                                                                                                                                                              
+    - name: mcp-github                                                                                                                                                                    
+      selector:                                                                                                                                                                           
+        services:                                                                                                                                                                         
+          matchLabels:                                                                                                                                                                    
+            app: mcp-github

@@ -1,0 +1,6 @@
+reloader:
+  autoReloadAll: false
+  namespaceSelector: "kubernetes.io/metadata.name=default"
+  ignoreNamespaces: "kube-system"
+  ignoreSecrets: false
+  ignoreConfigMaps: false

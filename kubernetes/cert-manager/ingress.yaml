@@ -2,15 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
   name: example-app
 spec:
+  ingressClassName: traefik
   tls:
   - hosts:
-    - marcel.guru
-    secretName: example-app-tls
+    - test.marceldempers.dev
+    secretName: secret-tls
   rules:
-  - host: marcel.guru
+  - host: test.marceldempers.dev
     http:
       paths:
       - path: /

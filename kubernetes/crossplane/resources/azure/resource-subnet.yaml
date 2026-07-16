@@ -1,0 +1,14 @@
+apiVersion: network.azure.upbound.io/v1beta2
+kind: Subnet
+metadata:
+  labels:
+    app: marcel-test
+  name: marcel-test
+spec:
+  forProvider:
+    resourceGroupName: marcel-test
+    addressPrefixes:
+    - 10.0.2.0/24
+    virtualNetworkNameSelector:
+      matchLabels:
+        app: marcel-test

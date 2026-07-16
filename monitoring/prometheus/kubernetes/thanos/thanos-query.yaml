@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-query
+  labels:
+    app: thanos-query
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-query
+  template:
+    metadata:
+      labels:
+        app: thanos-query
+    spec:
+      containers:
+      - name: thanos-query
+        image: quay.io/thanos/thanos:v0.38.0
+        args:
+        - "query"
+        - "--http-address=0.0.0.0:19090" # Thanos Query HTTP API, for Grafana and UI
+        - "--grpc-address=0.0.0.0:19091" # Thanos Query gRPC API, for other Thanos components
+        # Connect to Prometheus Thanos sidecars.
+        # These should be the Kubernetes Service names exposing the Thanos sidecar's gRPC port (10901 or 19091).
+        - --endpoint=dnssrv+_grpc._tcp.prometheus-operated.default.svc.cluster.local
+        ports:
+        - name: http
+          containerPort: 19090
+          protocol: TCP
+        - name: grpc
+          containerPort: 19091
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+      # Optional: Add a service account if you need to grant specific RBAC permissions
+      # serviceAccountName: thanos-query-sa
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-query
+  labels:
+    app: thanos-query
+spec:
+  selector:
+    app: thanos-query
+  ports:
+  - name: http
+    protocol: TCP
+    port: 19090
+    targetPort: http
+  - name: grpc
+    protocol: TCP
+    port: 19091
+    targetPort: grpc
+  type: ClusterIP # Use ClusterIP for internal access. For external, consider NodePort or Ingress.

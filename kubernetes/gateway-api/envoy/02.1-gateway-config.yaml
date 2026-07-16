@@ -1,0 +1,43 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: gateway-configuration
+    namespace: envoy-gateway-system
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: gateway-configuration
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 2
+      envoyService:
+        name: envoy-gateway-default
+  telemetry:
+    accessLog:
+      settings:
+      # Define a log sink (destination) and format
+      - sinks:
+          - type: File
+            file:
+              path: /dev/stdout
+        format:
+          type: JSON
+          json:
+            # Custom Fields (using Envoy command operators)
+            start_time: "%START_TIME%"
+            method: "%REQ(:METHOD)%"
+            path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+            response_code: "%RESPONSE_CODE%"
+            upstream_host: "%UPSTREAM_HOST%"
+            custom_header: "%REQ(X-CUSTOM-ID)%" # Example: Add a custom request header

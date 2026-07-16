@@ -1,0 +1,16 @@
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: gemma-e2b
+spec:
+  source: https://huggingface.co./ggml-org/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q8_0.gguf
+  format: gguf
+  quantization: Q8_0
+  #hardware:
+  #  accelerator: cuda
+  #  gpu:
+  #    enabled: true
+  #    count: 1
+  resources:
+    cpu: "4"
+    memory: "1Gi"

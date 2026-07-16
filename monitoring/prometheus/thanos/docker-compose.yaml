@@ -1,0 +1,107 @@
+networks:
+  prometheus:
+    name: prometheus
+    driver: bridge
+    external: true
+services:
+  # Object Storage for Thanos (using MinIO for local testing)
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000" # MinIO console/API
+      - "9001:9001" # MinIO console
+    environment:
+      MINIO_ROOT_USER: thanos
+      MINIO_ROOT_PASSWORD: supersecretpassword
+    command: server /data --console-address ":9001"
+    networks:
+      - prometheus
+  minio-init:
+    image: minio/mc
+    container_name: minio-init
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5s &&
+      /usr/bin/mc alias set minio http://minio:9000 thanos supersecretpassword;
+      /usr/bin/mc mb minio/thanos-blocks --ignore-existing;
+      exit 0;
+      "
+    networks:
+      - prometheus
+  thanos-sidecar-00:
+    image: quay.io/thanos/thanos:v0.38.0 # Use a specific version
+    container_name: thanos-sidecar-00
+    user: "65534"
+    volumes:
+      - sharding_prometheus_00:/prometheus # Mount Prometheus data
+      - ./thanos-sidecar-00:/etc/thanos # Mount Thanos config
+    command:
+      - 'sidecar'
+      - '--tsdb.path=/prometheus'
+      - '--prometheus.url=http://prometheus-00:9090' # External labels are crucial for Thanos Query to distinguish data sources
+      - '--objstore.config-file=/etc/thanos/thanos-objstore.yml'
+      - '--http-address=0.0.0.0:19090' # HTTP for metrics/status
+      - '--grpc-address=0.0.0.0:19091' # gRPC for Thanos Query to connect
+      - '--shipper.upload-compacted'
+    networks:
+      - prometheus
+    depends_on:
+      - minio
+  thanos-sidecar-01:
+    image: quay.io/thanos/thanos:v0.38.0 # Use a specific version
+    container_name: thanos-sidecar-01
+    user: "65534"
+    volumes:
+      - sharding_prometheus_01:/prometheus # Mount Prometheus data
+      - ./thanos-sidecar-01:/etc/thanos # Mount Thanos config
+    command:
+      - 'sidecar'
+      - '--tsdb.path=/prometheus'
+      - '--prometheus.url=http://prometheus-01:9090' # External labels are crucial for Thanos Query to distinguish data sources
+      - '--objstore.config-file=/etc/thanos/thanos-objstore.yml'
+      - '--http-address=0.0.0.0:19090' # HTTP for metrics/status
+      - '--grpc-address=0.0.0.0:19091' # gRPC for Thanos Query to connect
+      - '--shipper.upload-compacted'
+    networks:
+      - prometheus
+    depends_on:
+      - minio
+  thanos-query:
+    image: quay.io/thanos/thanos:v0.38.0
+    container_name: thanos-query
+    ports:
+      - "19090:19090" # Thanos Query HTTP API
+    command:
+      - 'query'
+      - '--http-address=0.0.0.0:19090'    #grafana will connect here
+      - '--grpc-address=0.0.0.0:19091'
+      - '--endpoint=thanos-sidecar-00:19091' #connect sidecar gRPC
+      - '--endpoint=thanos-sidecar-01:19091'  #connect sidecar gRPC    
+    networks:
+      - prometheus
+    depends_on:
+      - thanos-sidecar-00
+      - thanos-sidecar-01
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_AUTH_ANONYMOUS_ENABLED: 'true' # For quick testing, disable in production
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin # For quick testing, disable in production
+    volumes:
+      - ./grafana/:/etc/grafana/provisioning # For provisioning datasources
+    networks:
+      - prometheus
+    depends_on:
+      - thanos-query
+volumes:
+  sharding_prometheus_00:
+    external: true
+  sharding_prometheus_01:
+    external: true
