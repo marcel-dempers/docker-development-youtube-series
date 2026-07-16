@@ -206,7 +206,7 @@ Another network protocol which is built on top of TCP, is `HTTP`. </br>
 HTTP is used in Web communications and we'll learn more about the Web in a future Chapter. This is how we create an HTTP connection and send an HTTP message:
 
 ```
-curl -X POST http://localhost:12345 -d "test"`
+curl -X POST http://localhost:12345 -d "test"
 ```
 
 We'll get into more variations of what the client can do. But before we do this, we need to learn a couple of popular network tools and we can monitor the network at the same time. 

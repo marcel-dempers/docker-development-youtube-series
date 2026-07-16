@@ -1,4 +1,4 @@
-# Chapter-1 : Source Control and GIT
+# Chapter 1 : Source Control and GIT
 
 Back to [Course Introduction](../../README.md)
 
@@ -13,13 +13,13 @@ Back to [Course Introduction](../../README.md)
 <p>What your will learn:</p>
 
 <ul>
-<li> What source control is</li>
-<li> How to use GIT to manage source code</li>
-<li> Learn about the basics of hosted source control systems</li>
-<li> What an IDE is</li>
-<li> Developer Tools</li>
-<li> How to use an IDE as an engineer</li>
-</u>
+  <li> What source control is</li>
+  <li> How to use GIT to manage source code</li>
+  <li> Learn about the basics of hosted source control systems</li>
+  <li> What an IDE is</li>
+  <li> Developer Tools</li>
+  <li> How to use an IDE as an engineer</li>
+</ul>
 
 ### 🎬 [Module 1: Introduction to GIT: Source Control](../../content/source-control/git/README.md)
 
