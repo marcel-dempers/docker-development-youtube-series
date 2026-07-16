@@ -1,0 +1,7 @@
+- name: Provision Server
+  hosts: all 
+  remote_user: root
+  tasks:
+  - name: This is an example task
+    ansible.builtin.debug:
+      msg: "Hello, from Ansible!"

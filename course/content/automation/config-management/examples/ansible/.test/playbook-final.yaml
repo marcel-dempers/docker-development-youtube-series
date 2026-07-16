@@ -1,0 +1,266 @@
+- name: Provision User accounts
+  hosts: all
+  remote_user: root
+  vars:
+    SERVER_USERNAME: "{{ lookup('env', 'SERVER_USERNAME') }}"
+    SERVER_PASSWORD: "{{ lookup('env', 'SERVER_PASSWORD') }}"
+  tasks:
+  - name: create admin user account
+    become: true
+    ansible.builtin.user:
+      name: "{{ SERVER_USERNAME }}"
+      shell: /bin/bash
+  - name: set admin user password
+    become: true
+    ansible.builtin.shell: echo "{{ SERVER_USERNAME }}:{{ SERVER_PASSWORD }}" | sudo chpasswd
+  - name: add admin user to sudo group
+    become: true
+    ansible.builtin.user:
+      name: "{{ SERVER_USERNAME }}"
+      groups: sudo
+      append: yes
+- name: Provision Web server
+  hosts: all 
+  remote_user: root
+  vars:
+    WEBSITE_PATH: /websites/my-website
+  tasks:
+  - name: Install NGINX dependencies
+    become: true
+    ansible.builtin.apt:
+      name: gnupg2
+      state: present
+      update_cache: yes
+  - name: Create NGINX group for user
+    become: true
+    ansible.builtin.group:
+      name: nginx
+      state: present
+  - name: Create NGINX user
+    become: true
+    ansible.builtin.user:
+      name: nginx
+      group: nginx
+      shell: /sbin/nologin
+      state: present
+  - name: Add NGINX repository get signing key
+    become: true
+    ansible.builtin.get_url:
+      url: https://nginx.org/keys/nginx_signing.key
+      dest: /tmp/nginx_signing.key
+  - name: Add NGINX repository process signing key
+    become: true
+    ansible.builtin.shell: |
+      gpg --dearmor < /tmp/nginx_signing.key | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg > /dev/null
+  - name: Add NGINX repository
+    become: true
+    ansible.builtin.apt_repository:
+      repo: "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx"
+      state: present
+      filename: nginx
+  - name: Add NGINX repository priority
+    become: true
+    ansible.builtin.copy:
+      content: |
+        Package: *
+        Pin: origin nginx.org
+        Pin: release o=nginx
+        Pin-Priority: 900
+      dest: /etc/apt/preferences.d/99nginx
+      mode: '0644'
+  - name: Install NGINX
+    become: true
+    ansible.builtin.apt:
+      name: nginx
+      state: present
+      update_cache: yes
+  - name: Configure NGINX service directory
+    become: true
+    ansible.builtin.file:
+      path: "/etc/systemd/system/nginx.service.d"
+      state: directory
+      mode: '0755'
+  - name: Configure NGINX systemd override
+    become: true
+    ansible.builtin.copy:
+      content: |
+        [Service]
+        ExecStart=
+        ExecStart=/usr/sbin/nginx -c ${CONFFILE}
+        Environment="CONFFILE={{ WEBSITE_PATH }}/nginx.conf"
+      dest: "/etc/systemd/system/nginx.service.d/override.conf"
+      mode: '0644'
+    notify:
+    - Reload Systemd
+    - Restart NGINX
+  - name: Create website directory
+    become: true
+    ansible.builtin.file:
+      path: "{{ WEBSITE_PATH }}"
+      state: directory
+      owner: nginx
+      group: nginx
+      mode: '0755'
+  - name: Copy website content
+    become: true
+    ansible.builtin.copy:
+      src: /home/vagrant/tmp/my-website/
+      dest: "{{ WEBSITE_PATH }}"
+      owner: nginx
+      group: nginx
+      mode: '0644'
+      remote_src: yes
+  - name: Set website file permissions
+    become: true
+    ansible.builtin.file:
+      path: "{{ WEBSITE_PATH }}"
+      state: directory
+      owner: nginx
+      group: nginx
+      mode: '0755'
+  - name: Start NGINX service
+    become: true
+    ansible.builtin.systemd:
+      name: nginx
+      state: started
+      enabled: yes
+  handlers:
+  - name: Reload Systemd
+    become: true
+    ansible.builtin.systemd:
+      daemon_reload: yes
+  - name: Restart NGINX
+    ansible.builtin.systemd:
+      name: nginx
+      state: restarted
+- name: Provision Github CI/CD runner
+  hosts: all 
+  remote_user: root
+  vars:
+    PAT_TOKEN: "{{ lookup('env', 'PAT_TOKEN') }}"
+    GITHUB_ORG: "{{ lookup('env', 'GITHUB_ORG') }}"
+    GITHUB_REPO: "{{ lookup('env', 'GITHUB_REPO') }}"
+    RUNNER_NAME: "{{ lookup('env', 'RUNNER_NAME') }}"
+    WEBSITE_PATH: /websites/my-website
+    REPO_URL: "https://github.com/{{ GITHUB_ORG }}/{{ GITHUB_REPO }}"
+  tasks:
+  - name: Create Github user
+    become: true
+    ansible.builtin.user:
+      name: "github"
+      shell: /bin/bash
+  - name: Install Github dependencies
+    become: true
+    ansible.builtin.apt:
+      name: acl
+      state: present
+      update_cache: yes
+  - name: Set permissions on website folder
+    become: true
+    ansible.builtin.shell: setfacl -m u:github:rwx {{ WEBSITE_PATH }}
+  - name: Set permissions on website reload
+    become: true
+    ansible.builtin.copy:
+      content: |
+        # Permissions for the GitHub Actions runner user
+        github ALL=(root) NOPASSWD: /usr/bin/sed, /usr/bin/grep, /usr/sbin/nginx -s reload
+      dest: /etc/sudoers.d/github
+      mode: '0440'
+      validate: 'visudo -cf %s'
+  - name: Github Runner - Create runner folder
+    become: true
+    ansible.builtin.file:
+      path: /home/github/{{ RUNNER_NAME }}
+      state: directory
+      owner: github
+      group: github
+      mode: '0755'
+  - name: Github Runner - Get latest runner version
+    ansible.builtin.uri:
+      url: "https://api.github.com/repos/actions/runner/releases/latest"
+      return_content: yes
+    register: latest_release
+  - name: Github Runner - Set runner version
+    ansible.builtin.set_fact:
+      runner_version: "{{ latest_release.json.tag_name | replace('v','') }}"
+      runner_file: "actions-runner-linux-x64-{{ latest_release.json.tag_name | replace('v','') }}.tar.gz"
+  - name: Github Runner - Download
+    become: true
+    ansible.builtin.get_url:
+      url: "https://github.com/actions/runner/releases/download/{{ latest_release.json.tag_name }}/{{ runner_file }}"
+      dest: /home/github/{{ RUNNER_NAME }}
+      owner: "github"
+      group: "github"
+      mode: '0644'
+  - name: Github Runner - Extract 
+    become: true
+    ansible.builtin.unarchive:
+      src: "/home/github/{{ RUNNER_NAME }}/{{ runner_file }}"
+      dest: "/home/github/{{ RUNNER_NAME }}"
+      owner: "github"
+      group: "github"
+      remote_src: yes
+  - name: Install runner dependencies
+    become: true
+    ansible.builtin.command: |
+      /home/github/{{ RUNNER_NAME }}/bin/installdependencies.sh
+    args:
+      chdir: /home/github/{{ RUNNER_NAME }}
+      creates: /home/github/{{ RUNNER_NAME }}/.installed_dependencies
+  - name: Install runner dependencies marker file
+    become: true
+    ansible.builtin.file:
+      path: /home/github/{{ RUNNER_NAME }}/.installed_dependencies
+      state: touch
+      owner: github
+      group: github
+  - name: Github Runner - Get registration token
+    register: token_result
+    changed_when: true
+    no_log: true
+    ansible.builtin.uri:
+      url: "https://api.github.com/repos/{{ GITHUB_ORG }}/{{ GITHUB_REPO }}/actions/runners/registration-token"
+      method: POST
+      headers:
+        Authorization: "token {{ PAT_TOKEN }}"
+        Accept: "application/vnd.github+json"
+      body_format: json
+      status_code: 201
+  - name: Github Runner - Install
+    become: true
+    become_user: github
+    ansible.builtin.command: |
+      ./config.sh --unattended \
+        --token "{{ token_result.json.token }}" \
+        --url "{{ REPO_URL }}" \
+        --name "{{ RUNNER_NAME }}" \
+        --labels "self-hosted" "linux" \
+        --work "_work" \
+        --replace \
+        --runasservice \
+        --runnergroup "Default"
+    args:
+      chdir: /home/github/{{ RUNNER_NAME }}
+      creates: /home/github/{{ RUNNER_NAME }}/.installed_runner
+  - name: Github Runner - Marker file
+    become: true
+    ansible.builtin.file:
+      path: /home/github/{{ RUNNER_NAME }}/.installed_runner
+      state: touch
+      owner: github
+      group: github
+  - name: Github Service - Install
+    become: true
+    ansible.builtin.shell: |
+      ./svc.sh install github
+      ./svc.sh start
+    args:
+      chdir: /home/github/{{ RUNNER_NAME }}
+      creates: /home/github/{{ RUNNER_NAME }}/.installed_runner_service  
+  - name: Github Service - Marker file
+    become: true
+    ansible.builtin.file:
+      path: /home/github/{{ RUNNER_NAME }}/.installed_runner_service
+      state: touch
+      owner: github
+      group: github
