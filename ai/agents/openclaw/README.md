@@ -95,6 +95,7 @@ Run our container:
 
 ```shell
 mkdir ~/.openclaw
+cp ai/agents/openclaw/openclaw.json  ~/.openclaw/
 docker run -it --rm \
   --name openclaw \
   -e OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN} \
@@ -112,25 +113,13 @@ docker run -it --rm \
 
 ### Configration
 
-When our container starts for the first time, it fails because we do not have an `openclaw.json` configuration file. </br>
-We can tweak our `--entrypoint bash` to get into the container and run the `openclaw onboard` process to get a configuration. </br>
+If we want to generate a new `openclaw.json`, we can run the onboarding process by overriding the entrypoint to bash </br>
+We can tweak our `docker run` to add `--entrypoint bash` to get into the container and run the `openclaw onboard` process to get a configuration. </br>
 
 We can run the onboard manually to generate an `openclaw.json` configuration file:
 
 ```shell
 openclaw onboard --classic
-```
-
-We can use our pre-existing configuration file: </br>
-(Note: you may have to remove all openclaw json backups to prevent the gateway from rolling back configuration file changes)
-```shell
-cp openclaw.json ~/.openclaw/openclaw.json
-```
-
-Start OpenClaw: 
-
-```shell
-openclaw gateway run --bind lan
 ```
 
 ## Kubernetes

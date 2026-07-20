@@ -27,4 +27,7 @@ RUN curl -fsSL https://github.com/cli/cli/releases/download/v2.96.0/gh_2.96.0_li
 USER openclaw
 WORKDIR /home/openclaw
 
-ENTRYPOINT ["openclaw", "gateway", "run", "--bind", "lan"]
+COPY --chown=openclaw:openclaw entrypoint.sh /home/openclaw/entrypoint.sh
+RUN chmod +x /home/openclaw/entrypoint.sh
+
+ENTRYPOINT ["/home/openclaw/entrypoint.sh"]
