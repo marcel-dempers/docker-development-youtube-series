@@ -124,6 +124,22 @@ openclaw onboard --classic
 
 ## Kubernetes
 
+View docker setup scripts:
+```shell
+tree /tmp/openclaw/scripts/k8s/
+/tmp/openclaw/scripts/k8s/
+├── create-kind.sh
+├── deploy.sh
+└── manifests
+    ├── configmap.yaml
+    ├── deployment.yaml
+    ├── kustomization.yaml
+    ├── pvc.yaml
+    └── service.yaml
+
+1 directories, 7 files
+```
+
 Lets create a Kubernetes cluster to play with using [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ```
