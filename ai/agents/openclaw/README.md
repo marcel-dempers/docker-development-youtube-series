@@ -1,12 +1,9 @@
 # Introduction to OpenClaw
 
-<!-- #TODO intro
-#<a href="https://youtu.be/xxxxxx" title="openclaw"><img src="https://i.ytimg.com/vi/xxxxxxx/hqdefault.jpg" width="40%" alt="openclaw" /></a>
--->
+<a href="https://youtu.be/Xst5EPifJWM" title="openclaw-intro"><img src="https://i.ytimg.com/vi/Xst5EPifJWM/hqdefault.jpg" width="40%" alt="openclaw-intro" /></a>
 
-<!-- #TODO docker
-#<a href="https://youtu.be/xxxxxx" title="openclaw"><img src="https://i.ytimg.com/vi/xxxxxxx/hqdefault.jpg" width="40%" alt="openclaw" /></a>
--->
+
+<a href="https://youtu.be/l5sfnrQfgyk" title="openclaw-docker"><img src="https://i.ytimg.com/vi/l5sfnrQfgyk/hqdefault.jpg" width="40%" alt="openclaw-docker" /></a>
 
 <!-- #TODO kubernetes
 #<a href="https://youtu.be/xxxxxx" title="openclaw"><img src="https://i.ytimg.com/vi/xxxxxxx/hqdefault.jpg" width="40%" alt="openclaw" /></a>
