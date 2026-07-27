@@ -1,7 +1,24 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: openclaw-home-pv
+  labels:
+    app: openclaw
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /openclaw
+    type: DirectoryOrCreate
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: openclaw-home-pvc
+  namespace: openclaw
   labels:
     app: openclaw
 spec:
@@ -9,4 +26,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi

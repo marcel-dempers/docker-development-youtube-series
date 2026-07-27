@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: openclaw
+  namespace: openclaw
   labels:
     app: openclaw
 spec:
@@ -29,12 +30,12 @@ spec:
             - sh
             - -c
             - |
-              cp /config/openclaw.json /home/node/.openclaw/openclaw.json
-              mkdir -p /home/node/.openclaw/workspace
-              cp /config/AGENTS.md /home/node/.openclaw/workspace/AGENTS.md
+              cp /config/openclaw.json /home/openclaw/.openclaw/openclaw.json
+              mkdir -p /home/openclaw/.openclaw/workspace
+              cp /config/AGENTS.md /home/openclaw/.openclaw/workspace/AGENTS.md
+              chown -R 1000:1000 /home/openclaw/.openclaw
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 0
           resources:
             requests:
               memory: 32Mi
@@ -44,27 +45,18 @@ spec:
               cpu: 100m
           volumeMounts:
             - name: openclaw-home
-              mountPath: /home/node/.openclaw
+              mountPath: /home/openclaw/.openclaw
             - name: config
               mountPath: /config
       containers:
         - name: gateway
-          image: ghcr.io/openclaw/openclaw:slim
-          imagePullPolicy: IfNotPresent
-          command:
-            - node
-            - /app/dist/index.js
-            - gateway
-            - run
+          image: docker.io/aimvector/openclaw
+          imagePullPolicy: Always
           ports:
             - name: gateway
               containerPort: 18789
               protocol: TCP
           env:
-            - name: HOME
-              value: /home/node
-            - name: OPENCLAW_CONFIG_DIR
-              value: /home/node/.openclaw
             - name: NODE_ENV
               value: production
             - name: OPENCLAW_GATEWAY_TOKEN
@@ -72,29 +64,11 @@ spec:
                 secretKeyRef:
                   name: openclaw-secrets
                   key: OPENCLAW_GATEWAY_TOKEN
-            - name: ANTHROPIC_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: ANTHROPIC_API_KEY
-                  optional: true
-            - name: OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: OPENAI_API_KEY
-                  optional: true
             - name: GEMINI_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: openclaw-secrets
                   key: GEMINI_API_KEY
-                  optional: true
-            - name: OPENROUTER_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: OPENROUTER_API_KEY
                   optional: true
             - name: DISCORD_BOT_TOKEN
               valueFrom:
@@ -102,13 +76,12 @@ spec:
                   name: openclaw-secrets
                   key: DISCORD_BOT_TOKEN
                   optional: false
-          resources:
-            requests:
-              memory: 512Mi
-              cpu: 250m
-            limits:
-              memory: 2Gi
-              cpu: "1"
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: openclaw-secrets
+                  key: GITHUB_TOKEN
+                  optional: true
           livenessProbe:
             exec:
               command:
@@ -127,9 +100,16 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 5
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 2Gi
+              cpu: "1"
           volumeMounts:
             - name: openclaw-home
-              mountPath: /home/node/.openclaw
+              mountPath: /home/openclaw/.openclaw
             - name: tmp-volume
               mountPath: /tmp
           securityContext:

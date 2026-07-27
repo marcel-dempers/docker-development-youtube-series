@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: openclaw-config
+  namespace: openclaw
   labels:
     app: openclaw
 data:
