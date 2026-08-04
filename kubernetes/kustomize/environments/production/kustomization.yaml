@@ -1,16 +1,18 @@
-bases:
-  - ../../application
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../application
 patches:
-  - replica_count.yaml
-  - resource_limits.yaml
+- path: replica_count.yaml
+- path: resource_limits.yaml
+- path: env.yaml
+
 configMapGenerator:
-- name: example-config
-  namespace: example
-  #behavior: replace
-  files:
+  - name: example-config
+    namespace: example
+    behavior: replace
+    files:
     - configs/config.json
-patchesStrategicMerge:
-  - env.yaml
 images:
 - name: aimvector/python
   newTag: 1.0.1
