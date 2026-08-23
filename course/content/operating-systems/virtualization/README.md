@@ -197,32 +197,44 @@ On the main panel, we can click on `Machine` and `New` to get to the server crea
 give our server a `Name` and `Folder` where our virtual server data will be created. </br>
 We select the `ISO Image` that we downloaded previously. </br> Once we select our ISO file, the rest gets filled out because the software gets the data from the ISO image. </br>
 
-Next important section is `Hardware` </br>
+Steps:
+* Machine | New
+* Name: `my-website-1`
+* Folder: `C:\temp\vms`
+* ISO Image: `C:\temp\vms\ubuntu-24.04.1-live-server-amd64.iso`
+* **Important!** Skip Unattended Installation ✅
 
 #### Hardware 
 
 We select our `Base Memory` (RAM Memory) and `Processors` (CPU) </br>
 We learnt about the importance of these resources in our Operating system introduction module </br>
-
 When we choose these resources, we have to consider how much resources our host computer has. </br>
+
+Hardware:
+* Base Memory: `4096MB`
+* Processors: `4`
 
 Next we create a hard disk, by filling out `Hard Disk File Location and Size`
 
+Hard Disk:
+* I kept locations as is
+* Ensure size: `25GB`
+* Finish
+
 Then we press `Finish` to create the virtual server </br>
 
-Now before starting the virtual server, we need to add it to our network we created. </br> We can do this from the settings page </br>
+#### Network
+
+Now before starting the virtual server, we need to add it to our network we created. </br>
+We can do this from the settings page </br>
+
+Network:
+* Right click our server | Settings
+* Select "Network"
+* Under Adapter 1 | Change "Attached to:" to "NAT NETWORK" | my-website
+* Click "Ok"
 
 ### Server Settings Summary
-
-Here are some of the settings we used in this module when creating our Virtual Machine:
-
-| Property    | Value |
-| -------- | ------- |
-| name  | my-website-1    |
-| directory | C:\temp\vms     |
-| memory    | 4096MB    |
-| cpu    | 4 cores    |
-| disk    | 25GB    |
 
 During the installation we also provided some Operating system settings. I've recorded those below:
 
@@ -232,9 +244,6 @@ During the installation we also provided some Operating system settings. I've re
 | your name | devopsguy     |
 | username | devopsguy     |
 | password (for simplicity of this demo i kept it simple) | devopsguy     |
-
-
-
 
 ## Setup Server Access
 
