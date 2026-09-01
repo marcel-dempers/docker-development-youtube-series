@@ -358,10 +358,15 @@ Let's fill in our tasks. </br>
     gpg --dearmor < /tmp/nginx_signing.key | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg > /dev/null
 - name: Add NGINX repository
   become: true
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx"
+  # apt_repository is deprecated, use deb822_repository instead
+  ansible.builtin.deb822_repository:
+    name: nginx
+    types: deb
+    uris: http://nginx.org/packages/ubuntu
+    suites: "{{ ansible_facts['distribution_release'] }}"
+    components: nginx
+    signed_by: /usr/share/keyrings/nginx-archive-keyring.gpg
     state: present
-    filename: nginx
 - name: Add NGINX repository priority
   become: true
   ansible.builtin.copy:
@@ -427,6 +432,7 @@ handlers:
   ansible.builtin.systemd:
     daemon_reload: yes
 - name: Restart NGINX
+  become: true
   ansible.builtin.systemd:
     name: nginx
     state: restarted
