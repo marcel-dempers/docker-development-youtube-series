@@ -7,6 +7,7 @@ if ! id "$SERVER_USERNAME" >/dev/null 2>&1; then
   echo "User $SERVER_USERNAME not found. Creating..."
   sudo useradd -m -s /bin/bash "$SERVER_USERNAME"
   echo "$SERVER_USERNAME:$SERVER_PASSWORD" | sudo chpasswd
+  sudo chown "$SERVER_USERNAME":"$SERVER_USERNAME" "/home/$SERVER_USERNAME"
 fi
 
 echo "Adding user to sudoers group..."

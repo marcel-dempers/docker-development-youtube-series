@@ -10,6 +10,13 @@
     ansible.builtin.user:
       name: "{{ SERVER_USERNAME }}"
       shell: /bin/bash
+  - name: Ensure admin user owns their home directory
+    become: true
+    ansible.builtin.file:
+      path: "/home/{{ SERVER_USERNAME }}"
+      owner: "{{ SERVER_USERNAME }}"
+      group: "{{ SERVER_USERNAME }}"
+      state: directory
   - name: set admin user password
     become: true
     ansible.builtin.shell: echo "{{ SERVER_USERNAME }}:{{ SERVER_PASSWORD }}" | sudo chpasswd
