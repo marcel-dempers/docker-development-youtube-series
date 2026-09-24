@@ -253,6 +253,18 @@ Taking a look at our vagrant file, the first thing we provision are user account
 
 The above will create a user account if it does not already exist.
 
+4.1. Our Vagrantfile syncs a folder into `/home/{{ SERVER_USERNAME }}` before this user exists, which leaves that home directory owned by `root`. Let's fix ownership so our user actually has access to their own home directory:
+
+```yaml
+- name: Ensure admin user owns their home directory
+  become: true
+  ansible.builtin.file:
+    path: "/home/{{ SERVER_USERNAME }}"
+    owner: "{{ SERVER_USERNAME }}"
+    group: "{{ SERVER_USERNAME }}"
+    state: directory
+```
+
 5. We can use the `ansible.builtin.shell` module to set the admin accounts password 
 
 ```yaml
