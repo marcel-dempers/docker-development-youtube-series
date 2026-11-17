@@ -1,0 +1,411 @@
+apiVersion: cluster.x-k8s.io/v1beta2
+kind: ClusterClass
+metadata:
+  name: quick-start
+  namespace: default
+spec:
+  controlPlane:
+    healthCheck:
+      checks:
+        unhealthyMachineConditions:
+        - status: Unknown
+          timeoutSeconds: 300
+          type: NodeReady
+        - status: "False"
+          timeoutSeconds: 300
+          type: NodeReady
+        unhealthyNodeConditions:
+        - status: Unknown
+          timeoutSeconds: 300
+          type: Ready
+        - status: "False"
+          timeoutSeconds: 300
+          type: Ready
+    machineInfrastructure:
+      templateRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        kind: DevMachineTemplate
+        name: quick-start-control-plane
+    templateRef:
+      apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+      kind: KubeadmControlPlaneTemplate
+      name: quick-start-control-plane
+  infrastructure:
+    templateRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+      kind: DevClusterTemplate
+      name: quick-start-cluster
+  patches:
+  - definitions:
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/kubeadmConfigSpec/clusterConfiguration/imageRepository
+        valueFrom:
+          variable: imageRepository
+      selector:
+        apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+        kind: KubeadmControlPlaneTemplate
+        matchResources:
+          controlPlane: true
+    description: Sets the imageRepository used for the KubeadmControlPlane.
+    enabledIf: '{{ ne .imageRepository "" }}'
+    name: imageRepository
+  - definitions:
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/kubeadmConfigSpec/clusterConfiguration/etcd
+        valueFrom:
+          template: |
+            local:
+              imageTag: {{ .etcdImageTag }}
+      selector:
+        apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+        kind: KubeadmControlPlaneTemplate
+        matchResources:
+          controlPlane: true
+    description: Sets tag to use for the etcd image in the KubeadmControlPlane.
+    enabledIf: '{{ ne .etcdImageTag "" }}'
+    name: etcdImageTag
+  - definitions:
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/kubeadmConfigSpec/clusterConfiguration/dns
+        valueFrom:
+          template: |
+            imageTag: {{ .coreDNSImageTag }}
+      selector:
+        apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+        kind: KubeadmControlPlaneTemplate
+        matchResources:
+          controlPlane: true
+    description: Sets tag to use for the etcd image in the KubeadmControlPlane.
+    enabledIf: '{{ ne .coreDNSImageTag "" }}'
+    name: coreDNSImageTag
+  - definitions:
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/backend/docker/customImage
+        valueFrom:
+          template: |
+            kindest/node:{{ .builtin.machineDeployment.version | replace "+" "_" }}
+      selector:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        kind: DevMachineTemplate
+        matchResources:
+          machineDeploymentClass:
+            names:
+            - default-worker
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/backend/docker/customImage
+        valueFrom:
+          template: |
+            kindest/node:{{ .builtin.machinePool.version | replace "+" "_" }}
+      selector:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        kind: DevMachinePoolTemplate
+        matchResources:
+          machinePoolClass:
+            names:
+            - default-worker
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/backend/docker/customImage
+        valueFrom:
+          template: |
+            kindest/node:{{ .builtin.controlPlane.version | replace "+" "_" }}
+      selector:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        kind: DevMachineTemplate
+        matchResources:
+          controlPlane: true
+    description: Sets the container image that is used for running devMachines for
+      the controlPlane and default-worker machineDeployments.
+    name: customImage
+  - definitions:
+    - jsonPatches:
+      - op: add
+        path: /spec/template/spec/kubeadmConfigSpec/clusterConfiguration/apiServer/extraArgs
+        value:
+        - name: admission-control-config-file
+          value: /etc/kubernetes/kube-apiserver-admission-pss.yaml
+      - op: add
+        path: /spec/template/spec/kubeadmConfigSpec/clusterConfiguration/apiServer/extraVolumes
+        value:
+        - hostPath: /etc/kubernetes/kube-apiserver-admission-pss.yaml
+          mountPath: /etc/kubernetes/kube-apiserver-admission-pss.yaml
+          name: admission-pss
+          pathType: File
+          readOnly: true
+      - op: add
+        path: /spec/template/spec/kubeadmConfigSpec/files
+        valueFrom:
+          template: |
+            - content: |
+                apiVersion: apiserver.config.k8s.io/v1
+                kind: AdmissionConfiguration
+                plugins:
+                - name: PodSecurity
+                  configuration:
+                    apiVersion: pod-security.admission.config.k8s.io/v1{{ if semverCompare "< v1.25-0" .builtin.controlPlane.version }}beta1{{ end }}
+                    kind: PodSecurityConfiguration
+                    defaults:
+                      enforce: "{{ .podSecurityStandard.enforce }}"
+                      enforce-version: "latest"
+                      audit: "{{ .podSecurityStandard.audit }}"
+                      audit-version: "latest"
+                      warn: "{{ .podSecurityStandard.warn }}"
+                      warn-version: "latest"
+                    exemptions:
+                      usernames: []
+                      runtimeClasses: []
+                      namespaces: [kube-system]
+              path: /etc/kubernetes/kube-apiserver-admission-pss.yaml
+      selector:
+        apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+        kind: KubeadmControlPlaneTemplate
+        matchResources:
+          controlPlane: true
+    description: Adds an admission configuration for PodSecurity to the kube-apiserver.
+    enabledIf: '{{ .podSecurityStandard.enabled }}'
+    name: podSecurityStandard
+  variables:
+  - name: imageRepository
+    required: true
+    schema:
+      openAPIV3Schema:
+        default: ""
+        description: imageRepository sets the container registry to pull images from.
+          If empty, nothing will be set and the from of kubeadm will be used.
+        example: registry.k8s.io
+        type: string
+  - name: etcdImageTag
+    required: true
+    schema:
+      openAPIV3Schema:
+        default: ""
+        description: etcdImageTag sets the tag for the etcd image.
+        example: 3.5.3-0
+        type: string
+  - name: coreDNSImageTag
+    required: true
+    schema:
+      openAPIV3Schema:
+        default: ""
+        description: coreDNSImageTag sets the tag for the coreDNS image.
+        example: v1.8.5
+        type: string
+  - name: podSecurityStandard
+    required: false
+    schema:
+      openAPIV3Schema:
+        properties:
+          audit:
+            default: restricted
+            description: audit sets the level for the audit PodSecurityConfiguration
+              mode. One of privileged, baseline, restricted.
+            type: string
+          enabled:
+            default: true
+            description: enabled enables the patches to enable Pod Security Standard
+              via AdmissionConfiguration.
+            type: boolean
+          enforce:
+            default: baseline
+            description: enforce sets the level for the enforce PodSecurityConfiguration
+              mode. One of privileged, baseline, restricted.
+            type: string
+          warn:
+            default: restricted
+            description: warn sets the level for the warn PodSecurityConfiguration
+              mode. One of privileged, baseline, restricted.
+            type: string
+        type: object
+  workers:
+    machineDeployments:
+    - bootstrap:
+        templateRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+          kind: KubeadmConfigTemplate
+          name: quick-start-default-worker-bootstraptemplate
+      class: default-worker
+      healthCheck:
+        checks:
+          unhealthyMachineConditions:
+          - status: Unknown
+            timeoutSeconds: 300
+            type: NodeReady
+          - status: "False"
+            timeoutSeconds: 300
+            type: NodeReady
+          unhealthyNodeConditions:
+          - status: Unknown
+            timeoutSeconds: 300
+            type: Ready
+          - status: "False"
+            timeoutSeconds: 300
+            type: Ready
+      infrastructure:
+        templateRef:
+          apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+          kind: DevMachineTemplate
+          name: quick-start-default-worker-machinetemplate
+    machinePools:
+    - bootstrap:
+        templateRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+          kind: KubeadmConfigTemplate
+          name: quick-start-default-worker-bootstraptemplate
+      class: default-worker
+      infrastructure:
+        templateRef:
+          apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+          kind: DevMachinePoolTemplate
+          name: quick-start-default-worker-machinepooltemplate
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: DevClusterTemplate
+metadata:
+  name: quick-start-cluster
+  namespace: default
+spec:
+  template:
+    spec:
+      backend:
+        docker:
+          failureDomains:
+          - controlPlane: true
+            name: fd1
+          - controlPlane: true
+            name: fd2
+          - controlPlane: true
+            name: fd3
+          - controlPlane: true
+            name: fd4
+          - controlPlane: true
+            name: fd5
+          - controlPlane: false
+            name: fd6
+          - controlPlane: false
+            name: fd7
+          - controlPlane: false
+            name: fd8
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+kind: KubeadmControlPlaneTemplate
+metadata:
+  name: quick-start-control-plane
+  namespace: default
+spec:
+  template:
+    spec:
+      kubeadmConfigSpec:
+        clusterConfiguration:
+          apiServer:
+            certSANs:
+            - localhost
+            - 127.0.0.1
+            - 0.0.0.0
+            - host.docker.internal
+        initConfiguration:
+          nodeRegistration:
+            kubeletExtraArgs:
+            - name: eviction-hard
+              value: nodefs.available<0%,nodefs.inodesFree<0%,imagefs.available<0%
+        joinConfiguration:
+          nodeRegistration:
+            kubeletExtraArgs:
+            - name: eviction-hard
+              value: nodefs.available<0%,nodefs.inodesFree<0%,imagefs.available<0%
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: DevMachineTemplate
+metadata:
+  name: quick-start-control-plane
+  namespace: default
+spec:
+  template:
+    spec:
+      backend:
+        docker:
+          extraMounts:
+          - containerPath: /var/run/docker.sock
+            hostPath: /var/run/docker.sock
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: DevMachineTemplate
+metadata:
+  name: quick-start-default-worker-machinetemplate
+  namespace: default
+spec:
+  template:
+    spec:
+      backend:
+        docker:
+          extraMounts:
+          - containerPath: /var/run/docker.sock
+            hostPath: /var/run/docker.sock
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: DevMachinePoolTemplate
+metadata:
+  name: quick-start-default-worker-machinepooltemplate
+  namespace: default
+spec:
+  template:
+    spec:
+      backend:
+        docker: {}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+kind: KubeadmConfigTemplate
+metadata:
+  name: quick-start-default-worker-bootstraptemplate
+  namespace: default
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs:
+          - name: eviction-hard
+            value: nodefs.available<0%,nodefs.inodesFree<0%,imagefs.available<0%
+---
+apiVersion: cluster.x-k8s.io/v1beta2
+kind: Cluster
+metadata:
+  name: capi-quickstart
+  namespace: default
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+    serviceDomain: cluster.local
+    services:
+      cidrBlocks:
+      - 10.128.0.0/12
+  topology:
+    classRef:
+      name: quick-start
+    controlPlane:
+      replicas: 3
+    variables:
+    - name: imageRepository
+      value: ""
+    - name: etcdImageTag
+      value: ""
+    - name: coreDNSImageTag
+      value: ""
+    - name: podSecurityStandard
+      value:
+        audit: restricted
+        enabled: true
+        enforce: baseline
+        warn: restricted
+    version: v1.34.0
+    workers:
+      machineDeployments:
+      - class: default-worker
+        name: md-0
+        replicas: 3

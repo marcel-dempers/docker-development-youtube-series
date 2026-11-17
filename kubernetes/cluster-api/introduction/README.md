@@ -50,7 +50,7 @@ kubectl get pods -A
 
 ```bash
 clusterctl generate cluster capi-quickstart --flavor development \
-  --kubernetes-version v1.37.0 \
+  --kubernetes-version v1.34.0 \
   --control-plane-machine-count=3 \
   --worker-machine-count=3 \
   > kubernetes/cluster-api/introduction/workload-1.yaml
@@ -77,6 +77,15 @@ clusterctl get kubeconfig capi-quickstart > capi-quickstart.kubeconfig
 
 export KUBECONFIG=./capi-quickstart.kubeconfig
 kubectl cluster-info 
+kubectl get nodes
+```
+
+Install a CNI so the nodes become `Ready`:
+
+```bash
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/calico.yaml
+
+# wait a minute or two
 kubectl get nodes
 ```
 
