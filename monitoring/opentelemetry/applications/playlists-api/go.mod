@@ -1,6 +1,6 @@
 module example.com/playlists-api
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
@@ -14,6 +14,6 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
-	golang.org/x/net v0.43.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 )
