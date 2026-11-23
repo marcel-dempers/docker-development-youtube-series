@@ -1,4 +1,4 @@
-# Introduction to Cluster API `k8s-clusterapi-intro`
+# Introduction to Cluster API
 
 Documentation: <br/>
 The [concepts](https://cluster-api.sigs.k8s.io/user/concepts)
