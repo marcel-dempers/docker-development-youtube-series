@@ -3,7 +3,7 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    concurrent-ruby (1.1.7)
+    concurrent-ruby (1.3.7)
     cool.io (1.7.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
