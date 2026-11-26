@@ -3,7 +3,7 @@
 Back to [Course Introduction](../../README.md)
 
 <p>
-  This the previous chapters, we have spent quite a bit of time understanding operating systems and command line and why it's so important.  </br>
+  In the previous chapters, we have spent quite a bit of time understanding operating systems and the command line and why it's so important.  </br>
   Modern cloud and IT tends to hide or abstract a lot of how servers and operating systems function as well as how they are monitored. </br>
   This means engineers often lack the knowledge and expertise on how to dismantle a system and monitor it with bare essential command line tools. </br>
 </p>

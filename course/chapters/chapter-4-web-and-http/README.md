@@ -3,7 +3,7 @@
 Back to [Course Introduction](../../README.md)
 
 <p>
-  Web servers are an importand foundation of the IT ecosystem. </br>
+  Web servers are an important foundation of the IT ecosystem. </br>
   The internet is fundamentally made up of web servers. </br>
   In this chapter we'll learn about the basics of web servers and get our first web server up and running. </br>
 </p>
