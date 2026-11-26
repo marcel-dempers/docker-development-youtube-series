@@ -23,7 +23,7 @@ Back to [Course Introduction](../../README.md)
 <ul>
   <li> What is automation </li>
   <li> Our automation journey so far </li>
-  <li> Key Focusses of Automation: </li>
+  <li> Key Focuses of Automation: </li>
     <ul>
       <li> Scripting & Coding </li>
       <li> CI/CD: Automated build & deployments </li>

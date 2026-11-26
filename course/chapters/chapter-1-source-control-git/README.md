@@ -6,11 +6,11 @@ Back to [Course Introduction](../../README.md)
 
 <p>In this chapter we will cover the fundamental tools you need to know to start a DevOps, SRE or platform engineering career from the beginning.</p>
 <p> This starts with knowing how to work with files. 
-  Source control allows us to work with files, collaborate with others and track changes and histrory of source code.
+  Source control allows us to work with files, collaborate with others and track changes and history of source code.
 </p>
 
 <p>We will also take a look at popular tools that software engineers use to work with files.</p> 
-<p>What your will learn:</p>
+<p>What you will learn:</p>
 
 <ul>
   <li> What source control is</li>
@@ -73,7 +73,7 @@ It is software that helps us deal with software development and engineering. </b
 
 <p>
 Storing source code in a Git repository on a local machine carries a risk of data loss. </br>
-If your harddrive crashes, or you lose your laptop, all your work would be lost. </br>
+If your hard drive crashes, or you lose your laptop, all your work would be lost. </br>
 Therefore it's always recommended to use a hosted source control provider like Github, BitBucket, Gitlab and others. </br>
 </p>
 <p>
